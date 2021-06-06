@@ -4,10 +4,10 @@
     <!-- component: theme -->
     <style>
         body[data-app-theme="dark"] {
-        {# TODO #}
+            filter: invert(100%);
         }
         body[data-app-theme="light"] {
-        {# TODO #}
+            filter: invert(0%);
         }
     </style>
 {% endblock %}
@@ -39,7 +39,28 @@
         (function () {
             'use strict';
 
+            // TODO: Implement user preference.
+            //  https://css-tricks.com/a-complete-guide-to-dark-mode-on-the-web/#storing-preferences.
+
+            function getTheme() {
+                var initialTheme = 'light';
+
+                var preferDarkTheme = window.matchMedia('(prefers-color-scheme: dark)');
+                if (preferDarkTheme.matches) {
+                    initialTheme = 'dark';
+                } else {
+                    var date = new Date();
+                    if (7 > date.getHours() || 19 < date.getHours()) {
+                        initialTheme = 'dark';
+                    }
+                }
+
+                return initialTheme;
+            }
+
             var list = document.querySelectorAll('[data-app-component="theme"]');
+
+            document.body.dataset.appTheme = getTheme();
 
             Array.prototype.slice.call(list)
                 .forEach(
@@ -53,6 +74,8 @@
                         checkbox.addEventListener('change', function (event) {
                             document.body.dataset.appTheme = !!checkbox.checked ? 'dark' : 'light';
                         }, false);
+
+                        checkbox.checked = 'dark' === document.body.dataset.appTheme;
                     }
                 );
         })();

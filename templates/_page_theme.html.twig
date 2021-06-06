@@ -48,6 +48,8 @@
     {% with %}{{ block('style', 'component/main-content.html.twig') }}{% endwith %}
 {% endblock %}
 
+{% block body_class %}bg-white{% endblock %}
+
 {% block body_data %}
     {% with { value: reader_mode } %}{{ block('data', 'component/reader-mode.html.twig') }}{% endwith %}
     {% with { value: dark_mode } %}{{ block('data', 'component/theme.html.twig') }}{% endwith %}
@@ -102,7 +104,7 @@
     {% endblock %}
 
     <a class="invisible" id="{{ main_content_id[1:] }}"></a>
-    <div class="border-top border-5 min-vh-100" style="border-color: {{ random_color }}!important;">
+    <div class="bg-white border-top border-5 min-vh-100" style="border-color: {{ random_color }}!important;">
         <div class="container">
             {% block body_content %}
             {% endblock %}
