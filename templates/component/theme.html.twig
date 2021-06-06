@@ -3,6 +3,9 @@
 {% block style %}
     <!-- component: theme -->
     <style>
+        body {
+            transition: filter 500ms linear;
+        }
         body[data-app-theme="dark"] {
             filter: invert(100%);
         }

@@ -3,10 +3,14 @@
 {% block style %}
     <!-- component: reader mode -->
     <style>
+        body .rm {
+            transition: opacity 500ms linear;
+        }
         body[data-app-reader-mode="true"] .rm {
-            display: none;
+            opacity: 0.0;
         }
         body[data-app-reader-mode="false"] .rm {
+            opacity: 1.0;
         }
     </style>
 {% endblock %}
