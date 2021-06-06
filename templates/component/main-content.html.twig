@@ -12,7 +12,7 @@
 
 {% block html %}
     <!-- component: main-content -->
-    <div class="d-flex" data-app-component="">
+    <div class="d-flex" data-app-component="main-content">
         <button type="button" class="btn btn-outline-primary">
             {{ source('svg/paragraph.svg') }}
         </button>
@@ -22,5 +22,25 @@
 {% block script %}
     <!-- component: main-content -->
     <script type="text/javascript">
+        (function () {
+            'use strict';
+
+            var list = document.querySelectorAll('[data-app-component="main-content"]');
+
+            Array.prototype.slice.call(list)
+                .forEach(
+                    /**
+                     * @param component HTMLDivElement
+                     */
+                    function (component) {
+                        /** @type HTMLButtonElement */
+                        var button = component.querySelector('button[type="button"]');
+
+                        button.addEventListener('click', function (event) {
+                            location.hash = document.body.dataset.appMainContent;
+                        }, false);
+                    }
+                );
+        })();
     </script>
 {% endblock %}

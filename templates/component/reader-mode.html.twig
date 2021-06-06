@@ -3,10 +3,10 @@
 {% block style %}
     <!-- component: reader mode -->
     <style>
-        [data-app-reader-mode="true"] .rm {
+        body[data-app-reader-mode="true"] .rm {
             display: none;
         }
-        [data-app-reader-mode="false"] .rm {
+        body[data-app-reader-mode="false"] .rm {
         }
     </style>
 {% endblock %}
@@ -28,5 +28,25 @@
 {% block script %}
     <!-- component: reader mode -->
     <script type="text/javascript">
+        (function () {
+            'use strict';
+
+            var list = document.querySelectorAll('[data-app-component="reader-mode"]');
+
+            Array.prototype.slice.call(list)
+                .forEach(
+                    /**
+                     * @param component HTMLDivElement
+                     */
+                    function (component) {
+                        /** @type HTMLInputElement */
+                        var checkbox = component.querySelector('input[type="checkbox"]');
+
+                        checkbox.addEventListener('change', function (event) {
+                            document.body.dataset.appReaderMode = !!checkbox.checked ? 'true' : 'false';
+                        }, false);
+                    }
+                );
+        })();
     </script>
 {% endblock %}

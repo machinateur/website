@@ -3,26 +3,32 @@
 {% block style %}
     <!-- component: theme -->
     <style>
+        body[data-app-theme="dark"] {
+        {# TODO #}
+        }
+        body[data-app-theme="light"] {
+        {# TODO #}
+        }
     </style>
 {% endblock %}
 
 {% block data %}
-    data-app-theme="{{ value|default('light') }}"
+    data-app-theme="{{ value|default(false) ? 'dark' : 'light' }}"
 {% endblock %}
 
 {% block html %}
     <!-- component: theme -->
     <div class="d-flex mx-2 mt-2" data-app-component="theme">
         <div class="lh-sm">
-            {{ source('svg/brightness-low.svg') }}
+            {{ source('svg/brightness-high.svg') }}
         </div>
         <div class="form-check form-switch ps-5">
-            <input class="form-check-input" type="checkbox" id="switchCheck{{ id }}">
+            <input class="form-check-input" type="checkbox" id="switchCheck{{ id }}"{% if value|default(false) %} checked{% endif %}>
             <label class="form-check-label" for="switchCheck{{ id }}">
             </label>
         </div>
         <div class="lh-sm">
-            {{ source('svg/brightness-high.svg') }}
+            {{ source('svg/brightness-low.svg') }}
         </div>
     </div>
 {% endblock %}
@@ -30,5 +36,25 @@
 {% block script %}
     <!-- component: theme -->
     <script type="text/javascript">
+        (function () {
+            'use strict';
+
+            var list = document.querySelectorAll('[data-app-component="theme"]');
+
+            Array.prototype.slice.call(list)
+                .forEach(
+                    /**
+                     * @param component HTMLDivElement
+                     */
+                    function (component) {
+                        /** @type HTMLInputElement */
+                        var checkbox = component.querySelector('input[type="checkbox"]');
+
+                        checkbox.addEventListener('change', function (event) {
+                            document.body.dataset.appTheme = !!checkbox.checked ? 'dark' : 'light';
+                        }, false);
+                    }
+                );
+        })();
     </script>
 {% endblock %}

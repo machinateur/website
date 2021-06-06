@@ -3,6 +3,39 @@
 {% block style %}
     <!-- component: zoom -->
     <style>
+        body[data-app-zoom="-5"] {
+            font-size: 11px;
+        }
+        body[data-app-zoom="-4"] {
+            font-size: 12px;
+        }
+        body[data-app-zoom="-3"] {
+            font-size: 13px;
+        }
+        body[data-app-zoom="-2"] {
+            font-size: 14px;
+        }
+        body[data-app-zoom="-1"] {
+            font-size: 15px;
+        }
+        body[data-app-zoom="0"] {
+            font-size: 16px;
+        }
+        body[data-app-zoom="1"] {
+            font-size: 17px;
+        }
+        body[data-app-zoom="2"] {
+            font-size: 18px;
+        }
+        body[data-app-zoom="3"] {
+            font-size: 19px;
+        }
+        body[data-app-zoom="4"] {
+            font-size: 20px;
+        }
+        body[data-app-zoom="5"] {
+            font-size: 21px;
+        }
     </style>
 {% endblock %}
 
@@ -14,10 +47,10 @@
     <!-- component: zoom -->
     <div class="d-flex btn-group mx-2" role="group" aria-label="Zoom" data-app-component="zoom">
         <button type="button" class="btn btn-outline-primary">
-            {{ source('svg/zoom-in.svg') }}
+            {{ source('svg/zoom-out.svg') }}
         </button>
         <button type="button" class="btn btn-outline-primary">
-            {{ source('svg/zoom-out.svg') }}
+            {{ source('svg/zoom-in.svg') }}
         </button>
     </div>
 {% endblock %}
@@ -25,5 +58,34 @@
 {% block script %}
     <!-- component: zoom -->
     <script type="text/javascript">
+        (function () {
+            'use strict';
+
+            var list = document.querySelectorAll('[data-app-component="zoom"]');
+
+            Array.prototype.slice.call(list)
+                .forEach(
+                    /**
+                     * @param component HTMLDivElement
+                     */
+                    function (component) {
+                        /** @type HTMLButtonElement */
+                        var buttonZoomOut = component.querySelector('button[type="button"]:first-child');
+                        /** @type HTMLButtonElement */
+                        var buttonZoomIn = component.querySelector('button[type="button"]:last-child');
+
+                        buttonZoomOut.addEventListener('click', function (event) {
+                            var zoomLevel = parseInt(document.body.dataset.appZoom, 10);
+                            zoomLevel = Math.min(Math.max(zoomLevel - 1, -5), +5);
+                            document.body.dataset.appZoom = zoomLevel;
+                        }, false);
+                        buttonZoomIn.addEventListener('click', function (event) {
+                            var zoomLevel = parseInt(document.body.dataset.appZoom, 10);
+                            zoomLevel = Math.max(Math.min(zoomLevel + 1, +5), -5);
+                            document.body.dataset.appZoom = zoomLevel;
+                        }, false);
+                    }
+                );
+        })();
     </script>
 {% endblock %}
