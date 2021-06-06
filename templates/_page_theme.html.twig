@@ -43,6 +43,9 @@
         }
     </style>
     {% with %}{{ block('style', 'component/reader-mode.html.twig') }}{% endwith %}
+    {% with %}{{ block('style', 'component/theme.html.twig') }}{% endwith %}
+    {% with %}{{ block('style', 'component/zoom.html.twig') }}{% endwith %}
+    {% with %}{{ block('style', 'component/main-content.html.twig') }}{% endwith %}
 {% endblock %}
 
 {% block body_data %}
@@ -64,7 +67,7 @@
                         machinateur.dev
                     </a>
 
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    <button class="navbar-toggler mx-auto" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -98,7 +101,7 @@
         {% endblock %}
     {% endblock %}
 
-    <a class="invisible" id="{{ main_content_id }}"></a>
+    <a class="invisible" id="{{ main_content_id[1:] }}"></a>
     <div class="border-top border-5 min-vh-100" style="border-color: {{ random_color }}!important;">
         <div class="container">
             {% block body_content %}
