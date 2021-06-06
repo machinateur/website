@@ -1,0 +1,26 @@
+{# component: main-content #}
+
+{% block style %}
+    <!-- component: main-content -->
+    <style>
+    </style>
+{% endblock %}
+
+{% block data %}
+    data-app-main-content="{{ value|default('#main') }}"
+{% endblock %}
+
+{% block html %}
+    <!-- component: main-content -->
+    <div class="d-flex" data-app-component="">
+        <button type="button" class="btn btn-outline-primary">
+            {{ source('svg/paragraph.svg') }}
+        </button>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <!-- component: main-content -->
+    <script type="text/javascript">
+    </script>
+{% endblock %}

@@ -1,0 +1,32 @@
+{# component: reader mode #}
+
+{% block style %}
+    <!-- component: reader mode -->
+    <style>
+        [data-app-reader-mode="true"] .rm {
+            display: none;
+        }
+        [data-app-reader-mode="false"] .rm {
+        }
+    </style>
+{% endblock %}
+
+{% block data %}
+    data-app-reader-mode="{{ value|default(false) ? 'true' : 'false' }}"
+{% endblock %}
+
+{% block html %}
+    <!-- component: reader mode -->
+    <div class="d-flex" data-app-component="reader-mode">
+        <input type="checkbox" class="btn-check" id="btnCheck{{ id }}" autocomplete="off">
+        <label class="btn btn-outline-primary" for="btnCheck{{ id }}">
+            {{ source('svg/book.svg') }}
+        </label>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <!-- component: reader mode -->
+    <script type="text/javascript">
+    </script>
+{% endblock %}

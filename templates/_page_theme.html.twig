@@ -1,5 +1,10 @@
 {% extends '_page.html.twig' %}
 
+{% set reader_mode = false %}
+{% set theme = 'light' %}
+{% set zoom_level = 0 %}
+{% set main_content_id = '#main' %}
+
 {% set navbar_content = [
     {
         'label': 'Overview',
@@ -37,6 +42,14 @@
             }
         }
     </style>
+    {% with %}{{ block('style', 'component/reader-mode.html.twig') }}{% endwith %}
+{% endblock %}
+
+{% block body_data %}
+    {% with { value: reader_mode } %}{{ block('data', 'component/reader-mode.html.twig') }}{% endwith %}
+    {% with { value: theme } %}{{ block('data', 'component/theme.html.twig') }}{% endwith %}
+    {% with { value: zoom_level } %}{{ block('data', 'component/zoom.html.twig') }}{% endwith %}
+    {% with { value: main_content_id } %}{{ block('data', 'component/main-content.html.twig') }}{% endwith %}
 {% endblock %}
 
 {% block body %}
@@ -68,48 +81,16 @@
                         </div>
 
                         <div class="d-flex text-center px-5 py-3 border border-0-lg rounded rounded-3">
-                            <!-- component: toggle reader mode -->
-                            <div class="d-flex">
-                                <input type="checkbox" class="btn-check" id="btn-check" autocomplete="off">
-                                <label class="btn btn-outline-primary" for="btn-check">
-                                    {{ source('svg/book.svg') }}
-                                </label>
-                            </div>
+                            {% with { id: 0 } %}{{ block('html', 'component/reader-mode.html.twig') }}{% endwith %}
 
-                            <!-- component: toggle dark/light mode -->
-                            <div class="d-flex mx-2 mt-2">
-                                <div class="lh-sm">
-                                    {{ source('svg/brightness-low.svg') }}
-                                </div>
-                                <div class="form-check form-switch ps-5">
-                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-                                    <label class="form-check-label" for="flexSwitchCheckDefault">
-                                    </label>
-                                </div>
-                                <div class="lh-sm">
-                                    {{ source('svg/brightness-high.svg') }}
-                                </div>
-                            </div>
+                            {% with { id: 0 } %}{{ block('html', 'component/theme.html.twig') }}{% endwith %}
 
                             <div class="ms-auto invisible">
                             </div>
 
-                            <!-- component: zoom on text-size -->
-                            <div class="d-flex  btn-group mx-2" role="group" aria-label="Zoom">
-                                <button type="button" class="btn btn-outline-primary">
-                                    {{ source('svg/zoom-in.svg') }}
-                                </button>
-                                <button type="button" class="btn btn-outline-primary">
-                                    {{ source('svg/zoom-out.svg') }}
-                                </button>
-                            </div>
+                            {% with { id: 0 } %}{{ block('html', 'component/zoom.html.twig') }}{% endwith %}
 
-                            <!-- component: scroll to content -->
-                            <div class="d-flex">
-                                <a class="btn btn-outline-primary" href="#main" role="button">
-                                    {{ source('svg/paragraph.svg') }}
-                                </a>
-                            </div>
+                            {% with { id: 0 } %}{{ block('html', 'component/main-content.html.twig') }}{% endwith %}
                         </div>
                     </div>
                 </div>
@@ -117,7 +98,7 @@
         {% endblock %}
     {% endblock %}
 
-    <a class="invisible" id="main"></a>
+    <a class="invisible" id="{{ main_content_id }}"></a>
     <div class="border-top border-5 min-vh-100" style="border-color: {{ random_color }}!important;">
         <div class="container">
             {% block body_content %}
@@ -153,7 +134,8 @@
 
 {% block script %}
     {{ parent() }}
-    <script type="text/javascript">
-        // TODO: Implement both dynamic components.
-    </script>
+    {% with %}{{ block('script', 'component/reader-mode.html.twig') }}{% endwith %}
+    {% with %}{{ block('script', 'component/theme.html.twig') }}{% endwith %}
+    {% with %}{{ block('script', 'component/zoom.html.twig') }}{% endwith %}
+    {% with %}{{ block('script', 'component/main-content.html.twig') }}{% endwith %}
 {% endblock %}

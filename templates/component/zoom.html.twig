@@ -1,0 +1,29 @@
+{# component: zoom #}
+
+{% block style %}
+    <!-- component: zoom -->
+    <style>
+    </style>
+{% endblock %}
+
+{% block data %}
+    data-app-zoom="{{ value|default(0) }}"
+{% endblock %}
+
+{% block html %}
+    <!-- component: zoom -->
+    <div class="d-flex btn-group mx-2" role="group" aria-label="Zoom" data-app-component="zoom">
+        <button type="button" class="btn btn-outline-primary">
+            {{ source('svg/zoom-in.svg') }}
+        </button>
+        <button type="button" class="btn btn-outline-primary">
+            {{ source('svg/zoom-out.svg') }}
+        </button>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <!-- component: zoom -->
+    <script type="text/javascript">
+    </script>
+{% endblock %}
