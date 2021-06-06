@@ -22,7 +22,7 @@ use Twig\Error\Error;
 class IndexController extends ControllerAbstract
 {
     /**
-     * @Route("/{path}", name="index", methods={
+     * @Route("/{path}", name="view", methods={
      *     "GET",
      * }, requirements={
      *     "path" = "^(?:\/?[a-z0-9]+(?:-[a-z0-9]+)*)+$",
@@ -34,7 +34,7 @@ class IndexController extends ControllerAbstract
      * @param string|null $path
      * @return Response
      */
-    public function index(Request $request, ?string $path = null): Response
+    public function view(Request $request, ?string $path = null): Response
     {
         if (null === $path) {
             $view = 'content.html.twig';
