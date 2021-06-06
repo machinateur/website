@@ -1,0 +1,159 @@
+{% extends '_page.html.twig' %}
+
+{% set navbar_content = [
+    {
+        'label': 'Overview',
+        'path': '/',
+    },
+    {
+        'label': 'Blog',
+        'path': '/blog',
+    },
+    {
+        'label': 'About',
+        'path': '/about',
+    },
+] %}
+{% set random_color = random([
+    '#420039',
+    '#A76571',
+    '#F5E2C8',
+    '#7494EA',
+    '#DC136C',
+    '#35FF69',
+    '#4DA1A9',
+    '#4A306D',
+    '#BBDEF0',
+    '#F7FF58',
+    '#495867',
+]) %}
+
+{% block style %}
+    {{ parent() }}
+    <style>
+        @media (min-width: 992px) {
+            .border-0-lg {
+                border: 0 !important;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    {% block body_content_prepend %}
+        {% block navbar %}
+            <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom border-top">
+                <div class="container-fluid">
+                    <a class="navbar-brand font-monospace px-5 py-3" href="#">
+                        <img src="res/image/profile-machinateur.png" alt="" width="auto" height="30"
+                             class="border rounded-circle">
+
+                        machinateur.dev
+                    </a>
+
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                        <div class="navbar-nav justify-content-between w-100 mx-auto my-2 my-lg-0 px-5 py-3">
+                            {% block navbar_content %}
+                                {% for navbar_link in navbar_content %}
+                                    <a class="nav-link" href="{{ path('index_view', {
+                                        'path': navbar_link.path|trim('/', 'left'),
+                                    }) }}">{{ navbar_link.label }}</a>
+                                {% endfor %}
+                            {% endblock %}
+                        </div>
+
+                        <div class="d-flex text-center px-5 py-3 border border-0-lg rounded rounded-3">
+                            <!-- component: toggle reader mode -->
+                            <div class="d-flex">
+                                <input type="checkbox" class="btn-check" id="btn-check" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="btn-check">
+                                    {{ source('svg/book.svg') }}
+                                </label>
+                            </div>
+
+                            <!-- component: toggle dark/light mode -->
+                            <div class="d-flex mx-2 mt-2">
+                                <div class="lh-sm">
+                                    {{ source('svg/brightness-low.svg') }}
+                                </div>
+                                <div class="form-check form-switch ps-5">
+                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                                    <label class="form-check-label" for="flexSwitchCheckDefault">
+                                    </label>
+                                </div>
+                                <div class="lh-sm">
+                                    {{ source('svg/brightness-high.svg') }}
+                                </div>
+                            </div>
+
+                            <div class="ms-auto invisible">
+                            </div>
+
+                            <!-- component: zoom on text-size -->
+                            <div class="d-flex  btn-group mx-2" role="group" aria-label="Zoom">
+                                <button type="button" class="btn btn-outline-primary">
+                                    {{ source('svg/zoom-in.svg') }}
+                                </button>
+                                <button type="button" class="btn btn-outline-primary">
+                                    {{ source('svg/zoom-out.svg') }}
+                                </button>
+                            </div>
+
+                            <!-- component: scroll to content -->
+                            <div class="d-flex">
+                                <a class="btn btn-outline-primary" href="#main" role="button">
+                                    {{ source('svg/paragraph.svg') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        {% endblock %}
+    {% endblock %}
+
+    <a class="invisible" id="main"></a>
+    <div class="border-top border-5 min-vh-100" style="border-color: {{ random_color }}!important;">
+        <div class="container">
+            {% block body_content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    {% block body_content_append %}
+        <div class="navbar navbar-light bg-white border-bottom border-top">
+            <div class="container-fluid">
+                <div class="px-5 py-3">
+                    Copyright &copy; {{ 'now'|date('Y') }}, machinateur.dev
+                </div>
+
+                <div class="px-5 py-3">
+                    <a class="text-decoration-none px-2" href="https://github.com/machinateur"
+                       title="machinateur on GitHub">
+                        {{ source('svg/github.svg') }}
+                    </a>
+                    <a class="text-decoration-none px-2" href="https://twitter.com/machinateur"
+                       title="machinateur on Twitter">
+                        {{ source('svg/twitter.svg') }}
+                    </a>
+                </div>
+
+                <div class="text-center w-100 small px-5 py-3">
+                    Made with <span class="text-danger">{{ source('svg/heart-fill.svg') }}</span> in Germany
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    <script type="text/javascript">
+        // TODO: Implement both dynamic components.
+    </script>
+{% endblock %}
