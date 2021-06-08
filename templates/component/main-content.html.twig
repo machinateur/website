@@ -37,6 +37,10 @@
                         var button = component.querySelector('button[type="button"]');
 
                         button.addEventListener('click', function (event) {
+                            if (document.body.dataset.appMainContent === location.hash) {
+                                location.hash = '';
+                            }
+
                             location.hash = document.body.dataset.appMainContent;
                         }, false);
                     }

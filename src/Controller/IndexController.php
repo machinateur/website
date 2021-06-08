@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as ControllerAbstract;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -32,9 +33,10 @@ class IndexController extends ControllerAbstract
      *
      * @param Request $request
      * @param string|null $path
+     * @param array $context
      * @return Response
      */
-    public function view(Request $request, ?string $path = null): Response
+    public function view(Request $request, ?string $path = null, array $context = []): Response
     {
         if (null === $path) {
             $view = 'content.html.twig';
@@ -50,8 +52,20 @@ class IndexController extends ControllerAbstract
             throw new NotFoundHttpException();
         }
 
+        $context['blog_posts'] =
+            iterator_to_array(
+                Finder::create()
+                    ->files()
+                    ->name('/^[a-z0-9]+(?:-[a-z0-9]+)*.html.twig$/')
+                    ->path('content/blog/')
+                    ->in(
+                        $this->getParameter('twig.default_path')
+                    ),
+                false
+            );
+
         try {
-            $content = $templating->render($view);
+            $content = $templating->render($view, $context);
         } catch (Error $error) {
             throw new BadRequestHttpException('', $error);
         }

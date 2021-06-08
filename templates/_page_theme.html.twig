@@ -1,10 +1,11 @@
 {% extends '_page.html.twig' %}
 
-{% set reader_mode = false %}
-{% set dark_mode = false %}
-{% set zoom_level = 0 %}
-{% set main_content_id = '#main' %}
+{% set reader_mode = reader_mode|default(false) %}
+{% set dark_mode = dark_mode|default(false) %}
+{% set zoom_level = zoom_level|default(0) %}
+{% set main_content_id = main_content_id|default('#main') %}
 
+{% set navbar_brand_size = 32 %}
 {% set navbar_content = [
     {
         'label': 'Overview',
@@ -54,6 +55,8 @@
     {% with %}{{ block('style', 'component/main-content.html.twig') }}{% endwith %}
 {% endblock %}
 
+{% block title %}machinateur.dev{% endblock %}
+
 {% block body_class %}bg-white{% endblock %}
 
 {% block body_data %}
@@ -69,8 +72,8 @@
             <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom border-top">
                 <div class="container-fluid">
                     <a class="navbar-brand font-monospace py-3" href="#">
-                        <img src="res/image/profile-machinateur.png" alt="" width="32" height="32"
-                             class="border rounded-circle">
+                        <img src="/res/image/profile-machinateur.png" alt="" width="{{ navbar_brand_size }}"
+                             height="{{ navbar_brand_size }}" class="border rounded-circle">
 
                         machinateur.dev
                     </a>
@@ -110,7 +113,7 @@
     {% endblock %}
 
     <a class="invisible" id="{{ main_content_id[1:] }}"></a>
-    <div class="bg-white border-top border-5 min-vh-100" style="border-color: {{ random_color }}!important;">
+    <div class="bg-light border-top border-5 min-vh-100" style="border-color: {{ random_color }}!important;">
         <div class="container">
             {% block body_content %}
             {% endblock %}

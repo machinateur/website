@@ -6,9 +6,11 @@
         body {
             transition: filter 500ms linear;
         }
+
         body[data-app-theme="dark"] {
             filter: invert(100%);
         }
+
         body[data-app-theme="light"] {
             filter: invert(0%);
         }
@@ -21,12 +23,13 @@
 
 {% block html %}
     <!-- component: theme -->
-    <div class="d-flex mx-2 mt-2" data-app-component="theme">
+    <div class="d-flex mx-2 mt-2" style="font-size: 16px;" data-app-component="theme">
         <div class="lh-sm">
             {{ source('svg/brightness-high.svg') }}
         </div>
         <div class="form-check form-switch ps-5">
-            <input class="form-check-input" type="checkbox" id="switchCheck{{ id }}"{% if value|default(false) %} checked{% endif %}>
+            <input class="form-check-input" type="checkbox"
+                   id="switchCheck{{ id }}"{% if value|default(false) %} checked{% endif %}>
             <label class="form-check-label" for="switchCheck{{ id }}">
             </label>
         </div>
@@ -42,19 +45,21 @@
         (function () {
             'use strict';
 
-            // TODO: Implement user preference.
-            //  https://css-tricks.com/a-complete-guide-to-dark-mode-on-the-web/#storing-preferences.
-
             function getTheme() {
                 var initialTheme = 'light';
 
-                var preferDarkTheme = window.matchMedia('(prefers-color-scheme: dark)');
-                if (preferDarkTheme.matches) {
-                    initialTheme = 'dark';
+                var theme = localStorage.getItem('component.theme.theme');
+                if (!!theme && ['dark', 'light'].includes(theme)) {
+                    initialTheme = theme;
                 } else {
-                    var date = new Date();
-                    if (7 > date.getHours() || 19 < date.getHours()) {
+                    var preferDarkTheme = window.matchMedia('(prefers-color-scheme: dark)');
+                    if (preferDarkTheme.matches) {
                         initialTheme = 'dark';
+                    } else {
+                        var date = new Date();
+                        if (7 > date.getHours() || 19 < date.getHours()) {
+                            initialTheme = 'dark';
+                        }
                     }
                 }
 
@@ -76,6 +81,8 @@
 
                         checkbox.addEventListener('change', function (event) {
                             document.body.dataset.appTheme = !!checkbox.checked ? 'dark' : 'light';
+
+                            localStorage.setItem('component.theme.theme', document.body.dataset.appTheme);
                         }, false);
 
                         checkbox.checked = 'dark' === document.body.dataset.appTheme;

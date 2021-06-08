@@ -1,0 +1,76 @@
+{% extends '_page_theme.html.twig' %}
+
+{% block title %}{{ parent() }} - Blog - {{ block('post_title') }}{% endblock %}
+
+{% set profile_picture_size = profile_picture_size|default(32) %}
+{% set recent_blog_posts = blog_posts|sort((a, b) => block('post_date', a.relativePathname) < block('post_date', b.relativePathname))|slice(0, 3) %}
+
+{# metadata #}
+{% block post_title %}{% endblock %}
+{% block post_author %}{% endblock %}
+{% block post_date %}{% endblock %}
+{% block post_tags %}{% endblock %}
+{# content #}
+{% block post_content %}
+{% endblock %}
+
+{% block body_content %}
+    {% set author = block('post_author') %}
+    {% set author_link = 'https://github.com/' ~ author %}
+    {% set author_profile = author_link ~ '.png' %}
+
+    <div class="mx-auto my-5 px-3">
+        <div style="margin-bottom: 4rem;">
+            <h1 class="fw-500">{{ block('post_title') }}</h1>
+
+            <div class="d-flex align-items-center mb-4 rm">
+                <a class="d-flex align-items-center text-muted text-decoration-none" href="{{ author_link }}"
+                   target="_blank">
+                    <img class="mb-0 me-2" src="{{ author_profile ~ '?size=' ~ profile_picture_size }}" alt=""
+                         width="{{ profile_picture_size }}" height="{{ profile_picture_size }}">
+                    <span>{{ '@' ~ author }}</span>
+                </a>
+
+                <span class="d-flex align-items-center ms-3 text-muted" title="Thu, 13 May 2021 00:00:00 +0000">
+                    <span class="me-2">{{ source('svg/calendar-event.svg') }}</span> {{ block('post_date')|date('M d, Y') }}
+                </span>
+            </div>
+
+            {{ block('post_content') }}
+        </div>
+
+        <div class="py-4 border-top rm">
+            <h2 class="h4">Topics</h2>
+
+            {% for tag in block('post_tags')|split(',') %}
+                <span class="badge rounded-pill bg-secondary">
+                    {{ tag|trim(' ', 'both') }}
+                </span>
+            {% endfor %}
+        </div>
+
+        <div class="py-4 border-top rm">
+            <h2 class="h4">Recent posts</h2>
+
+            <ul class="list-unstyled">
+                {% for blog_post in recent_blog_posts %}
+                    <li>
+                        <h4>
+                            <a class="text-decoration-none" href="{{ path('index_view', {
+                                'path': blog_post.relativePath|replace({
+                                    '\\': '/',
+                                })|trim('/', 'left') ~ '/' ~ blog_post.filenameWithoutExtension[:-'.html'|length],
+                            }) }}">
+                                {{ block('post_title', blog_post.relativePathname) }}
+
+                                <small class="text-secondary" style="font-size: 75%;">
+                                    {{ block('post_date', blog_post.relativePathname)|date('d M Y') }}
+                                </small>
+                            </a>
+                        </h4>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

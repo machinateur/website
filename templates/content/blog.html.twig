@@ -1,0 +1,9 @@
+{% extends '_page_theme.html.twig' %}
+
+{% set recent_blog_posts = blog_posts|sort((a, b) => block('post_date', a.relativePathname) < block('post_date', b.relativePathname)) %}
+
+{% block body_content %}
+    {% for blog_post in recent_blog_posts %}
+        <p>{{ blog_post.filenameWithoutExtension }}</p>
+    {% endfor %}
+{% endblock %}
