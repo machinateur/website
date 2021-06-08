@@ -69,19 +69,19 @@
             <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom border-top">
                 <div class="container-fluid">
                     <a class="navbar-brand font-monospace py-3" href="#">
-                        <img src="res/image/profile-machinateur.png" alt="" width="auto" height="30"
+                        <img src="res/image/profile-machinateur.png" alt="" width="32" height="32"
                              class="border rounded-circle">
 
                         machinateur.dev
                     </a>
 
-                    <button class="navbar-toggler mx-auto" type="button" data-bs-toggle="collapse"
+                    <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                        <div class="navbar-nav justify-content-around w-100 mx-auto my-2 my-lg-0 py-3">
+                        <div class="navbar-nav justify-content-around w-100 mx-auto my-2 my-lg-0 px-5 px-lg-0 py-3">
                             {% block navbar_content %}
                                 {% for navbar_link in navbar_content %}
                                     <a class="nav-link" href="{{ path('index_view', {
@@ -91,7 +91,7 @@
                             {% endblock %}
                         </div>
 
-                        <div class="d-flex text-center border border-0-lg rounded rounded-3 py-3">
+                        <div class="d-flex text-center border border-0-lg rounded rounded-3 px-5 px-lg-0 py-3">
                             {% with { id: 0 } %}{{ block('html', 'component/reader-mode.html.twig') }}{% endwith %}
 
                             {% with { id: 0, value: dark_mode } %}{{ block('html', 'component/theme.html.twig') }}{% endwith %}
