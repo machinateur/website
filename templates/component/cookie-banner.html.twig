@@ -1,0 +1,117 @@
+{# component: cookie-banner #}
+
+{% block style %}
+    <!-- component: cookie-banner -->
+    <style>
+        body[data-app-cookie-banner="true"] div[data-app-component="cookie-banner"] {
+            display: block;
+        }
+
+        body[data-app-cookie-banner="false"] div[data-app-component="cookie-banner"] {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block data %}
+    data-app-cookie-banner="{{ (not value|default(false)) ? 'true' : 'false' }}"
+{% endblock %}
+
+{% block html %}
+    <!-- component: cookie-banner -->
+    <div class="alert alert-light border alert-dismissible fade show my-3 pb-0" role="alert"
+         data-app-component="cookie-banner">
+        <p>
+            {{ source('svg/question-square.svg') }} <strong class="ms-1">Heads up!</strong>
+        </p>
+
+        <p>
+            I use cookies in my site to offer you a better browsing experience, personalise content, preferences and
+            ads, as many others do. I also use cookies to analyse traffic. By continuing to use this site, you consent
+            to these cookies being used.
+        </p>
+
+        <div style="margin-right: -2rem;">
+            <hr>
+
+            <button type="button" class="btn btn-outline-primary btn-sm mb-3">
+                Alright, fine
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm mb-3">
+                No, please do not use cookies
+            </button>
+        </div>
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <!-- component: cookie-banner -->
+    <script type="text/javascript">
+        (function () {
+            'use strict';
+
+            function getCookieConsent() {
+                var value = document.cookie;
+
+                if (-1 < value.indexOf(';')) {
+                    value = value.split(';')
+                        .find(function (row) {
+                            return row.startsWith('cookie_consent=');
+                        });
+                }
+
+                if ('undefined' === typeof value || '' === value) {
+                    value = 'cookie_consent=false';
+                }
+
+                return value.split('=')[1];
+            }
+
+            function getTimeout(ms) {
+                return (12 /*months*/ * 30 /*days*/ * 24 /*hours*/ * 60 /*minutes*/ * 60 /*seconds*/ * ms ? (1000 /*milliseconds*/) : 1);
+            }
+
+            document.body.dataset.appCookieBanner = 'false' === getCookieConsent() ? 'true' : 'false';
+
+            var list = document.querySelectorAll('[data-app-component="cookie-banner"]');
+
+            Array.prototype.slice.call(list)
+                .forEach(
+                    /**
+                     * @param {HTMLDivElement} component
+                     */
+                    function (component) {
+                        /** @type {HTMLDivElement} */
+                        var buttonGroup = component.querySelector('div');
+
+                        /** @type {HTMLButtonElement} */
+                        var buttonYes = buttonGroup.querySelector('button[type="button"]:first-of-type');
+                        /** @type {HTMLButtonElement} */
+                        var buttonNo = buttonGroup.querySelector('button[type="button"]:last-of-type');
+
+                        buttonYes.addEventListener('click', function (event) {
+                            var date = new Date();
+                            date.setTime(date.getTime() + getTimeout(true));
+
+                            window.document.cookie = 'cookie_consent=true'
+                                + '; expires=' + date.toUTCString() + '; Max-Age=' + getTimeout(false)
+                                + '; path=/'
+                                // + '; domain=' + location.hostname.replace(/^www\./, '')
+                                + '; secure'
+                                + '; samesite=lax';
+                        });
+                        buttonNo.addEventListener('click', function (event) {
+                            window.document.cookie = 'cookie_consent=false'
+                                + '; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0'
+                                + '; path=/'
+                                + '; domain=' + location.hostname.replace(/^www\./, '')
+                                + '; secure'
+                                + '; samesite=lax';
+                        });
+                    }
+                );
+        })();
+    </script>
+{% endblock %}

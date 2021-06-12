@@ -69,12 +69,12 @@
             Array.prototype.slice.call(list)
                 .forEach(
                     /**
-                     * @param component HTMLDivElement
+                     * @param {HTMLDivElement} component
                      */
                     function (component) {
-                        /** @type HTMLButtonElement */
+                        /** @type {HTMLButtonElement} */
                         var buttonZoomOut = component.querySelector('button[type="button"]:first-child');
-                        /** @type HTMLButtonElement */
+                        /** @type {HTMLButtonElement} */
                         var buttonZoomIn = component.querySelector('button[type="button"]:last-child');
 
                         buttonZoomOut.addEventListener('click', function (event) {

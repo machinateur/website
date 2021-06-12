@@ -30,10 +30,10 @@
             Array.prototype.slice.call(list)
                 .forEach(
                     /**
-                     * @param component HTMLDivElement
+                     * @param {HTMLDivElement} component
                      */
                     function (component) {
-                        /** @type HTMLButtonElement */
+                        /** @type {HTMLButtonElement} */
                         var button = component.querySelector('button[type="button"]');
 
                         button.addEventListener('click', function (event) {

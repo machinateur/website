@@ -16,17 +16,19 @@ use Twig\Error\Error;
 /**
  * Class IndexController
  *
- * @Route("", name="index_")
+ * @Route("", name="index_", schemes={
+ *     "https",
+ * })
  *
  * @package App\Controller
  */
 class IndexController extends ControllerAbstract
 {
     /**
-     * @Route("/{path}", name="view", methods={
-     *     "GET",
-     * }, requirements={
+     * @Route("/{path}", name="view", requirements={
      *     "path" = "^(?:\/?[a-z0-9]+(?:-[a-z0-9]+)*)+$",
+     * }, methods={
+     *     "GET",
      * })
      *
      * @see https://regex101.com/r/GRZ0vv/1
@@ -39,10 +41,12 @@ class IndexController extends ControllerAbstract
     public function view(Request $request, ?string $path = null, array $context = []): Response
     {
         if (null === $path) {
-            $view = 'content.html.twig';
-        } else {
-            $view = 'content/' . $path . '.html.twig';
+            $path = 'overview';
+        } elseif ($path === 'overview') {
+            throw new NotFoundHttpException();
         }
+
+        $view = 'content/' . $path . '.html.twig';
 
         /** @var Environment $templating */
         $templating = $this->container->get('twig');

@@ -40,10 +40,10 @@
             Array.prototype.slice.call(list)
                 .forEach(
                     /**
-                     * @param component HTMLDivElement
+                     * @param {HTMLDivElement} component
                      */
                     function (component) {
-                        /** @type HTMLInputElement */
+                        /** @type {HTMLInputElement} */
                         var checkbox = component.querySelector('input[type="checkbox"]');
 
                         checkbox.addEventListener('change', function (event) {

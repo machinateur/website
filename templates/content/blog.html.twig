@@ -2,6 +2,15 @@
 
 {% block title %}{{ parent() }} - Blog{% endblock %}
 
+{% block style %}
+    {{ parent() }}
+    <style>
+        .mb-0-p > p {
+            margin-bottom: 0;
+        }
+    </style>
+{% endblock %}
+
 {% set profile_picture_size = profile_picture_size|default(32) %}
 {% set recent_blog_posts = blog_posts|sort((a, b) => block('post_date', a.relativePathname) < block('post_date', b.relativePathname)) %}
 
@@ -48,26 +57,17 @@
                         </div>
                     {% endblock %}
 
-                    {#
-                    <div class="py-2 text-muted small">
-                        {{ block('post_content', blog_post.relativePathname)|replace({
-                            '<h1': '<p',
-                            '</h1>': '</p>',
-                            '<h2': '<p',
-                            '</h2>': '</p>',
-                            '<h3': '<p',
-                            '</h3>': '</p>',
-                            '<h4': '<p',
-                            '</h4>': '</p>',
-                            '<h5': '<p',
-                            '</h5>': '</p>',
-                            '<h6': '<p',
-                            '</h6>': '</p>',
-                        })|striptags([
+                    <div class="pt-2 text-muted small mb-0-p">
+                        {{ block('post_content', blog_post.relativePathname)|pcre_replace([
+                            '#<h[0-6]#',
+                            '#<\/h[0-6]>#',
+                        ], [
+                            '<p',
+                            '</p>',
+                        ])|striptags([
                             'p'
                         ])|u.truncate(69, '...', true)|raw }}
                     </div>
-                    #}
                 </div>
             {% endfor %}
         </div>

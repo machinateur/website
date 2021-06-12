@@ -7,6 +7,13 @@
             transition: filter 500ms linear;
         }
 
+        /**
+         * WARNING: The filter property breaks fixed positioning!
+         *  https://bugzilla.mozilla.org/show_bug.cgi?id=1311070#c8
+         *  https://bugzilla.mozilla.org/show_bug.cgi?id=1125767#c5
+         *  https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/The_stacking_context
+         */
+
         body[data-app-theme="dark"] {
             filter: invert(100%);
         }
@@ -73,10 +80,10 @@
             Array.prototype.slice.call(list)
                 .forEach(
                     /**
-                     * @param component HTMLDivElement
+                     * @param {HTMLDivElement} component
                      */
                     function (component) {
-                        /** @type HTMLInputElement */
+                        /** @type {HTMLInputElement} */
                         var checkbox = component.querySelector('input[type="checkbox"]');
 
                         checkbox.addEventListener('change', function (event) {

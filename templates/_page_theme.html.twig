@@ -4,6 +4,7 @@
 {% set dark_mode = dark_mode|default(false) %}
 {% set zoom_level = zoom_level|default(0) %}
 {% set main_content_id = main_content_id|default('#main') %}
+{% set cookie_consent = cookie_consent|default(false) %}
 
 {% set navbar_brand_size = 32 %}
 {% set navbar_content = [
@@ -53,6 +54,7 @@
     {% with %}{{ block('style', 'component/theme.html.twig') }}{% endwith %}
     {% with %}{{ block('style', 'component/zoom.html.twig') }}{% endwith %}
     {% with %}{{ block('style', 'component/main-content.html.twig') }}{% endwith %}
+    {% with %}{{ block('style', 'component/cookie-banner.html.twig') }}{% endwith %}
 {% endblock %}
 
 {% block title %}machinateur.dev{% endblock %}
@@ -64,6 +66,7 @@
     {% with { value: dark_mode } %}{{ block('data', 'component/theme.html.twig') }}{% endwith %}
     {% with { value: zoom_level } %}{{ block('data', 'component/zoom.html.twig') }}{% endwith %}
     {% with { value: main_content_id } %}{{ block('data', 'component/main-content.html.twig') }}{% endwith %}
+    {% with { value: cookie_consent } %}{{ block('data', 'component/cookie-banner.html.twig') }}{% endwith %}
 {% endblock %}
 
 {% block body %}
@@ -71,11 +74,13 @@
         {% block navbar %}
             <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom border-top">
                 <div class="container-fluid">
-                    <a class="navbar-brand font-monospace py-3" href="#">
+                    <a class="navbar-brand font-monospace py-3" href="{{ path('index_view', {
+                        'path': '',
+                    }) }}">
                         <img src="/res/image/profile-machinateur.png" alt="" width="{{ navbar_brand_size }}"
                              height="{{ navbar_brand_size }}" class="border rounded-circle">
 
-                        machinateur.dev
+                        <span>machinateur.dev</span>
                     </a>
 
                     <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse"
@@ -115,6 +120,8 @@
     <a class="invisible" id="{{ main_content_id[1:] }}"></a>
     <div class="bg-light border-top border-5 min-vh-100" style="border-color: {{ random_color }}!important;">
         <div class="container">
+            {% with { id: 0 } %}{{ block('html', 'component/cookie-banner.html.twig') }}{% endwith %}
+
             {% block body_content %}
             {% endblock %}
         </div>
@@ -122,7 +129,7 @@
 
     {% block body_content_append %}
         <div class="navbar navbar-light bg-white border-bottom border-top">
-            <div class="container-fluid">
+            <div class="container-fluid justify-content-around">
                 <div class="px-5 py-3">
                     Copyright &copy; {{ 'now'|date('Y') }}, machinateur.dev
                 </div>
@@ -152,4 +159,5 @@
     {% with %}{{ block('script', 'component/theme.html.twig') }}{% endwith %}
     {% with %}{{ block('script', 'component/zoom.html.twig') }}{% endwith %}
     {% with %}{{ block('script', 'component/main-content.html.twig') }}{% endwith %}
+    {% with %}{{ block('script', 'component/cookie-banner.html.twig') }}{% endwith %}
 {% endblock %}
