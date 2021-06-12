@@ -7,5 +7,21 @@
 {% block post_tags %}hello,world{% endblock %}
 {# content #}
 {% block post_content %}
-    hello, this is content
+{% apply markdown_to_html %}
+# headline
+
+hello, this is markdown content content
+
+## sub-headline
+
+> citation
+
+**bold** _italic_ `code`
+
+```js
+//alert('test');
+```
+
+[A link](https://google.com/) (Google)
+{% endapply %}
 {% endblock %}

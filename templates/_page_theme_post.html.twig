@@ -15,12 +15,14 @@
 {% endblock %}
 
 {% block body_content %}
-    {% set author = block('post_author') %}
-    {% set author_link = 'https://github.com/' ~ author %}
-    {% set author_profile = author_link ~ '.png' %}
+    {# TODO: Add optional header image. #}
 
-    <div class="mx-auto my-5 px-3">
+    <div class="mx-auto py-5 px-3">
         <div style="margin-bottom: 4rem;">
+            {% set author = block('post_author') %}
+            {% set author_link = 'https://github.com/' ~ author %}
+            {% set author_profile = author_link ~ '.png' %}
+
             <h1 class="fw-500">{{ block('post_title') }}</h1>
 
             <div class="d-flex align-items-center mb-4 rm">
@@ -31,7 +33,8 @@
                     <span>{{ '@' ~ author }}</span>
                 </a>
 
-                <span class="d-flex align-items-center ms-3 text-muted" title="Thu, 13 May 2021 00:00:00 +0000">
+                <span class="d-flex align-items-center ms-3 text-muted"
+                      title="{{ block('post_date')|date('D, d M Y H:i:s') }}">
                     <span class="me-2">{{ source('svg/calendar-event.svg') }}</span> {{ block('post_date')|date('M d, Y') }}
                 </span>
             </div>
@@ -59,7 +62,8 @@
                             <a class="text-decoration-none" href="{{ path('index_view', {
                                 'path': blog_post.relativePath|replace({
                                     '\\': '/',
-                                })|trim('/', 'left') ~ '/' ~ blog_post.filenameWithoutExtension[:-'.html'|length],
+                                })['content'|length:]|trim('/', 'left')
+                                ~ '/'~ blog_post.filenameWithoutExtension[:-'.html'|length],
                             }) }}">
                                 {{ block('post_title', blog_post.relativePathname) }}
 
@@ -73,4 +77,6 @@
             </ul>
         </div>
     </div>
+
+    {# TODO: Scroll to top button. #}
 {% endblock %}

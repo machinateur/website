@@ -17,6 +17,9 @@
     "doctrine/lexer": {
         "version": "1.2.1"
     },
+    "erusev/parsedown": {
+        "version": "1.7.4"
+    },
     "monolog/monolog": {
         "version": "2.2.0"
     },
@@ -352,6 +355,12 @@
         "version": "1.2.0"
     },
     "twig/extra-bundle": {
+        "version": "v3.3.1"
+    },
+    "twig/markdown-extra": {
+        "version": "v3.3.1"
+    },
+    "twig/string-extra": {
         "version": "v3.3.1"
     },
     "twig/twig": {

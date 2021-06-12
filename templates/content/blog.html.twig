@@ -1,9 +1,75 @@
 {% extends '_page_theme.html.twig' %}
 
+{% block title %}{{ parent() }} - Blog{% endblock %}
+
+{% set profile_picture_size = profile_picture_size|default(32) %}
 {% set recent_blog_posts = blog_posts|sort((a, b) => block('post_date', a.relativePathname) < block('post_date', b.relativePathname)) %}
 
 {% block body_content %}
-    {% for blog_post in recent_blog_posts %}
-        <p>{{ blog_post.filenameWithoutExtension }}</p>
-    {% endfor %}
+    <div class="mx-auto py-5 px-3">
+        <div>
+            <h1>Blog</h1>
+        </div>
+
+        {# TODO: Implement search. #}
+        {# TODO: Add spacing between h1 and list #}
+
+        <div class="">
+            {% for blog_post in recent_blog_posts %}
+                <div class="{{ loop.first ? 'border-top-0' : 'border-top' }} py-4">
+                    {% block post_headline %}
+                        {% set author = block('post_author', blog_post.relativePathname) %}
+                        {% set author_link = 'https://github.com/' ~ author %}
+                        {% set author_profile = author_link ~ '.png' %}
+
+                        <a class="text-decoration-none" href="{{ path('index_view', {
+                            'path': blog_post.relativePath|replace({
+                                '\\': '/',
+                            })['content'|length:]|trim('/', 'left')
+                            ~ '/'~ blog_post.filenameWithoutExtension[:-'.html'|length],
+                        }) }}">
+                            <h2 class="h1 fw-500">{{ block('post_title', blog_post.relativePathname) }}</h2>
+                        </a>
+
+                        <div class="d-flex align-items-center">
+                            <a class="d-flex align-items-center text-muted text-decoration-none"
+                               href="{{ author_link }}"
+                               target="_blank">
+                                <img class="mb-0 me-2" src="{{ author_profile ~ '?size=' ~ profile_picture_size }}"
+                                     alt=""
+                                     width="{{ profile_picture_size }}" height="{{ profile_picture_size }}">
+                                <span>{{ '@' ~ author }}</span>
+                            </a>
+
+                            <span class="d-flex align-items-center ms-3 text-muted"
+                                  title="{{ block('post_date', blog_post.relativePathname)|date('D, d M Y H:i:s') }}">
+                                <span class="me-2">{{ source('svg/calendar-event.svg') }}</span> {{ block('post_date', blog_post.relativePathname)|date('M d, Y') }}
+                            </span>
+                        </div>
+                    {% endblock %}
+
+                    {#
+                    <div class="py-2 text-muted small">
+                        {{ block('post_content', blog_post.relativePathname)|replace({
+                            '<h1': '<p',
+                            '</h1>': '</p>',
+                            '<h2': '<p',
+                            '</h2>': '</p>',
+                            '<h3': '<p',
+                            '</h3>': '</p>',
+                            '<h4': '<p',
+                            '</h4>': '</p>',
+                            '<h5': '<p',
+                            '</h5>': '</p>',
+                            '<h6': '<p',
+                            '</h6>': '</p>',
+                        })|striptags([
+                            'p'
+                        ])|u.truncate(69, '...', true)|raw }}
+                    </div>
+                    #}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}
