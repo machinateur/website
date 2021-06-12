@@ -1,5 +1,7 @@
 {% extends '_page_theme.html.twig' %}
 
+{% set highlighted_code = true %}
+
 {% block title %}{{ parent() }} - Blog - {{ block('post_title') }}{% endblock %}
 
 {% set profile_picture_size = profile_picture_size|default(32) %}
@@ -26,8 +28,6 @@
         {% endif %}
 
         <div style="margin-bottom: 4rem;">
-            {% set profile_picture_size = profile_picture_size|default(32) %}
-
             {% set author = block('post_author') %}
             {% set author_link = 'https://github.com/' ~ author %}
             {% set author_profile = author_link ~ '.png' %}

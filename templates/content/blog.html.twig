@@ -26,36 +26,33 @@
         <div class="">
             {% for blog_post in recent_blog_posts %}
                 <div class="{{ loop.first ? 'border-top-0' : 'border-top' }} py-4">
-                    {% block post_headline %}
-                        {% set author = block('post_author', blog_post.relativePathname) %}
-                        {% set author_link = 'https://github.com/' ~ author %}
-                        {% set author_profile = author_link ~ '.png' %}
+                    {% set author = block('post_author', blog_post.relativePathname) %}
+                    {% set author_link = 'https://github.com/' ~ author %}
+                    {% set author_profile = author_link ~ '.png' %}
 
-                        <a class="text-decoration-none" href="{{ path('index_view', {
-                            'path': blog_post.relativePath|replace({
-                                '\\': '/',
-                            })['content'|length:]|trim('/', 'left')
-                            ~ '/'~ blog_post.filenameWithoutExtension[:-'.html'|length],
-                        }) }}">
-                            <h2 class="h1 fw-500">{{ block('post_title', blog_post.relativePathname) }}</h2>
+                    <a class="text-decoration-none" href="{{ path('index_view', {
+                        'path': blog_post.relativePath|replace({
+                            '\\': '/',
+                        })['content'|length:]|trim('/', 'left')
+                        ~ '/'~ blog_post.filenameWithoutExtension[:-'.html'|length],
+                    }) }}">
+                        <h2 class="h1 fw-500">{{ block('post_title', blog_post.relativePathname) }}</h2>
+                    </a>
+
+                    <div class="d-flex align-items-center">
+                        <a class="d-flex align-items-center text-muted text-decoration-none" href="{{ author_link }}"
+                           target="_blank">
+                            <img class="mb-0 me-2" src="{{ author_profile ~ '?size=' ~ profile_picture_size }}"
+                                 alt=""
+                                 width="{{ profile_picture_size }}" height="{{ profile_picture_size }}">
+                            <span>{{ '@' ~ author }}</span>
                         </a>
 
-                        <div class="d-flex align-items-center">
-                            <a class="d-flex align-items-center text-muted text-decoration-none"
-                               href="{{ author_link }}"
-                               target="_blank">
-                                <img class="mb-0 me-2" src="{{ author_profile ~ '?size=' ~ profile_picture_size }}"
-                                     alt=""
-                                     width="{{ profile_picture_size }}" height="{{ profile_picture_size }}">
-                                <span>{{ '@' ~ author }}</span>
-                            </a>
-
-                            <span class="d-flex align-items-center ms-3 text-muted"
-                                  title="{{ block('post_date', blog_post.relativePathname)|date('D, d M Y H:i:s') }}">
-                                <span class="me-2">{{ source('svg/calendar-event.svg') }}</span> {{ block('post_date', blog_post.relativePathname)|date('M d, Y') }}
-                            </span>
-                        </div>
-                    {% endblock %}
+                        <span class="d-flex align-items-center ms-3 text-muted"
+                              title="{{ block('post_date', blog_post.relativePathname)|date('D, d M Y H:i:s') }}">
+                            <span class="me-2">{{ source('svg/calendar-event.svg') }}</span> {{ block('post_date', blog_post.relativePathname)|date('M d, Y') }}
+                        </span>
+                    </div>
 
                     <div class="pt-2 text-muted small mb-0-p">
                         {{ block('post_content', blog_post.relativePathname)|pcre_replace([

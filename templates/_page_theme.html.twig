@@ -1,5 +1,7 @@
 {% extends '_page.html.twig' %}
 
+{% set highlighted_code = highlighted_code|default(false) %}
+
 {% set reader_mode = reader_mode|default(false) %}
 {% set dark_mode = dark_mode|default(false) %}
 {% set zoom_level = zoom_level|default(0) %}
@@ -43,6 +45,9 @@
 
 {% block style %}
     {{ parent() }}
+    {% if highlighted_code is same as(true) %}
+        <link rel="stylesheet" href="/res/style/highlight/default.css">
+    {% endif %}
     <style>
         @media (min-width: 992px) {
             .border-0-lg {
@@ -155,6 +160,14 @@
 
 {% block script %}
     {{ parent() }}
+    {% if highlighted_code is same as(true) %}
+        <script src="/res/script/highlight/highlight.min.js" type="text/javascript"></script>
+        <script typeof="text/javascript">
+            (function () {
+                hljs.highlightAll();
+            })();
+        </script>
+    {% endif %}
     {% with %}{{ block('script', 'component/reader-mode.html.twig') }}{% endwith %}
     {% with %}{{ block('script', 'component/theme.html.twig') }}{% endwith %}
     {% with %}{{ block('script', 'component/zoom.html.twig') }}{% endwith %}
