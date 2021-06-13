@@ -19,10 +19,14 @@
         'author': block('post_author', p.relativePathname),
         'date': block('post_date', p.relativePathname),
         'tags': block('post_tags', p.relativePathname)|split(','),
+        'read_time': block('post_read_time', p.relativePathname),
         'image': block('post_image', p.relativePathname),
         'image_alt': block('post_image_alt', p.relativePathname),
         'content': block('post_content', p.relativePathname),
     },
+    'path': p.relativePath|replace({
+        '\\': '/',
+    })['content'|length:]|trim('/', 'left') ~ '/'~ p.filenameWithoutExtension[:-'.html'|length],
 })|sort((a, b) => a.post_data.date < b.post_data.date) %}
 
 {% block body_content %}
@@ -31,7 +35,7 @@
     </script>
 
     <div class="mx-auto py-5 px-3">
-        <div class="pb-3 border-bottom">
+        <div class="border-bottom pb-3">
             <h1 class="display-1">Blog</h1>
 
             {% set search_authors = recent_blog_posts|map((p) => p.post_data.author)|unique %}
@@ -86,6 +90,7 @@
                                 'author',
                                 'date',
                                 'tags',
+                                'read_time',
                             ])|json_encode|raw }}
                         };
                     </script>
@@ -95,10 +100,7 @@
                     {% set author_profile = author_link ~ '.png' %}
 
                     <a class="text-decoration-none" href="{{ path('index_view', {
-                        'path': blog_post.fileinfo.relativePath|replace({
-                            '\\': '/',
-                        })['content'|length:]|trim('/', 'left')
-                        ~ '/'~ blog_post.fileinfo.filenameWithoutExtension[:-'.html'|length],
+                        'path': blog_post.path,
                     }) }}">
                         <h2 class="h1 fw-500">{{ blog_post.post_data.title }}</h2>
                     </a>
@@ -115,6 +117,12 @@
                               title="{{ blog_post.post_data.date|date('D, d M Y H:i:s') }}">
                             <span class="me-2">{{ source('svg/calendar-event.svg') }}</span> {{ blog_post.post_data.date|date('M d, Y') }}
                         </span>
+
+                        {% if blog_post.post_data.read_time is not empty %}
+                            <span class="d-flex align-items-center ms-3 text-muted">
+                                <span class="me-2">{{ source('svg/clock.svg') }}</span> {{ blog_post.post_data.read_time }}
+                            </span>
+                        {% endif %}
                     </div>
 
                     <div class="pt-2 text-muted small mb-0-p">
@@ -130,6 +138,14 @@
                     </div>
                 </div>
             {% endfor %}
+        </div>
+
+        <div class="py-3 border-top">
+            <div class="text-center">
+                <a class="btn btn-outline-primary btn-lg" href="{{ main_content_id }}">
+                    Back to page start
+                </a>
+            </div>
         </div>
     </div>
 {% endblock %}

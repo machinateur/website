@@ -12,10 +12,14 @@
         'author': block('post_author', p.relativePathname),
         'date': block('post_date', p.relativePathname),
         'tags': block('post_tags', p.relativePathname)|split(','),
+        'read_time': block('post_read_time', p.relativePathname),
         'image': block('post_image', p.relativePathname),
         'image_alt': block('post_image_alt', p.relativePathname),
         'content': block('post_content', p.relativePathname),
     },
+    'path': p.relativePath|replace({
+        '\\': '/',
+    })['content'|length:]|trim('/', 'left') ~ '/'~ p.filenameWithoutExtension[:-'.html'|length],
 })|sort((a, b) => a.post_data.date < b.post_data.date)|slice(0, 3) %}
 {% set this_blog_post = recent_blog_posts|reduce((carry, p) => (carry is not null ? carry : (p.fileinfo.relativePathname|replace({
     '\\': '/',
@@ -26,6 +30,7 @@
 {% block post_author %}{% endblock %}
 {% block post_date %}{% endblock %}
 {% block post_tags %}{% endblock %}
+{% block post_read_time %}{% endblock %}
 {# content #}
 {% block post_image %}{% endblock %}
 {% block post_image_alt %}{% endblock %}
@@ -58,12 +63,18 @@
                       title="{{ this_blog_post.post_data.date|date('D, d M Y H:i:s') }}">
                     <span class="me-2">{{ source('svg/calendar-event.svg') }}</span> {{ this_blog_post.post_data.date|date('M d, Y') }}
                 </span>
+
+                {% if this_blog_post.post_data.read_time is not empty %}
+                    <span class="d-flex align-items-center ms-3 text-muted">
+                        <span class="me-2">{{ source('svg/clock.svg') }}</span> {{ this_blog_post.post_data.read_time }}
+                    </span>
+                {% endif %}
             </div>
 
             {{ this_blog_post.post_data.content|raw }}
         </div>
 
-        <div class="py-4 border-top rm">
+        <div class="border-top py-4 rm">
             <h2 class="h4">Topics</h2>
 
             {% for tag in this_blog_post.post_data.tags %}
@@ -73,7 +84,7 @@
             {% endfor %}
         </div>
 
-        <div class="py-4 border-top rm">
+        <div class="border-top py-4 rm">
             <h2 class="h4">Recent posts</h2>
 
             <ul class="list-unstyled">
@@ -81,10 +92,7 @@
                     <li>
                         <h4>
                             <a class="text-decoration-none" href="{{ path('index_view', {
-                                'path': blog_post.fileinfo.relativePath|replace({
-                                    '\\': '/',
-                                })['content'|length:]|trim('/', 'left')
-                                ~ '/'~ blog_post.fileinfo.filenameWithoutExtension[:-'.html'|length],
+                                'path': blog_post.path,
                             }) }}">
                                 {{ blog_post.post_data.title }}
 

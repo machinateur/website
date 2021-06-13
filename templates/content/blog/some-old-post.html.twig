@@ -9,5 +9,5 @@
 {% block post_image %}{% endblock %}
 {% block post_image_alt %}{% endblock %}
 {% block post_content %}
-    Well, you should not be here. It is forbidden to go this far back in time!
+    {{ source('content/blog/some-old-post.md', true)|markdown_to_html|raw }}
 {% endblock %}

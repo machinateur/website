@@ -2,14 +2,99 @@
 
 {% block title %}{{ parent() }} - Overview{% endblock %}
 
+{% block style %}
+    {{ parent() }}
+    <style>
+        .mb-0-p > p {
+            margin-bottom: 0;
+        }
+    </style>
+{% endblock %}
+
+{% set profile_picture_size = profile_picture_size|default(32) %}
+{% set recent_blog_posts = blog_posts|map((p) => {
+    'fileinfo': p,
+    'post_data': {
+        'title': block('post_title', p.relativePathname),
+        'author': block('post_author', p.relativePathname),
+        'date': block('post_date', p.relativePathname),
+        'tags': block('post_tags', p.relativePathname)|split(','),
+        'read_time': block('post_read_time', p.relativePathname),
+        'image': block('post_image', p.relativePathname),
+        'image_alt': block('post_image_alt', p.relativePathname),
+        'content': block('post_content', p.relativePathname),
+    },
+    'path': p.relativePath|replace({
+        '\\': '/',
+    })['content'|length:]|trim('/', 'left') ~ '/'~ p.filenameWithoutExtension[:-'.html'|length],
+})|sort((a, b) => a.post_data.date < b.post_data.date)|slice(0, 3) %}
+
 {% block body_content %}
     <div class="mx-auto py-5 px-3">
-        <div class="pb-3 border-bottom">
+        <div class="border-bottom pb-3">
             <h1 class="display-1">Overview</h1>
         </div>
 
-        <div class="py-4">
-            {{ source('content/overview.md')|markdown_to_html|raw }}
+        <div class="border-bottom py-3">
+            {{ source('content/overview.md', true)|markdown_to_html|raw }}
+        </div>
+
+        <div>
+            {% for blog_post in recent_blog_posts %}
+                <div class="{{ loop.first ? 'border-top-0' : 'border-top' }} py-4">
+                    {% set author = blog_post.post_data.author %}
+                    {% set author_link = 'https://github.com/' ~ author %}
+                    {% set author_profile = author_link ~ '.png' %}
+
+                    <a class="text-decoration-none" href="{{ path('index_view', {
+                        'path': blog_post.path,
+                    }) }}">
+                        <h2 class="h1 fw-500">{{ blog_post.post_data.title }}</h2>
+                    </a>
+
+                    <div class="d-flex align-items-center">
+                        <a class="d-flex align-items-center text-muted text-decoration-none" href="{{ author_link }}"
+                           target="_blank">
+                            <img class="mb-0 me-2 rounded" src="{{ author_profile ~ '?size=' ~ profile_picture_size }}"
+                                 alt="" width="{{ profile_picture_size }}" height="{{ profile_picture_size }}">
+                            <span>{{ '@' ~ author }}</span>
+                        </a>
+
+                        <span class="d-flex align-items-center ms-3 text-muted"
+                              title="{{ blog_post.post_data.date|date('D, d M Y H:i:s') }}">
+                            <span class="me-2">{{ source('svg/calendar-event.svg') }}</span> {{ blog_post.post_data.date|date('M d, Y') }}
+                        </span>
+
+                        {% if blog_post.post_data.read_time is not empty %}
+                            <span class="d-flex align-items-center ms-3 text-muted">
+                                <span class="me-2">{{ source('svg/clock.svg') }}</span> {{ blog_post.post_data.read_time }}
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <div class="pt-2 text-muted small mb-0-p">
+                        {{ blog_post.post_data.content|pcre_replace([
+                            '#<h[0-6]#',
+                            '#<\/h[0-6]>#',
+                        ], [
+                            '<p',
+                            '</p>',
+                        ])|striptags([
+                            'p'
+                        ])|u.truncate(240, '...', true)|raw }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="border-top py-3">
+            <div class="text-center">
+                <a class="btn btn-outline-primary btn-lg" href="{{ path('index_view', {
+                    'path': 'blog',
+                }) }}">
+                    More...
+                </a>
+            </div>
         </div>
     </div>
 {% endblock %}
