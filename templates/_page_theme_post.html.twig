@@ -5,7 +5,21 @@
 {% block title %}{{ parent() }} - Blog - {{ block('post_title') }}{% endblock %}
 
 {% set profile_picture_size = profile_picture_size|default(32) %}
-{% set recent_blog_posts = blog_posts|sort((a, b) => block('post_date', a.relativePathname) < block('post_date', b.relativePathname))|slice(0, 3) %}
+{% set recent_blog_posts = blog_posts|map((p) => {
+    'fileinfo': p,
+    'post_data': {
+        'title': block('post_title', p.relativePathname),
+        'author': block('post_author', p.relativePathname),
+        'date': block('post_date', p.relativePathname),
+        'tags': block('post_tags', p.relativePathname)|split(','),
+        'image': block('post_image', p.relativePathname),
+        'image_alt': block('post_image_alt', p.relativePathname),
+        'content': block('post_content', p.relativePathname),
+    },
+})|sort((a, b) => a.post_data.date < b.post_data.date)|slice(0, 3) %}
+{% set this_blog_post = recent_blog_posts|reduce((carry, p) => (carry is not null ? carry : (p.fileinfo.relativePathname|replace({
+    '\\': '/',
+}) is same as(current_view) ? p : null)), null) %}
 
 {# metadata #}
 {% block post_title %}{% endblock %}
@@ -20,41 +34,39 @@
 
 {% block body_content %}
     <div class="mx-auto py-5 px-3">
-        {% set thumbnail_image = thumbnail_image|default(block('post_image')) %}
-        {% set thumbnail_image_alt = thumbnail_image_alt|default(block('post_image_alt')) %}
-
-        {% if thumbnail_image is not empty %}
-            <img src="{{ thumbnail_image }}" class="img-fluid rounded rounded-3" alt="{{ thumbnail_image_alt }}">
+        {% if this_blog_post.post_data.image is not empty %}
+            <img src="{{ this_blog_post.post_data.image }}" class="img-fluid rounded rounded-3"
+                 alt="{{ this_blog_post.post_data.image_alt }}">
         {% endif %}
 
         <div style="margin-bottom: 4rem;">
-            {% set author = block('post_author') %}
+            {% set author = this_blog_post.post_data.author %}
             {% set author_link = 'https://github.com/' ~ author %}
             {% set author_profile = author_link ~ '.png' %}
 
-            <h1 class="display-1">{{ block('post_title') }}</h1>
+            <h1 class="display-1">{{ this_blog_post.post_data.title }}</h1>
 
             <div class="d-flex align-items-center mb-4 rm">
                 <a class="d-flex align-items-center text-muted text-decoration-none" href="{{ author_link }}"
                    target="_blank">
-                    <img class="mb-0 me-2" src="{{ author_profile ~ '?size=' ~ profile_picture_size }}" alt=""
+                    <img class="mb-0 me-2 rounded" src="{{ author_profile ~ '?size=' ~ profile_picture_size }}" alt=""
                          width="{{ profile_picture_size }}" height="{{ profile_picture_size }}">
                     <span>{{ '@' ~ author }}</span>
                 </a>
 
                 <span class="d-flex align-items-center ms-3 text-muted"
-                      title="{{ block('post_date')|date('D, d M Y H:i:s') }}">
-                    <span class="me-2">{{ source('svg/calendar-event.svg') }}</span> {{ block('post_date')|date('M d, Y') }}
+                      title="{{ this_blog_post.post_data.date|date('D, d M Y H:i:s') }}">
+                    <span class="me-2">{{ source('svg/calendar-event.svg') }}</span> {{ this_blog_post.post_data.date|date('M d, Y') }}
                 </span>
             </div>
 
-            {{ block('post_content') }}
+            {{ this_blog_post.post_data.content|raw }}
         </div>
 
         <div class="py-4 border-top rm">
             <h2 class="h4">Topics</h2>
 
-            {% for tag in block('post_tags')|split(',') %}
+            {% for tag in this_blog_post.post_data.tags %}
                 <span class="badge rounded-pill bg-secondary">
                     {{ tag|trim(' ', 'both') }}
                 </span>
@@ -69,15 +81,15 @@
                     <li>
                         <h4>
                             <a class="text-decoration-none" href="{{ path('index_view', {
-                                'path': blog_post.relativePath|replace({
+                                'path': blog_post.fileinfo.relativePath|replace({
                                     '\\': '/',
                                 })['content'|length:]|trim('/', 'left')
-                                ~ '/'~ blog_post.filenameWithoutExtension[:-'.html'|length],
+                                ~ '/'~ blog_post.fileinfo.filenameWithoutExtension[:-'.html'|length],
                             }) }}">
-                                {{ block('post_title', blog_post.relativePathname) }}
+                                {{ blog_post.post_data.title }}
 
                                 <small class="text-secondary" style="font-size: 75%;">
-                                    {{ block('post_date', blog_post.relativePathname)|date('d M Y') }}
+                                    {{ blog_post.post_data.date }}
                                 </small>
                             </a>
                         </h4>

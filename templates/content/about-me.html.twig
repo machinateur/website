@@ -1,15 +1,15 @@
 {% extends '_page_theme.html.twig' %}
 
-{% block title %}{{ parent() }} - Overview{% endblock %}
+{% block title %}{{ parent() }} - About me{% endblock %}
 
 {% block body_content %}
     <div class="mx-auto py-5 px-3">
         <div class="pb-3 border-bottom">
-            <h1 class="display-1">Overview</h1>
+            <h1 class="display-1">About me</h1>
         </div>
 
         <div class="py-4">
-            {{ source('content/overview.md')|markdown_to_html|raw }}
+            {{ source('content/about-me.md')|markdown_to_html|raw }}
         </div>
     </div>
 {% endblock %}

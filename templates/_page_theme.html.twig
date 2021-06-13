@@ -12,15 +12,15 @@
 {% set navbar_content = [
     {
         'label': 'Overview',
-        'path': '/',
+        'path': 'overview',
     },
     {
         'label': 'Blog',
-        'path': '/blog',
+        'path': 'blog',
     },
     {
-        'label': 'About',
-        'path': '/about',
+        'label': 'About me',
+        'path': 'about-me',
     },
 ] %}
 {% set random_color = random([
@@ -97,8 +97,9 @@
                         <div class="navbar-nav justify-content-around w-100 mx-auto my-2 my-lg-0 px-5 px-lg-0 py-3">
                             {% block navbar_content %}
                                 {% for navbar_link in navbar_content %}
-                                    <a class="nav-link" href="{{ path('index_view', {
-                                        'path': navbar_link.path|trim('/', 'left'),
+                                    <a class="nav-link{% if navbar_link.path is same as(current_path) %} active"
+                                       aria-current="page{% endif %}" href="{{ path('index_view', {
+                                        'path': navbar_link.path,
                                     }) }}">{{ navbar_link.label }}</a>
                                 {% endfor %}
                             {% endblock %}
@@ -141,11 +142,11 @@
 
                 <div class="px-5 py-3">
                     <a class="text-decoration-none px-2" href="https://github.com/machinateur"
-                       title="machinateur on GitHub">
+                       target="_blank" title="machinateur on GitHub">
                         {{ source('svg/github.svg') }}
                     </a>
                     <a class="text-decoration-none px-2" href="https://twitter.com/machinateur"
-                       title="machinateur on Twitter">
+                       target="_blank" title="machinateur on Twitter">
                         {{ source('svg/twitter.svg') }}
                     </a>
                 </div>

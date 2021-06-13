@@ -5,11 +5,7 @@ namespace App\Twig;
 
 use Exception;
 use Twig\Error\RuntimeError;
-use Twig\Extension\AbstractExtension as ExtensionAbstract;
 use Twig\TwigFilter;
-use function get_class;
-use function gettype;
-use function is_object;
 
 /**
  * Class PcreExtension
@@ -45,33 +41,38 @@ class PcreExtension extends ExtensionAbstract
      * @param int $limit
      * @return string|array|string[]|null
      * @throws Exception
+     * @noinspection PhpMissingParamTypeInspection
+     * @noinspection PhpUnusedParameterInspection
      */
-    public function pcre_replace($value, $pattern, $replacement = '', int $limit = -1)
+    public function pcre_replace($value, $pattern, $replacement = '', $limit = -1)
     {
         if (!isset($value)) {
             return null;
+        } elseif (!(is_array($value) || is_string($value))) {
+            $this->throwTypeError('The "pcre_replace" filter only works with arrays or "Traversable", got "%s" as first argument.', $value);
         }
 
-//        if (twig_test_iterable($pattern)) {
         if (is_array($pattern)) {
-//            $pattern = twig_to_array($pattern, false);
-
             array_walk($pattern, function ($value, $key): void {
                 $this->assertPatternWithoutModifier((string)$value);
             });
         } elseif (is_string($pattern)) {
             $this->assertPatternWithoutModifier($pattern);
         } else {
-            $this->throwTypeException('The "pcre_replace" filter expects a string, an array or "Traversable" as pattern values, got "%s".', $pattern);
+            $this->throwTypeError('The "pcre_replace" filter expects a string, an array or "Traversable" as pattern values, got "%s".', $pattern);
         }
 
-//        if (twig_test_iterable($replacement)) {
-        if (is_array($replacement)) {
-//            $replacement = twig_to_array($replacement, false);
-        } elseif(!is_string($replacement)) {
-            $this->throwTypeException('The "pcre_replace" filter expects a string, an array or "Traversable" as replacement values, got "%s".', $replacement);
+        if(!(is_array($replacement) || is_string($replacement))) {
+            $this->throwTypeError('The "pcre_replace" filter expects a string, an array or "Traversable" as replacement values, got "%s".', $replacement);
         }
 
+        if (is_numeric($limit)) {
+            $limit = (int)$limit;
+        } else {
+            $this->throwTypeError('The "pcre_replace" filter expects a number as limit value, got "%s".', $limit);
+        }
+
+        /** @noinspection PhpUnusedLocalVariableInspection */
         return preg_replace($pattern, $replacement, $subject = $value, $limit, $count);
     }
 
@@ -88,15 +89,5 @@ class PcreExtension extends ExtensionAbstract
         if (strpos($modifierPart, $modifier) !== false) {
             throw new RuntimeError(sprintf('Using the "%s" modifier for regular expressions is not allowed.', $modifier));
         }
-    }
-
-    /**
-     * @param string $message
-     * @param mixed $value
-     * @throws RuntimeError
-     */
-    protected function throwTypeException(string $message, $value): void
-    {
-        throw new RuntimeError(sprintf($message, is_object($value) ? get_class($value) : gettype($value)));
     }
 }

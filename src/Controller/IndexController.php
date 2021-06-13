@@ -41,9 +41,9 @@ class IndexController extends ControllerAbstract
     public function view(Request $request, ?string $path = null, array $context = []): Response
     {
         if (null === $path) {
-            $path = 'overview';
-        } elseif ($path === 'overview') {
-            throw new NotFoundHttpException();
+            return $this->redirectToRoute('index_view', [
+                'path' => 'overview',
+            ], 302);
         }
 
         $view = 'content/' . $path . '.html.twig';
@@ -56,6 +56,8 @@ class IndexController extends ControllerAbstract
             throw new NotFoundHttpException();
         }
 
+        $context['current_path'] = $path;
+        $context['current_view'] = $view;
         $context['blog_posts'] =
             iterator_to_array(
                 Finder::create()
