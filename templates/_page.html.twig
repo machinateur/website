@@ -6,8 +6,24 @@
 
     <title>{% block title %}{% endblock %}</title>
 
+    {% block meta %}
+        <meta name="description" content="{% block description %}{% endblock %}">
+    {% endblock %}
+
     {% block style %}
-        <link href="/res/style/bootstrap.min.css" rel="stylesheet" type="text/css">
+        {% set style = source('style/' ~ current_path ~ '.css', true) %}
+        {% if style is not null %}
+            <style>
+                {{ style|raw }}
+            </style>
+            <link rel="preload" href="/res/style/bootstrap.min.css" as="style"
+                  onload="this.onload=null;this.rel='stylesheet'">
+            <noscript>
+                <link href="/res/style/bootstrap.min.css" rel="stylesheet" type="text/css">
+            </noscript>
+        {% else %}
+            <link href="/res/style/bootstrap.min.css" rel="stylesheet" type="text/css">
+        {% endif %}
     {% endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}"{% block body_data %}{% endblock %}>

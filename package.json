@@ -1,0 +1,32 @@
+{
+  "name": "website",
+  "version": "1.0.0",
+  "description": "The machinateur.dev website. Somewhere between static and dynamic or something.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "build.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/machinateur/website.git"
+  },
+  "keywords": [],
+  "author": "machinateur<hello@machinateur.dev>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/machinateur/website/issues"
+  },
+  "homepage": "https://github.com/machinateur/website#readme",
+  "private": true,
+  "dependencies": {
+    "@popperjs/core": "^2.9.2",
+    "bootstrap": "^5.0.1",
+    "bootstrap-icons": "^1.5.0",
+    "highlight.js": "^11.0.1"
+  },
+  "devDependencies": {
+    "puppeteer": "^10.0.0",
+    "sass": "^1.34.1"
+  }
+}

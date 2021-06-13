@@ -2,6 +2,8 @@
 
 {% block title %}{{ parent() }} - Overview{% endblock %}
 
+{% block description %}{% endblock %}
+
 {% block style %}
     {{ parent() }}
     <style>
@@ -36,7 +38,7 @@
         </div>
 
         <div class="border-bottom py-3">
-            {{ source('content/overview.md', true)|markdown_to_html|raw }}
+            {{ source('markdown/overview.md', true)|markdown_to_html|raw }}
         </div>
 
         <div>
@@ -53,26 +55,26 @@
                     </a>
 
                     <div class="d-flex align-items-center">
-                        <a class="d-flex align-items-center text-muted text-decoration-none" href="{{ author_link }}"
-                           target="_blank">
+                        <a class="d-flex align-items-center text-body text-decoration-none" href="{{ author_link }}"
+                           target="_blank" rel="noopener">
                             <img class="mb-0 me-2 rounded" src="{{ author_profile ~ '?size=' ~ profile_picture_size }}"
                                  alt="" width="{{ profile_picture_size }}" height="{{ profile_picture_size }}">
                             <span>{{ '@' ~ author }}</span>
                         </a>
 
-                        <span class="d-flex align-items-center ms-3 text-muted"
+                        <span class="d-flex align-items-center ms-3"
                               title="{{ blog_post.post_data.date|date('D, d M Y H:i:s') }}">
                             <span class="me-2">{{ source('svg/calendar-event.svg') }}</span> {{ blog_post.post_data.date|date('M d, Y') }}
                         </span>
 
                         {% if blog_post.post_data.read_time is not empty %}
-                            <span class="d-flex align-items-center ms-3 text-muted">
+                            <span class="d-flex align-items-center ms-3">
                                 <span class="me-2">{{ source('svg/clock.svg') }}</span> {{ blog_post.post_data.read_time }}
                             </span>
                         {% endif %}
                     </div>
 
-                    <div class="pt-2 text-muted small mb-0-p">
+                    <div class="pt-2 text-body small mb-0-p">
                         {{ blog_post.post_data.content|pcre_replace([
                             '#<h[0-6]#',
                             '#<\/h[0-6]>#',
@@ -89,7 +91,7 @@
 
         <div class="border-top py-3">
             <div class="text-center">
-                <a class="btn btn-outline-primary btn-lg" href="{{ path('index_view', {
+                <a class="btn btn-outline-primary btn-lg border-2" href="{{ path('index_view', {
                     'path': 'blog',
                 }) }}">
                     More...

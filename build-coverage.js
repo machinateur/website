@@ -1,0 +1,75 @@
+// build-coverage.js script to extract used/unused rules to defer non-critical css
+//  Licensed under MIT (https://github.com/machinateur/website/blob/main/LICENSE)
+//  More information https://web.dev/defer-non-critical-css/
+
+const puppeteer = require('puppeteer');
+const fs = require('fs');
+
+(async () => {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    page.setJavaScriptEnabled(false);
+
+    let sitemap = [
+        'https://127.0.0.1:1312/',
+    ];
+
+    if (fs.existsSync('./var/build/coverage-sitemap.txt')) {
+        const buffer = fs.readFileSync('./var/build/coverage-sitemap.txt');
+
+        sitemap = buffer.toString()
+            .split("\n");
+    }
+    for (const url of sitemap) {
+        if (0 === url.length) {
+            // in case of an empty line,
+            continue;
+        }
+
+        await Promise.all([
+            page.coverage.startCSSCoverage()
+        ]);
+
+        console.log(`Visiting ${url}...`);
+
+        await page.goto(url);
+
+        const coverageIterator = await Promise.all([
+            page.coverage.stopCSSCoverage(),
+        ]);
+
+        const coverage = [...coverageIterator];
+
+        let bytes_used = 0;
+        let bytes_total = 0;
+        let covered_code = '';
+
+        for (const entry of coverage[0]) {
+            bytes_total += entry.text.length;
+
+            console.log(`Total Bytes for ${entry.url}: ${entry.text.length}.`);
+
+            for (const range of entry.ranges) {
+                bytes_used += range.end - range.start - 1;
+
+                covered_code += entry.text.slice(range.start, range.end) + "\n";
+            }
+        }
+
+        console.log(`Total Bytes: ${bytes_total}.`);
+        console.log(`Used Bytes: ${bytes_used}.`);
+
+        const path = (new URL(url)).pathname;
+        fs.writeFile('./templates/style/' + path + '.css', covered_code, function (err) {
+            if (err) {
+                console.log(err);
+
+                return;
+            }
+
+            console.log('Done!');
+        });
+    }
+
+    await browser.close();
+})();

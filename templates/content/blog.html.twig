@@ -2,6 +2,8 @@
 
 {% block title %}{{ parent() }} - Blog{% endblock %}
 
+{% block description %}{% endblock %}
+
 {% block style %}
     {{ parent() }}
     <style>
@@ -42,7 +44,7 @@
             {% set search_months = recent_blog_posts|map((p) => p.post_data.date|date('M Y'))|unique %}
 
             <div class="py-2">
-                <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse"
+                <button class="btn btn-outline-secondary border-2" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseSearch"
                         aria-expanded="false" aria-controls="collapseSearch">
                     {{ source('svg/search.svg') }} Search...
@@ -51,8 +53,8 @@
 
             <div class="collapse" id="collapseSearch">
                 <form id="search">
-                    <div class="card">
-                        <div class="card-body" style="line-height: 3;">
+                    <div class="bg-white border">
+                        <div class="p-3" style="line-height: 3;">
                             <span>Search for</span>
                             <label for="searchText">text</label>
                             <input type="text" class="form-control d-inline w-auto" placeholder="" id="searchText">
@@ -106,26 +108,26 @@
                     </a>
 
                     <div class="d-flex align-items-center">
-                        <a class="d-flex align-items-center text-muted text-decoration-none" href="{{ author_link }}"
-                           target="_blank">
+                        <a class="d-flex align-items-center text-body text-decoration-none" href="{{ author_link }}"
+                           target="_blank" rel="noopener">
                             <img class="mb-0 me-2 rounded" src="{{ author_profile ~ '?size=' ~ profile_picture_size }}"
                                  alt="" width="{{ profile_picture_size }}" height="{{ profile_picture_size }}">
                             <span>{{ '@' ~ author }}</span>
                         </a>
 
-                        <span class="d-flex align-items-center ms-3 text-muted"
+                        <span class="d-flex align-items-center ms-3"
                               title="{{ blog_post.post_data.date|date('D, d M Y H:i:s') }}">
                             <span class="me-2">{{ source('svg/calendar-event.svg') }}</span> {{ blog_post.post_data.date|date('M d, Y') }}
                         </span>
 
                         {% if blog_post.post_data.read_time is not empty %}
-                            <span class="d-flex align-items-center ms-3 text-muted">
+                            <span class="d-flex align-items-center ms-3">
                                 <span class="me-2">{{ source('svg/clock.svg') }}</span> {{ blog_post.post_data.read_time }}
                             </span>
                         {% endif %}
                     </div>
 
-                    <div class="pt-2 text-muted small mb-0-p">
+                    <div class="pt-2 text-body small mb-0-p">
                         {{ blog_post.post_data.content|pcre_replace([
                             '#<h[0-6]#',
                             '#<\/h[0-6]>#',
@@ -142,7 +144,7 @@
 
         <div class="py-3 border-top">
             <div class="text-center">
-                <a class="btn btn-outline-primary btn-lg" href="{{ main_content_id }}">
+                <a class="btn btn-outline-primary btn-lg border-2" href="{{ main_content_id }}">
                     Back to page start
                 </a>
             </div>

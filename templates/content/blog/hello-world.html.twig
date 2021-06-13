@@ -1,5 +1,7 @@
 {% extends '_page_theme_post.html.twig' %}
 
+{% block description %}{% endblock %}
+
 {# metadata #}
 {% block post_title %}Hello world :){% endblock %}
 {% block post_author %}machinateur{% endblock %}
@@ -10,5 +12,5 @@
 {% block post_image %}https://github.blog/wp-content/uploads/2019/09/security-1200-630.png?fit=1200%2C630{% endblock %}
 {% block post_image_alt %}An image stolen from the github blog{% endblock %}
 {% block post_content %}
-    {{ source('content/blog/hello-world.md', true)|markdown_to_html|raw }}
+    {{ source('markdown/blog/hello-world.md', true)|markdown_to_html|raw }}
 {% endblock %}

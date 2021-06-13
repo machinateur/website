@@ -43,6 +43,8 @@
     '#A1CDA8',
 ]) %}
 
+{% block title %}machinateur.dev{% endblock %}
+
 {% block style %}
     {{ parent() }}
     {% if highlighted_code is same as(true) %}
@@ -55,23 +57,21 @@
             }
         }
     </style>
-    {% with %}{{ block('style', 'component/reader-mode.html.twig') }}{% endwith %}
-    {% with %}{{ block('style', 'component/theme.html.twig') }}{% endwith %}
-    {% with %}{{ block('style', 'component/zoom.html.twig') }}{% endwith %}
-    {% with %}{{ block('style', 'component/main-content.html.twig') }}{% endwith %}
-    {% with %}{{ block('style', 'component/cookie-banner.html.twig') }}{% endwith %}
+    {% with %}{{ block('style', 'component/reader-mode.html.twig')|raw }}{% endwith %}
+    {% with %}{{ block('style', 'component/theme.html.twig')|raw }}{% endwith %}
+    {% with %}{{ block('style', 'component/zoom.html.twig')|raw }}{% endwith %}
+    {% with %}{{ block('style', 'component/main-content.html.twig')|raw }}{% endwith %}
+    {% with %}{{ block('style', 'component/cookie-banner.html.twig')|raw }}{% endwith %}
 {% endblock %}
-
-{% block title %}machinateur.dev{% endblock %}
 
 {% block body_class %}bg-white{% endblock %}
 
 {% block body_data %}
-    {% with { value: reader_mode } %}{{ block('data', 'component/reader-mode.html.twig') }}{% endwith %}
-    {% with { value: dark_mode } %}{{ block('data', 'component/theme.html.twig') }}{% endwith %}
-    {% with { value: zoom_level } %}{{ block('data', 'component/zoom.html.twig') }}{% endwith %}
-    {% with { value: main_content_id } %}{{ block('data', 'component/main-content.html.twig') }}{% endwith %}
-    {% with { value: cookie_consent } %}{{ block('data', 'component/cookie-banner.html.twig') }}{% endwith %}
+    {% with { value: reader_mode } %}{{ block('data', 'component/reader-mode.html.twig')|raw }}{% endwith %}
+    {% with { value: dark_mode } %}{{ block('data', 'component/theme.html.twig')|raw }}{% endwith %}
+    {% with { value: zoom_level } %}{{ block('data', 'component/zoom.html.twig')|raw }}{% endwith %}
+    {% with { value: main_content_id } %}{{ block('data', 'component/main-content.html.twig')|raw }}{% endwith %}
+    {% with { value: cookie_consent } %}{{ block('data', 'component/cookie-banner.html.twig')|raw }}{% endwith %}
 {% endblock %}
 
 {% block body %}
@@ -82,8 +82,8 @@
                     <a class="navbar-brand font-monospace py-3" href="{{ path('index_view', {
                         'path': '',
                     }) }}">
-                        <img src="/res/image/profile-machinateur.png" alt="" width="{{ navbar_brand_size }}"
-                             height="{{ navbar_brand_size }}" class="border rounded-circle">
+                        <img src="/res/image/profile-machinateur.png" alt="" width="{{ navbar_brand_size + 2 }}"
+                             height="{{ navbar_brand_size + 2 }}" class="border rounded-circle">
 
                         <span>machinateur.dev</span>
                     </a>
@@ -106,16 +106,16 @@
                         </div>
 
                         <div class="d-flex text-center border border-0-lg rounded rounded-3 px-5 px-lg-0 py-3">
-                            {% with { id: 0 } %}{{ block('html', 'component/reader-mode.html.twig') }}{% endwith %}
+                            {% with { id: 0 } %}{{ block('html', 'component/reader-mode.html.twig')|raw }}{% endwith %}
 
-                            {% with { id: 0, value: dark_mode } %}{{ block('html', 'component/theme.html.twig') }}{% endwith %}
+                            {% with { id: 0, value: dark_mode } %}{{ block('html', 'component/theme.html.twig')|raw }}{% endwith %}
 
                             <div class="ms-auto invisible">
                             </div>
 
-                            {% with { id: 0 } %}{{ block('html', 'component/zoom.html.twig') }}{% endwith %}
+                            {% with { id: 0 } %}{{ block('html', 'component/zoom.html.twig')|raw }}{% endwith %}
 
-                            {% with { id: 0 } %}{{ block('html', 'component/main-content.html.twig') }}{% endwith %}
+                            {% with { id: 0 } %}{{ block('html', 'component/main-content.html.twig')|raw }}{% endwith %}
                         </div>
                     </div>
                 </div>
@@ -123,10 +123,10 @@
         {% endblock %}
     {% endblock %}
 
-    <a class="invisible" id="{{ main_content_id[1:] }}"></a>
-    <div class="bg-light border-top border-5 min-vh-100" style="border-color: {{ random_color }}!important;">
+    <div class="bg-light border-top border-5 min-vh-100" id="{{ main_content_id[1:] }}"
+         style="border-color: {{ random_color }}!important;">
         <div class="container">
-            {% with { id: 0 } %}{{ block('html', 'component/cookie-banner.html.twig') }}{% endwith %}
+            {% with { id: 0 } %}{{ block('html', 'component/cookie-banner.html.twig')|raw }}{% endwith %}
 
             {% block body_content %}
             {% endblock %}
@@ -142,11 +142,11 @@
 
                 <div class="px-5 py-3">
                     <a class="text-decoration-none px-2" href="https://github.com/machinateur"
-                       target="_blank" title="machinateur on GitHub">
+                       target="_blank" title="machinateur on GitHub" rel="noopener">
                         {{ source('svg/github.svg') }}
                     </a>
                     <a class="text-decoration-none px-2" href="https://twitter.com/machinateur"
-                       target="_blank" title="machinateur on Twitter">
+                       target="_blank" title="machinateur on Twitter" rel="noopener">
                         {{ source('svg/twitter.svg') }}
                     </a>
                 </div>
@@ -169,9 +169,9 @@
             })();
         </script>
     {% endif %}
-    {% with %}{{ block('script', 'component/reader-mode.html.twig') }}{% endwith %}
-    {% with %}{{ block('script', 'component/theme.html.twig') }}{% endwith %}
-    {% with %}{{ block('script', 'component/zoom.html.twig') }}{% endwith %}
-    {% with %}{{ block('script', 'component/main-content.html.twig') }}{% endwith %}
-    {% with %}{{ block('script', 'component/cookie-banner.html.twig') }}{% endwith %}
+    {% with %}{{ block('script', 'component/reader-mode.html.twig')|raw }}{% endwith %}
+    {% with %}{{ block('script', 'component/theme.html.twig')|raw }}{% endwith %}
+    {% with %}{{ block('script', 'component/zoom.html.twig')|raw }}{% endwith %}
+    {% with %}{{ block('script', 'component/main-content.html.twig')|raw }}{% endwith %}
+    {% with %}{{ block('script', 'component/cookie-banner.html.twig')|raw }}{% endwith %}
 {% endblock %}

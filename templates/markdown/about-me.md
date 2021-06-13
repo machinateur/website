@@ -36,7 +36,7 @@ still learning it.
 Currently, my favourite technologies and projects to work with are [symfony](https://symfony.com),
 [twig](https://twig.symfony.com), [doctrine](https://www.doctrine-project.org),
 [jms-serializer](https://jmsyst.com/libs/serializer), [slim framework](https://www.slimframework.com). I could just go
-on with the list, but these are the most significant ones. Containerization with 
+on with the list, but these are the most significant ones. Containerization with
 [docker](https://www.docker.com/use-cases) is really interesting, and I'd like to use it more in the future.
 
 Feel free to contact me via [hello@machinateur.dev](mailto:hello@machinateur.dev).

@@ -2,6 +2,8 @@
 
 {% block title %}{{ parent() }} - About me{% endblock %}
 
+{% block description %}{% endblock %}
+
 {% block body_content %}
     <div class="mx-auto py-5 px-3">
         <div class="border-bottom pb-3">
@@ -9,7 +11,7 @@
         </div>
 
         <div class="py-3">
-            {{ source('content/about-me.md', true)|markdown_to_html|raw }}
+            {{ source('markdown/about-me.md', true)|markdown_to_html|raw }}
         </div>
     </div>
 {% endblock %}

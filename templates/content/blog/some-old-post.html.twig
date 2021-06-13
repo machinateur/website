@@ -1,5 +1,7 @@
 {% extends '_page_theme_post.html.twig' %}
 
+{% block description %}{% endblock %}
+
 {# metadata #}
 {% block post_title %}Some old post{% endblock %}
 {% block post_author %}machinateur{% endblock %}
@@ -9,5 +11,5 @@
 {% block post_image %}{% endblock %}
 {% block post_image_alt %}{% endblock %}
 {% block post_content %}
-    {{ source('content/blog/some-old-post.md', true)|markdown_to_html|raw }}
+    {{ source('markdown/blog/some-old-post.md', true)|markdown_to_html|raw }}
 {% endblock %}
