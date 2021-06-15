@@ -6,6 +6,8 @@
  * Modified by @machinateur (https://github.com/machinateur/website)
  */
 
+$blue: #144da0;
+
 // scss-docs-start import-stack
 // Configuration
 @import "functions";
@@ -20,15 +22,13 @@
 @import "images";
 @import "containers";
 @import "grid";
-@import "tables";
+//@import "tables";
 @import "forms";
 @import "buttons";
 @import "transitions";
-@import "dropdown";
 @import "button-group";
 @import "nav";
 @import "navbar";
-@import "accordion";
 @import "badge";
 @import "alert";
 @import "close";

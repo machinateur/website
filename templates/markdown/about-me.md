@@ -28,9 +28,9 @@ I've started out in 2011 doing java for a couple of years, then got into php aga
 since. A little fun-fact or side-note on how I initially found out about programming, long story short:
 click [this link](https://minecraft.fandom.com/wiki/Java_Edition_Beta_1.8.1). `:D`
 
-My repertoire of programming languages spans from [PHP](https://www.php.net) throughout the frontend stuff (_html_, _
-css_, _javascript_), to [java](https://www.oracle.com/java/technologies/) (little dusty). Different sql dialects (_
-mariadb_, _mysql_, _oracle_) too. [Python](https://www.python.org) is somewhat new to the list, but I consider myself
+My repertoire of programming languages spans from [PHP](https://www.php.net) throughout the frontend stuff (_html_,
+_css_, _javascript_), to [java](https://www.oracle.com/java/technologies/) (little dusty). Different sql dialects
+(_mariadb_, _mysql_, _oracle_) too. [Python](https://www.python.org) is somewhat new to the list, but I consider myself
 still learning it.
 
 Currently, my favourite technologies and projects to work with are [symfony](https://symfony.com),

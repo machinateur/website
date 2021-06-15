@@ -1,6 +1,7 @@
 // build-coverage.js script to extract used/unused rules to defer non-critical css
 //  Licensed under MIT (https://github.com/machinateur/website/blob/main/LICENSE)
 //  More information https://web.dev/defer-non-critical-css/
+//  and https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#class-coverage
 
 const puppeteer = require('puppeteer');
 const fs = require('fs');

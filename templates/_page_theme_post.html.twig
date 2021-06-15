@@ -59,13 +59,13 @@
                     <span>{{ '@' ~ author }}</span>
                 </a>
 
-                <span class="d-flex align-items-center ms-3 text-muted"
+                <span class="d-flex align-items-center ms-3 text-center"
                       title="{{ this_blog_post.post_data.date|date('D, d M Y H:i:s') }}">
                     <span class="me-2">{{ source('svg/calendar-event.svg') }}</span> {{ this_blog_post.post_data.date|date('M d, Y') }}
                 </span>
 
                 {% if this_blog_post.post_data.read_time is not empty %}
-                    <span class="d-flex align-items-center ms-3 text-muted">
+                    <span class="d-flex align-items-center ms-3 text-center">
                         <span class="me-2">{{ source('svg/clock.svg') }}</span> {{ this_blog_post.post_data.read_time }}
                     </span>
                 {% endif %}

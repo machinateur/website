@@ -19,7 +19,7 @@
 
 {% block html %}
     <!-- component: cookie-banner -->
-    <div class="alert alert-light border alert-dismissible fade show my-3 pb-0" role="alert"
+    <div class="alert alert-light border alert-dismissible my-3 pb-0" role="alert"
          data-app-component="cookie-banner">
         <p>
             {{ source('svg/question-square.svg') }} <strong class="ms-1">Heads up!</strong>
@@ -37,7 +37,7 @@
             <button type="button" class="btn btn-outline-primary btn-sm border-2 mb-3">
                 Alright, fine
             </button>
-            <button type="button" class="btn btn-outline-secondary btn-sm border-2 mb-3">
+            <button type="button" class="btn btn-outline-dark btn-sm border-2 mb-3">
                 No, please do not use cookies
             </button>
         </div>
@@ -101,6 +101,8 @@
                                 // + '; domain=' + location.hostname.replace(/^www\./, '')
                                 + '; secure'
                                 + '; samesite=lax';
+
+                            document.body.dataset.appCookieBanner = 'true';
                         });
                         buttonNo.addEventListener('click', function (event) {
                             window.document.cookie = 'cookie_consent=false'
@@ -109,6 +111,8 @@
                                 + '; domain=' + location.hostname.replace(/^www\./, '')
                                 + '; secure'
                                 + '; samesite=lax';
+
+                            document.body.dataset.appCookieBanner = 'false';
                         });
                     }
                 );

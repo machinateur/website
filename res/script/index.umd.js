@@ -7,13 +7,9 @@
  */
 
 import Alert from './src/alert'
-import Button from './src/button'
 import Collapse from './src/collapse'
-import Dropdown from './src/dropdown'
 
 export default {
   Alert,
-  Button,
   Collapse,
-  Dropdown,
 }

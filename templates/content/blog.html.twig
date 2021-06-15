@@ -1,8 +1,8 @@
 {% extends '_page_theme.html.twig' %}
 
-{% block title %}{{ parent() }} - Blog{% endblock %}
+{% block title %}{{ parent() }} - Blog Archive{% endblock %}
 
-{% block description %}{% endblock %}
+{% block description %}Browse and search the machinateur.dev blog archive by title, author and month.{% endblock %}
 
 {% block style %}
     {{ parent() }}
@@ -44,7 +44,7 @@
             {% set search_months = recent_blog_posts|map((p) => p.post_data.date|date('M Y'))|unique %}
 
             <div class="py-2">
-                <button class="btn btn-outline-secondary border-2" type="button" data-bs-toggle="collapse"
+                <button class="btn btn-outline-dark border-2" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseSearch"
                         aria-expanded="false" aria-controls="collapseSearch">
                     {{ source('svg/search.svg') }} Search...
@@ -115,13 +115,13 @@
                             <span>{{ '@' ~ author }}</span>
                         </a>
 
-                        <span class="d-flex align-items-center ms-3"
+                        <span class="d-flex align-items-center ms-3 text-center"
                               title="{{ blog_post.post_data.date|date('D, d M Y H:i:s') }}">
                             <span class="me-2">{{ source('svg/calendar-event.svg') }}</span> {{ blog_post.post_data.date|date('M d, Y') }}
                         </span>
 
                         {% if blog_post.post_data.read_time is not empty %}
-                            <span class="d-flex align-items-center ms-3">
+                            <span class="d-flex align-items-center ms-3 text-center">
                                 <span class="me-2">{{ source('svg/clock.svg') }}</span> {{ blog_post.post_data.read_time }}
                             </span>
                         {% endif %}
