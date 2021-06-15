@@ -8,7 +8,6 @@
 {% set main_content_id = main_content_id|default('#main') %}
 {% set cookie_consent = cookie_consent|default(false) %}
 
-{% set navbar_brand_size = 32 %}
 {% set navbar_content = [
     {
         'label': 'Overview',
@@ -82,8 +81,8 @@
                     <a class="navbar-brand font-monospace py-3" href="{{ path('index_view', {
                         'path': '',
                     }) }}">
-                        <img src="/res/image/profile-machinateur.png" alt="" width="{{ navbar_brand_size + 2 }}"
-                             height="{{ navbar_brand_size + 2 }}" class="border rounded-circle">
+                        <img src="/res/image/profile-machinateur.png" alt="" width="34" height="34"
+                             class="border rounded-circle">
 
                         <span>machinateur.dev</span>
                     </a>
@@ -169,6 +168,7 @@
             })();
         </script>
     {% endif %}
+    {% with %}{{ block('script', 'component/src.html.twig')|raw }}{% endwith %}
     {% with %}{{ block('script', 'component/reader-mode.html.twig')|raw }}{% endwith %}
     {% with %}{{ block('script', 'component/theme.html.twig')|raw }}{% endwith %}
     {% with %}{{ block('script', 'component/zoom.html.twig')|raw }}{% endwith %}
