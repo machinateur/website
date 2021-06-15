@@ -1,0 +1,31 @@
+{# component: src #}
+
+{% block data %}
+    data-src="{{ value|default('') }}"
+{% endblock %}
+
+{% block script %}
+    <!-- component: src -->
+    <script type="text/javascript">
+        (function () {
+            'use strict';
+
+            window.addEventListener('load', function (event) {
+                var images = document.getElementsByTagName('img');
+
+                Array.prototype.slice.call(images)
+                    .forEach(
+                        /**
+                         * @param {HTMLImageElement} image
+                         */
+                        function (image) {
+                            var src = image.getAttribute('data-src');
+                            if (!!src) {
+                                image.setAttribute('src', src);
+                            }
+                        }
+                    );
+            });
+        })();
+    </script>
+{% endblock %}

@@ -4,6 +4,7 @@
 
 {% block title %}{{ parent() }} - Blog - {{ block('post_title') }}{% endblock %}
 
+{% set profile_picture = 'data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=' %}
 {% set profile_picture_size = profile_picture_size|default(32) %}
 {% set recent_blog_posts = blog_posts|map((p) => {
     'fileinfo': p,
@@ -54,7 +55,8 @@
             <div class="d-flex align-items-center mb-4 rm">
                 <a class="d-flex align-items-center text-muted text-decoration-none" href="{{ author_link }}"
                    target="_blank" rel="noopener">
-                    <img class="mb-0 me-2 rounded" src="{{ author_profile ~ '?size=' ~ profile_picture_size }}" alt=""
+                    <img class="mb-0 me-2 rounded" src="{{ profile_picture }}"
+                         data-src="{{ author_profile ~ '?size=' ~ profile_picture_size }}" alt=""
                          width="{{ profile_picture_size }}" height="{{ profile_picture_size }}">
                     <span>{{ '@' ~ author }}</span>
                 </a>
