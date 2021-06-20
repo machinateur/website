@@ -97,7 +97,7 @@
                                 {{ blog_post.post_data.title }}
 
                                 <small class="text-secondary" style="font-size: 75%;">
-                                    {{ blog_post.post_data.date }}
+                                    {{ blog_post.post_data.date|date('d M Y') }}
                                 </small>
                             </a>
                         </h4>
