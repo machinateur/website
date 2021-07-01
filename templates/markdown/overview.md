@@ -6,4 +6,4 @@ There is no shortage of bug-anecdotes and reports too.
 
 If you'd like to know more about me and my qualification, have a look at the ["About me" page](/about-me).
 
-*Below you can find the three most recent block posts...*
+*Below you can find the three most recent blog posts...*

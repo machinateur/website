@@ -70,7 +70,7 @@
             }
 
             function getTimeout(ms) {
-                return (12 /*months*/ * 30 /*days*/ * 24 /*hours*/ * 60 /*minutes*/ * 60 /*seconds*/ * ms ? (1000 /*milliseconds*/) : 1);
+                return (12 /*months*/ * 30 /*days*/ * 24 /*hours*/ * 60 /*minutes*/ * 60 /*seconds*/ * (ms ? (1000 /*milliseconds*/) : 1));
             }
 
             document.body.dataset.appCookieBanner = 'false' === getCookieConsent() ? 'true' : 'false';
@@ -95,17 +95,17 @@
                             var date = new Date();
                             date.setTime(date.getTime() + getTimeout(true));
 
-                            window.document.cookie = 'cookie_consent=true'
+                            document.cookie = 'cookie_consent=true'
                                 + '; expires=' + date.toUTCString() + '; Max-Age=' + getTimeout(false)
                                 + '; path=/'
                                 // + '; domain=' + location.hostname.replace(/^www\./, '')
                                 + '; secure'
                                 + '; samesite=lax';
 
-                            document.body.dataset.appCookieBanner = 'true';
+                            document.body.dataset.appCookieBanner = 'false';
                         });
                         buttonNo.addEventListener('click', function (event) {
-                            window.document.cookie = 'cookie_consent=false'
+                            document.cookie = 'cookie_consent=false'
                                 + '; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0'
                                 + '; path=/'
                                 + '; domain=' + location.hostname.replace(/^www\./, '')
@@ -113,6 +113,8 @@
                                 + '; samesite=lax';
 
                             document.body.dataset.appCookieBanner = 'false';
+
+                            disableGa();
                         });
                     }
                 );
