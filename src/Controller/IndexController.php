@@ -69,6 +69,7 @@ class IndexController extends ControllerAbstract
                     ),
                 false
             );
+        $context['ga_measurement_id'] = $this->getParameter('app.ga_measurement_id');
 
         try {
             $content = $templating->render($view, $context);

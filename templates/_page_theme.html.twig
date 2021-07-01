@@ -44,6 +44,13 @@
 
 {% block title %}machinateur.dev{% endblock %}
 
+{% block meta %}
+    {{ parent() }}
+    {% if ga_measurement_id is not empty %}
+        {% include '_gtag.html.twig' %}
+    {% endif %}
+{% endblock %}
+
 {% block style %}
     {{ parent() }}
     {% if highlighted_code is same as(true) %}
