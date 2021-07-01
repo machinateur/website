@@ -1,3 +1,9 @@
+body[data-app-cookie-banner="true"] div[data-app-component="cookie-banner"] {
+            display: block;
+        }
+.mb-0-p > p {
+            margin-bottom: 0;
+        }
 :root{--bs-blue:#144da0;--bs-indigo:#6610f2;--bs-purple:#6f42c1;--bs-pink:#d63384;--bs-red:#dc3545;--bs-orange:#fd7e14;--bs-yellow:#ffc107;--bs-green:#198754;--bs-teal:#20c997;--bs-cyan:#0dcaf0;--bs-white:#fff;--bs-gray:#6c757d;--bs-gray-dark:#343a40;--bs-primary:#144da0;--bs-secondary:#6c757d;--bs-success:#198754;--bs-info:#0dcaf0;--bs-warning:#ffc107;--bs-danger:#dc3545;--bs-light:#f8f9fa;--bs-dark:#212529;--bs-font-sans-serif:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";--bs-font-monospace:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;--bs-gradient:linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0))}*,::after,::before{box-sizing:border-box}
 :root{scroll-behavior:smooth}
 body{margin:0;font-family:var(--bs-font-sans-serif);font-size:1rem;font-weight:400;line-height:1.5;color:#212529;background-color:#fff;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}hr{margin:1rem 0;color:inherit;background-color:currentColor;border:0;opacity:.25}hr:not([size]){height:1px}.h1,.h2,.h3,.h4,.h5,.h6,h1,h2,h3,h4,h5,h6{margin-top:0;margin-bottom:.5rem;font-weight:500;line-height:1.2}.h1,h1{font-size:calc(1.375rem + 1.5vw)}
@@ -58,17 +64,11 @@ button,input,optgroup,select,textarea{margin:0;font-family:inherit;font-size:inh
 .bg-white{background-color:#fff!important}
 .rounded{border-radius:.25rem!important}
 .rounded-circle{border-radius:50%!important}
-body[data-app-cookie-banner="true"] div[data-app-component="cookie-banner"] {
-            display: block;
-        }
 body {
             transition: filter 500ms linear;
         }
 body[data-app-theme="light"] {
             filter: invert(0%);
-        }
-.mb-0-p > p {
-            margin-bottom: 0;
         }
 body {
             transition: font-size 500ms linear;
