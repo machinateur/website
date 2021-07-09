@@ -1,1 +1,3 @@
 /public/res/** linguist-vendored=true
+
+/templates/style/** linguist-vendored=true
