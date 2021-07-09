@@ -24,8 +24,14 @@ Located near *Frankfurt, HE, Germany*, I'm currently working full-time, 40h a we
 towards the private (and some day hopefully public and open-sourced) projects. I don't want to put something out that
 isn't ready, so that's that.
 
-I've started out in 2011 doing java for a couple of years, then got into php again in 2016. I've been writing it ever
-since. A little fun-fact or side-note on how I initially found out about programming, long story short:
+I've started out in 2011 doing java for a couple of years, then got into php again in 2016. And I've been writing php
+ever since. There are a bunch of unfinished java projects still lurking in the depths of my old hard-drives, helplessly
+hoping to get paid a visit some distant day (I've promised).
+
+Most of my open-source work has been done under another alias, so it's still kind of empty over at
+[my github profile](https://github.com/machinateur).
+
+A little fun-fact or side-note, if you will, on how I initially found out about programming, long story short:
 click [this link](https://minecraft.fandom.com/wiki/Java_Edition_Beta_1.8.1). `:D`
 
 My repertoire of programming languages spans from [PHP](https://www.php.net) throughout the frontend stuff (_html_,
