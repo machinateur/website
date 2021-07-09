@@ -46,9 +46,7 @@
 
 {% block meta %}
     {{ parent() }}
-    {% if ga_measurement_id is not empty %}
-        {% include '_gtag.html.twig' %}
-    {% endif %}
+    {% include '_gtag.html.twig' %}
 {% endblock %}
 
 {% block style %}
