@@ -1,0 +1,25 @@
+{% if ad_script is not empty and ad_client is not empty %}
+    <script async src="{{ ad_script }}" data-ad-client="{{ ad_client }}">
+    </script>
+{% endif %}
+<script>
+    window.adsbygoogle = window.adsbygoogle || [];
+
+    function disablePersonalizedAds() {
+        window.adsbygoogle.requestNonPersonalizedAds = 1;
+    }
+
+    function enablePersonalizedAds() {
+        window.adsbygoogle.requestNonPersonalizedAds = 0;
+    }
+
+    function pauseAds() {
+        window.adsbygoogle.pauseAdRequests = 1;
+    }
+
+    function resumeAds() {
+        window.adsbygoogle.pauseAdRequests = 0;
+    }
+
+    pauseAds();
+</script>

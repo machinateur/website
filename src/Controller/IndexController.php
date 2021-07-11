@@ -26,6 +26,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as ControllerAbstract;
+use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,6 +47,16 @@ use Twig\Error\Error;
  */
 class IndexController extends ControllerAbstract
 {
+    private static string $DEFAULT_PATH = 'overview';
+
+    private static array $PARAMETER = [
+        // Google Analytics
+        'ga_measurement_id',
+        // Google AdSense
+        'ad_script',
+        'ad_client',
+    ];
+
     /**
      * @Route("/{path}", name="view", requirements={
      *     "path" = "^(?:\/?[a-z0-9]+(?:-[a-z0-9]+)*)+$",
@@ -63,8 +74,9 @@ class IndexController extends ControllerAbstract
     public function view(Request $request, ?string $path = null, array $context = []): Response
     {
         if (null === $path) {
+            // Redirect to default route.
             return $this->redirectToRoute('index_view', [
-                'path' => 'overview',
+                'path' => static::$DEFAULT_PATH,
             ], 302);
         }
 
@@ -74,9 +86,13 @@ class IndexController extends ControllerAbstract
         $templating = $this->container->get('twig');
         $templatingLoader = $templating->getLoader();
 
+        // Return 404 in case the path does not exist.
         if (false === $templatingLoader->exists($view)) {
             throw new NotFoundHttpException();
         }
+
+        /** @var string[] $contextGlobals */
+        $contextGlobals = array_keys($templating->getGlobals());
 
         $context['current_path'] = $path;
         $context['current_view'] = $view;
@@ -91,14 +107,33 @@ class IndexController extends ControllerAbstract
                     ),
                 false
             );
-        $context['ga_measurement_id'] = $this->getParameter('app.ga_measurement_id');
 
+        // Copy the parameters from container to context.
+        foreach (static::$PARAMETER as $parameter) {
+            // Skip when the name is already taken, sorry.
+            if (array_key_exists($parameter, $context) || in_array($parameter, $contextGlobals, true)) {
+                continue;
+            }
+
+            // Get the parameter value or fallback to null.
+            try {
+                $parameterValue = $this->getParameter("app.{$parameter}");
+            } catch (ParameterNotFoundException $exception) {
+                $parameterValue = null;
+            }
+
+            $context[$parameter] = $parameterValue;
+        }
+
+        // Render the template with context.
         try {
             $content = $templating->render($view, $context);
         } catch (Error $error) {
+            // Return 400 in case the template yields an error.
             throw new BadRequestHttpException('', $error);
         }
 
+        // Return the response.
         $response = new Response();
         $response->setContent($content);
 

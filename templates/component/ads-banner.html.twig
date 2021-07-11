@@ -1,44 +1,43 @@
-{# component: cookie-banner #}
+{# component: ads-banner #}
 
 {% block style %}
-    <!-- component: cookie-banner -->
+    <!-- component: ads-banner -->
     <style>
-        body[data-app-cookie-banner="true"] div[data-app-component="cookie-banner"] {
+        body[data-app-ads-banner="true"] div[data-app-component="ads-banner"] {
             display: block;
         }
 
-        body[data-app-cookie-banner="false"] div[data-app-component="cookie-banner"] {
+        body[data-app-ads-banner="false"] div[data-app-component="ads-banner"] {
             display: none;
         }
     </style>
 {% endblock %}
 
 {% block data %}
-    data-app-cookie-banner="{{ (not value|default(false)) ? 'true' : 'false' }}"
-    data-app-cookie-banner-state="false"
+    data-app-ads-banner="{{ (not value|default(false)) ? 'true' : 'false' }}"
+    data-app-ads-banner-state="false"
 {% endblock %}
 
 {% block html %}
-    <!-- component: cookie-banner -->
-    <div class="alert alert-light border alert-dismissible my-3 pb-0" role="alert" data-app-component="cookie-banner">
+    <!-- component: ads-banner -->
+    <div class="alert alert-light border alert-dismissible my-3 pb-0" role="alert" data-app-component="ads-banner">
         <p>
-            {{ source('svg/question-square.svg') }} <strong class="ms-1">Heads up!</strong>
+            {{ source('svg/badge-ad.svg') }} <strong class="ms-1">Ads are nice.</strong>
         </p>
 
         <p>
-            I use cookies in my site to offer you a better browsing experience, personalise content, preferences and
-            ads, as many others do. I also use cookies to analyse traffic. By continuing to use this site, you consent
-            to these cookies being used.
+            Aren't they? Well, they help me pay the bills, but they can also get in the way quite easily. So you decide
+            if you want to see them. :) The ads shown will not be personalized, if you don't consent to cookies above.
         </p>
 
         <div style="margin-right: -2rem;">
             <hr>
 
             <button type="button" class="btn btn-outline-primary btn-sm border-2 mb-3">
-                Alright, fine
+                I'm ok with seeing ads
             </button>
             <button type="button" class="btn btn-outline-dark btn-sm border-2 mb-3">
-                No, please do not use cookies
+                No ads for me, sir
             </button>
         </div>
 
@@ -47,23 +46,27 @@
 {% endblock %}
 
 {% block script %}
-    <!-- component: cookie-banner -->
+    <!-- component: ads-banner -->
     <script type="text/javascript">
         (function () {
             'use strict';
 
-            function getCookieConsent() {
+            function hasCookieConsent() {
+                return 'true' === document.body.dataset.appCookieBannerState;
+            }
+
+            function getAdsConsent() {
                 var value = document.cookie;
 
                 if (-1 < value.indexOf(';')) {
                     value = value.split(';')
                         .find(function (row) {
-                            return row.startsWith('cookie_consent=');
+                            return row.startsWith('ads_consent=');
                         });
                 }
 
-                if ('undefined' === typeof value || '' === value) {
-                    value = 'cookie_consent=undefined';
+                if (!hasCookieConsent() || 'undefined' === typeof value || '' === value) {
+                    value = 'ads_consent=undefined';
                 }
 
                 return value.split('=')[1];
@@ -73,11 +76,15 @@
                 return (12 /*months*/ * 30 /*days*/ * 24 /*hours*/ * 60 /*minutes*/ * 60 /*seconds*/ * (ms ? (1000 /*milliseconds*/) : 1));
             }
 
-            function setCookieConsent(value) {
+            function setAdsConsent(value) {
+                if (!hasCookieConsent()) {
+                    return;
+                }
+
                 var date = new Date();
                 date.setTime(date.getTime() + getTimeout(true));
 
-                document.cookie = 'cookie_consent=' + value
+                document.cookie = 'ads_consent=' + value
                     + '; expires=' + date.toUTCString() + '; Max-Age=' + getTimeout(false)
                     + '; path=/'
                     + '; domain=' + location.hostname.replace(/^www\./, '')
@@ -86,29 +93,27 @@
             }
 
             function init() {
-                var value = getCookieConsent();
+                var value = getAdsConsent();
 
-                document.body.dataset.appCookieBannerState = value;
+                document.body.dataset.appAdsBannerState = value;
 
                 switch (value) {
                     case 'undefined':
-                        document.body.dataset.appCookieBanner = 'true';
+                        document.body.dataset.appAdsBanner = 'true';
 
                         break;
                     case 'true':
-                        document.body.dataset.appCookieBanner = 'false';
+                        document.body.dataset.appAdsBanner = 'false';
 
                         break;
                     case 'false':
-                        document.body.dataset.appCookieBanner = 'false';
-
-                        disableGa();
+                        document.body.dataset.appAdsBanner = 'false';
 
                         break;
                 }
             }
 
-            var list = document.querySelectorAll('[data-app-component="cookie-banner"]');
+            var list = document.querySelectorAll('[data-app-component="ads-banner"]');
 
             Array.prototype.slice.call(list)
                 .forEach(
@@ -125,16 +130,24 @@
                         var buttonNo = buttonGroup.querySelector('button[type="button"]:last-of-type');
 
                         buttonYes.addEventListener('click', function (event) {
-                            setCookieConsent('true');
+                            setAdsConsent('true');
 
-                            document.body.dataset.appCookieBanner = 'false';
-                            document.body.dataset.appCookieBannerState = 'true';
+                            enablePersonalizedAds();
+
+                            document.body.dataset.appAdsBanner = 'false';
+                            document.body.dataset.appAdsBannerState = 'true';
+
+                            resumeAds();
                         });
                         buttonNo.addEventListener('click', function (event) {
-                            setCookieConsent('false');
+                            setAdsConsent('false');
 
-                            document.body.dataset.appCookieBanner = 'false';
-                            document.body.dataset.appCookieBannerState = 'false';
+                            disablePersonalizedAds();
+
+                            document.body.dataset.appAdsBanner = 'false';
+                            document.body.dataset.appAdsBannerState = 'false';
+
+                            pauseAds();
                         });
                     }
                 );
