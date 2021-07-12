@@ -11,6 +11,19 @@
             display: none;
         }
     </style>
+    <style>
+        body[data-app-ads-banner-state="true"] div[data-app-component="ad"] {
+            display: block;
+        }
+
+        body[data-app-ads-banner-state="false"] div[data-app-component="ad"] {
+            display: none;
+        }
+
+        body[data-app-ads-banner-state="undefined"] div[data-app-component="ad"] {
+            display: none;
+        }
+    </style>
 {% endblock %}
 
 {% block data %}

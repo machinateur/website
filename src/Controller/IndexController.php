@@ -55,6 +55,8 @@ class IndexController extends ControllerAbstract
         // Google AdSense
         'ad_script',
         'ad_client',
+        // Google AdSense Ads Configuration
+        'ad_config',
     ];
 
     /**

@@ -7,6 +7,7 @@ parameters:
   app.ga_measurement_id: '%env(APP_GA_MEASUREMENT_ID)%'
   app.ad_script: '%env(APP_AD_SCRIPT)%'
   app.ad_client: '%env(APP_AD_CLIENT)%'
+  app.ad_config: '%env(json:file:resolve:APP_AD_CONFIG)%'
 
 services:
   # default configuration for services in *this* file

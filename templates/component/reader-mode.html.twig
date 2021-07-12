@@ -6,9 +6,11 @@
         body .rm {
             transition: opacity 500ms linear;
         }
+
         body[data-app-reader-mode="true"] .rm {
             opacity: 0.0;
         }
+
         body[data-app-reader-mode="false"] .rm {
             opacity: 1.0;
         }
@@ -49,6 +51,8 @@
                         checkbox.addEventListener('change', function (event) {
                             document.body.dataset.appReaderMode = !!checkbox.checked ? 'true' : 'false';
                         }, false);
+
+                        checkbox.checked = 'true' === document.body.dataset.appReaderMode;
                     }
                 );
         })();

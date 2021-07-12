@@ -67,23 +67,47 @@
             display: none;
         }
     </style>
-    {% with %}{{ block('style', 'component/reader-mode.html.twig')|raw }}{% endwith %}
-    {% with %}{{ block('style', 'component/theme.html.twig')|raw }}{% endwith %}
-    {% with %}{{ block('style', 'component/zoom.html.twig')|raw }}{% endwith %}
-    {% with %}{{ block('style', 'component/main-content.html.twig')|raw }}{% endwith %}
-    {% with %}{{ block('style', 'component/cookie-banner.html.twig')|raw }}{% endwith %}
-    {% with %}{{ block('style', 'component/ads-banner.html.twig')|raw }}{% endwith %}
+    {% with %}
+        {{ block('style', 'component/reader-mode.html.twig')|raw }}
+    {% endwith %}
+    {% with %}
+        {{ block('style', 'component/theme.html.twig')|raw }}
+    {% endwith %}
+    {% with %}
+        {{ block('style', 'component/zoom.html.twig')|raw }}
+    {% endwith %}
+    {% with %}
+        {{ block('style', 'component/main-content.html.twig')|raw }}
+    {% endwith %}
+    {% with %}
+        {{ block('style', 'component/cookie-banner.html.twig')|raw }}
+    {% endwith %}
+    {% with %}
+        {{ block('style', 'component/ads-banner.html.twig')|raw }}
+    {% endwith %}
 {% endblock %}
 
 {% block body_class %}bg-white{% endblock %}
 
 {% block body_data %}
-    {% with { value: reader_mode } %}{{ block('data', 'component/reader-mode.html.twig')|raw }}{% endwith %}
-    {% with { value: dark_mode } %}{{ block('data', 'component/theme.html.twig')|raw }}{% endwith %}
-    {% with { value: zoom_level } %}{{ block('data', 'component/zoom.html.twig')|raw }}{% endwith %}
-    {% with { value: main_content_id } %}{{ block('data', 'component/main-content.html.twig')|raw }}{% endwith %}
-    {% with { value: cookie_consent } %}{{ block('data', 'component/cookie-banner.html.twig')|raw }}{% endwith %}
-    {% with { value: ads_consent } %}{{ block('data', 'component/ads-banner.html.twig')|raw }}{% endwith %}
+    {% with { value: reader_mode } %}
+        {{ block('data', 'component/reader-mode.html.twig')|raw }}
+    {% endwith %}
+    {% with { value: dark_mode } %}
+        {{ block('data', 'component/theme.html.twig')|raw }}
+    {% endwith %}
+    {% with { value: zoom_level } %}
+        {{ block('data', 'component/zoom.html.twig')|raw }}
+    {% endwith %}
+    {% with { value: main_content_id } %}
+        {{ block('data', 'component/main-content.html.twig')|raw }}
+    {% endwith %}
+    {% with { value: cookie_consent } %}
+        {{ block('data', 'component/cookie-banner.html.twig')|raw }}
+    {% endwith %}
+    {% with { value: ads_consent } %}
+        {{ block('data', 'component/ads-banner.html.twig')|raw }}
+    {% endwith %}
 {% endblock %}
 
 {% block body %}
@@ -118,16 +142,22 @@
                         </div>
 
                         <div class="d-flex text-center border border-0-lg rounded rounded-3 p-1">
-                            {% with { id: 0 } %}{{ block('html', 'component/reader-mode.html.twig')|raw }}{% endwith %}
-
-                            {% with { id: 0, value: dark_mode } %}{{ block('html', 'component/theme.html.twig')|raw }}{% endwith %}
+                            {% with { id: 0 } %}
+                                {{ block('html', 'component/reader-mode.html.twig')|raw }}
+                            {% endwith %}
+                            {% with { id: 0 } %}
+                                {{ block('html', 'component/theme.html.twig')|raw }}
+                            {% endwith %}
 
                             <div class="ms-auto invisible">
                             </div>
 
-                            {% with { id: 0 } %}{{ block('html', 'component/zoom.html.twig')|raw }}{% endwith %}
-
-                            {% with { id: 0 } %}{{ block('html', 'component/main-content.html.twig')|raw }}{% endwith %}
+                            {% with { id: 0 } %}
+                                {{ block('html', 'component/zoom.html.twig')|raw }}
+                            {% endwith %}
+                            {% with { id: 0 } %}
+                                {{ block('html', 'component/main-content.html.twig')|raw }}
+                            {% endwith %}
                         </div>
                     </div>
                 </div>
@@ -138,8 +168,16 @@
     <div class="bg-light border-top border-5 min-vh-100" id="{{ main_content_id[1:] }}"
          style="border-color: {{ random_color }}!important;">
         <div class="container">
-            {% with { id: 0 } %}{{ block('html', 'component/cookie-banner.html.twig')|raw }}{% endwith %}
-            {% with { id: 0 } %}{{ block('html', 'component/ads-banner.html.twig')|raw }}{% endwith %}
+            {% with { id: 0 } %}
+                {{ block('html', 'component/cookie-banner.html.twig')|raw }}
+            {% endwith %}
+            {% with { id: 0 } %}
+                {{ block('html', 'component/ads-banner.html.twig')|raw }}
+            {% endwith %}
+
+            {% with { ad: ad_config.above_content } %}
+                {% include 'component/ads/above-content.html.twig' %}
+            {% endwith %}
 
             {% block body_content %}
             {% endblock %}
@@ -182,11 +220,25 @@
             })();
         </script>
     {% endif %}
-    {% with %}{{ block('script', 'component/src.html.twig')|raw }}{% endwith %}
-    {% with %}{{ block('script', 'component/reader-mode.html.twig')|raw }}{% endwith %}
-    {% with %}{{ block('script', 'component/theme.html.twig')|raw }}{% endwith %}
-    {% with %}{{ block('script', 'component/zoom.html.twig')|raw }}{% endwith %}
-    {% with %}{{ block('script', 'component/main-content.html.twig')|raw }}{% endwith %}
-    {% with %}{{ block('script', 'component/cookie-banner.html.twig')|raw }}{% endwith %}
-    {% with %}{{ block('script', 'component/ads-banner.html.twig')|raw }}{% endwith %}
+    {% with %}
+        {{ block('script', 'component/src.html.twig')|raw }}
+    {% endwith %}
+    {% with %}
+        {{ block('script', 'component/reader-mode.html.twig')|raw }}
+    {% endwith %}
+    {% with %}
+        {{ block('script', 'component/theme.html.twig')|raw }}
+    {% endwith %}
+    {% with %}
+        {{ block('script', 'component/zoom.html.twig')|raw }}
+    {% endwith %}
+    {% with %}
+        {{ block('script', 'component/main-content.html.twig')|raw }}
+    {% endwith %}
+    {% with %}
+        {{ block('script', 'component/cookie-banner.html.twig')|raw }}
+    {% endwith %}
+    {% with %}
+        {{ block('script', 'component/ads-banner.html.twig')|raw }}
+    {% endwith %}
 {% endblock %}
