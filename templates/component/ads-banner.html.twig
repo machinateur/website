@@ -20,28 +20,34 @@
 
 {% block html %}
     <!-- component: ads-banner -->
-    <div class="alert alert-light border alert-dismissible my-3 pb-0" role="alert" data-app-component="ads-banner">
+    <div class="alert alert-light border alert-dismissible my-3 pb-0 position-relative" role="alert"
+         data-app-component="ads-banner">
         <p>
             {{ source('svg/badge-ad.svg') }} <strong class="ms-1">Ads are nice.</strong>
         </p>
 
-        <p>
-            Aren't they? Well, they help me pay the bills, but they can also get in the way quite easily. So you decide
-            if you want to see them. :) The ads shown will not be personalized, if you don't consent to cookies above.
-        </p>
+        <div class="collapse collapse-once" id="collapseAdsBanner">
+            <p>
+                Aren't they? Well, they help me pay the bills, but they can also get in the way quite easily. So you
+                decide if you want to see them. :)
+            </p>
 
-        <div style="margin-right: -2rem;">
-            <hr>
+            <div style="margin-right: -2rem;">
+                <hr>
 
-            <button type="button" class="btn btn-outline-primary btn-sm border-2 mb-3">
-                I'm ok with seeing ads
-            </button>
-            <button type="button" class="btn btn-outline-dark btn-sm border-2 mb-3">
-                No ads for me, sir
-            </button>
+                <button type="button" class="btn btn-outline-primary btn-sm border-2 mb-3">
+                    I'm ok with seeing ads
+                </button>
+                <button type="button" class="btn btn-outline-dark btn-sm border-2 mb-3">
+                    No ads for me, sir
+                </button>
+            </div>
+
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <a class="stretched-link" data-bs-toggle="collapse" href="#collapseAdsBanner" role="button"
+           aria-expanded="false" aria-controls="collapseAdsBanner"></a>
     </div>
 {% endblock %}
 

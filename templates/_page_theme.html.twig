@@ -62,6 +62,10 @@
                 border: 0 !important;
             }
         }
+
+        .collapse.collapse-once.show + a[data-bs-toggle="collapse"] {
+            display: none;
+        }
     </style>
     {% with %}{{ block('style', 'component/reader-mode.html.twig')|raw }}{% endwith %}
     {% with %}{{ block('style', 'component/theme.html.twig')|raw }}{% endwith %}
@@ -185,6 +189,4 @@
     {% with %}{{ block('script', 'component/main-content.html.twig')|raw }}{% endwith %}
     {% with %}{{ block('script', 'component/cookie-banner.html.twig')|raw }}{% endwith %}
     {% with %}{{ block('script', 'component/ads-banner.html.twig')|raw }}{% endwith %}
-    <script type="text/javascript">
-    </script>
 {% endblock %}

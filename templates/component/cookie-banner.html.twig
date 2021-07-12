@@ -20,29 +20,35 @@
 
 {% block html %}
     <!-- component: cookie-banner -->
-    <div class="alert alert-light border alert-dismissible my-3 pb-0" role="alert" data-app-component="cookie-banner">
+    <div class="alert alert-light border alert-dismissible my-3 pb-0 position-relative" role="alert"
+         data-app-component="cookie-banner">
         <p>
             {{ source('svg/question-square.svg') }} <strong class="ms-1">Heads up!</strong>
         </p>
 
-        <p>
-            I use cookies in my site to offer you a better browsing experience, personalise content, preferences and
-            ads, as many others do. I also use cookies to analyse traffic. By continuing to use this site, you consent
-            to these cookies being used.
-        </p>
+        <div class="collapse collapse-once" id="collapseCookieBanner">
+            <p>
+                I use cookies in my site to offer you a better browsing experience, personalise content, preferences and
+                ads, as many others do. I also use cookies to analyse traffic. By continuing to use this site, you
+                consent to these cookies being used.
+            </p>
 
-        <div style="margin-right: -2rem;">
-            <hr>
+            <div style="margin-right: -2rem;">
+                <hr>
 
-            <button type="button" class="btn btn-outline-primary btn-sm border-2 mb-3">
-                Alright, fine
-            </button>
-            <button type="button" class="btn btn-outline-dark btn-sm border-2 mb-3">
-                No, please do not use cookies
-            </button>
+                <button type="button" class="btn btn-outline-primary btn-sm border-2 mb-3">
+                    Alright, fine
+                </button>
+                <button type="button" class="btn btn-outline-dark btn-sm border-2 mb-3">
+                    No, please do not use cookies
+                </button>
+            </div>
+
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <a class="stretched-link" data-bs-toggle="collapse" href="#collapseCookieBanner" role="button"
+           aria-expanded="false" aria-controls="collapseCookieBanner"></a>
     </div>
 {% endblock %}
 
