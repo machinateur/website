@@ -111,9 +111,17 @@
                     case 'true':
                         document.body.dataset.appAdsBanner = 'false';
 
+                        enablePersonalizedAds();
+
+                        resumeAds();
+
                         break;
                     case 'false':
-                        document.body.dataset.appAdsBanner = 'false';
+                        document.body.dataset.appAdsBanner = 'true';
+
+                        disablePersonalizedAds();
+
+                        pauseAds();
 
                         break;
                 }
@@ -138,20 +146,20 @@
                         buttonYes.addEventListener('click', function (event) {
                             setAdsConsent('true');
 
-                            enablePersonalizedAds();
-
                             document.body.dataset.appAdsBanner = 'false';
                             document.body.dataset.appAdsBannerState = 'true';
+
+                            enablePersonalizedAds();
 
                             resumeAds();
                         });
                         buttonNo.addEventListener('click', function (event) {
                             setAdsConsent('false');
 
-                            disablePersonalizedAds();
-
                             document.body.dataset.appAdsBanner = 'false';
                             document.body.dataset.appAdsBannerState = 'false';
+
+                            disablePersonalizedAds();
 
                             pauseAds();
                         });
