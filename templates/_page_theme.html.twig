@@ -175,7 +175,7 @@
                 {{ block('html', 'component/ads-banner.html.twig')|raw }}
             {% endwith %}
 
-            {% with { ad: ad_config.above_content } %}
+            {% with { ad: ad_config.above_content|default({}) } %}
                 {% include 'component/ads/above-content.html.twig' %}
             {% endwith %}
 
