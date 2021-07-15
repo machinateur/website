@@ -20,7 +20,7 @@
     'path': p.relativePath|replace({
         '\\': '/',
     })['content'|length:]|trim('/', 'left') ~ '/'~ p.filenameWithoutExtension[:-'.html'|length],
-})|sort((a, b) => a.post_data.date < b.post_data.date)|filter((v, k) => v.post_data.date <= 'now'|date('Y-m-d'))|slice(0, 3) %}
+})|sort((a, b) => a.post_data.date <=> b.post_data.date)|filter((v, k) => v.post_data.date <= 'now'|date('Y-m-d'))|slice(0, 3) %}
 {% set this_blog_post = recent_blog_posts|reduce((carry, p) => (carry is not null ? carry : (p.fileinfo.relativePathname|replace({
     '\\': '/',
 }) is same as(current_view) ? p : null)), null) %}

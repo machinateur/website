@@ -29,7 +29,7 @@
     'path': p.relativePath|replace({
         '\\': '/',
     })['content'|length:]|trim('/', 'left') ~ '/'~ p.filenameWithoutExtension[:-'.html'|length],
-})|sort((a, b) => a.post_data.date < b.post_data.date)|filter((v, k) => v.post_data.date <= 'now'|date('Y-m-d'))|slice(0, 3) %}
+})|sort((a, b) => a.post_data.date <=> b.post_data.date)|filter((v, k) => v.post_data.date <= 'now'|date('Y-m-d'))|slice(0, 3) %}
 
 {% block body_content %}
     <div class="mx-auto py-5 px-3">
