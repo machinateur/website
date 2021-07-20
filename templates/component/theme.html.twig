@@ -4,7 +4,10 @@
     <!-- component: theme -->
     <style>
         body {
-            transition: filter 500ms linear;
+            /**
+             * There is a collision between this transition and the "font-size" transition!
+             */
+            transition: filter 250ms linear;
         }
 
         /**
