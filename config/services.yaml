@@ -30,4 +30,4 @@ services:
 
   App\Command\SitemapCommand:
     calls:
-      - 'setContentPath': [ '%twig.default_path%' ]
+      - setContentPath: [ '%twig.default_path%' ]

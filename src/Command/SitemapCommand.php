@@ -116,14 +116,14 @@ class SitemapCommand extends Command
             false
         );
 
-        $sitemapContent = implode("\n", array_filter(array_map(function (SplFileInfo $fileinfo) use ($input): string {
+        $sitemapContent = implode("\n", array_filter(array_map(function (SplFileInfo $fileInfo) use ($input): string {
             $urlScheme = $input->getOption('url-scheme');
             $urlHost = $input->getOption('url-host');
             $urlPort = $input->getOption('url-port');
             if (self::DEFAULT_PORT != $urlPort) {
                 $urlPort = ':' . $urlPort;
             }
-            $urlPath = str_replace('\\', '/', substr($fileinfo->getRelativePathname(),
+            $urlPath = str_replace('\\', '/', substr($fileInfo->getRelativePathname(),
                 strlen('content'), -strlen('.html.twig')));
             return "{$urlScheme}://{$urlHost}{$urlPort}{$urlPath}";
         }, $pages), function (string $url) use ($input): bool {
