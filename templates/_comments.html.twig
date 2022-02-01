@@ -1,0 +1,41 @@
+{% for comment in comments %}
+    {% if comment is not null %}
+        <div class="{% if not loop.first %}border-top {% endif %}p-1">
+            <div class="d-flex align-items-center justify-content-between border-bottom">
+                {% set author = comment.user.login %}
+                {# set author_link = comment.user.html_url #}
+                {% set author_link = 'https://github.com/' ~ author %}
+                {% set author_profile = author_link ~ '.png' %}
+
+                <a href="{{ author_link }}" target="_blank" rel="author external noopener noreferrer"
+                   class="d-flex align-items-center text-muted text-decoration-none">
+                    <img class="mb-0 me-2 rounded" src="{{ author_profile ~ '?size=32' }}" alt="" width="32" height="32"
+                         referrerpolicy="no-referrer">
+                    <span>{{ '@' ~ author }}</span>
+                </a>
+
+                {% set comment_link = 'https://gist.github.com/machinateur/' ~ subject_id ~ '#gistcomment-' ~ comment.id %}
+
+                <a class="d-flex align-items-center ms-1 me-3 text-center text-decoration-none small"
+                   href="{{ comment_link }}" target="_blank"
+                   title="{{ comment.created_at|date('D, d M Y H:i:s') }}">
+                    <span class="me-2">{{ source('svg/clock.svg') }}</span> {{ comment.created_at|date('M d, Y') }}
+                </a>
+            </div>
+
+            <div class="mx-2 my-1">
+                {{ comment.body|markdown_to_html|pcre_replace([
+                    '#<h[0-6]#',
+                    '#<\/h[0-6]>#',
+                ], [
+                    '<p',
+                    '</p>',
+                ])|raw }}
+            </div>
+        </div>
+    {% endif %}
+{% else %}
+    <div class="text-center py-5" id="commentEmpty">
+        <span class="text-muted">No comments yet</span>
+    </div>
+{% endfor %}

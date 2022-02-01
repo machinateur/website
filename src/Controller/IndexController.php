@@ -34,14 +34,14 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
-use Twig\Error\Error;
+use Twig\Error\Error as TwigError;
 
 /**
  * Class IndexController
  *
  * @Route("", name="index_", schemes={
  *     "https",
- * })
+ * }, priority=0)
  *
  * @package App\Controller
  */
@@ -49,7 +49,7 @@ class IndexController extends ControllerAbstract
 {
     private static string $DEFAULT_PATH = 'overview';
 
-    private static array $PARAMETER = [
+    private static array $EXPOSED_PARAMETERS = [
         // Google Analytics
         'ga_measurement_id',
         // Google AdSense
@@ -70,10 +70,9 @@ class IndexController extends ControllerAbstract
      *
      * @param Request $request
      * @param string|null $path
-     * @param array $context
      * @return Response
      */
-    public function view(Request $request, ?string $path = null, array $context = []): Response
+    public function view(Request $request, ?string $path = null): Response
     {
         if (null === $path) {
             // Redirect to default route.
@@ -84,18 +83,19 @@ class IndexController extends ControllerAbstract
 
         $view = 'content/' . $path . '.html.twig';
 
-        /** @var Environment $templating */
-        $templating = $this->container->get('twig');
-        $templatingLoader = $templating->getLoader();
+        /** @var Environment $twig */
+        $twig = $this->container->get('twig');
+        $twigLoader = $twig->getLoader();
 
         // Return 404 in case the path does not exist.
-        if (false === $templatingLoader->exists($view)) {
+        if (false === $twigLoader->exists($view)) {
             throw new NotFoundHttpException();
         }
 
         /** @var string[] $contextGlobals */
-        $contextGlobals = array_keys($templating->getGlobals());
+        $contextGlobals = array_keys($twig->getGlobals());
 
+        $context = [];
         $context['current_path'] = $path;
         $context['current_view'] = $view;
         $context['blog_posts'] =
@@ -111,7 +111,7 @@ class IndexController extends ControllerAbstract
             );
 
         // Copy the parameters from container to context.
-        foreach (static::$PARAMETER as $parameter) {
+        foreach (static::$EXPOSED_PARAMETERS as $parameter) {
             // Skip when the name is already taken, sorry.
             if (array_key_exists($parameter, $context) || in_array($parameter, $contextGlobals, true)) {
                 continue;
@@ -120,7 +120,7 @@ class IndexController extends ControllerAbstract
             // Get the parameter value or fallback to null.
             try {
                 $parameterValue = $this->getParameter("app.{$parameter}");
-            } catch (ParameterNotFoundException $exception) {
+            } catch (ParameterNotFoundException) {
                 $parameterValue = null;
             }
 
@@ -129,10 +129,10 @@ class IndexController extends ControllerAbstract
 
         // Render the template with context.
         try {
-            $content = $templating->render($view, $context);
-        } catch (Error $error) {
+            $content = $twig->render($view, $context);
+        } catch (TwigError $error) {
             // Return 400 in case the template yields an error.
-            throw new BadRequestHttpException('', $error);
+            throw new BadRequestHttpException('0oops...', $error);
         }
 
         // Return the response.
@@ -140,5 +140,41 @@ class IndexController extends ControllerAbstract
         $response->setContent($content);
 
         return $response;
+    }
+
+    /**
+     * @Route("/{path}/source", name="view_source", requirements={
+     *     "path" = "^(?:\/?[a-z0-9]+(?:-[a-z0-9]+)*)+$",
+     * }, methods={
+     *     "GET",
+     * }, priority=1)
+     *
+     * @see https://regex101.com/r/GRZ0vv/1
+     *
+     * @param Request $request
+     * @param string|null $path
+     * @return Response
+     */
+    public function view_source(Request $request, ?string $path = null): Response
+    {
+        if (null === $path) {
+            // Redirect to default route.
+            return $this->redirectToRoute('index_view_source', [
+                'path' => static::$DEFAULT_PATH,
+            ], 302);
+        }
+
+        // Return raw markdown content, when the source parameter is present.
+        $source = $this->getParameter('twig.default_path') . '/markdown/' . $path . '.md';
+
+        if (!file_exists($source)) {
+            throw new NotFoundHttpException('No markdown content available.');
+        }
+
+        $sourceContent = file_get_contents($source);
+
+        return new Response($sourceContent, 200, [
+            'Content-Type' => 'text/markdown',
+        ]);
     }
 }

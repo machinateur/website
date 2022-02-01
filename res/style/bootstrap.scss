@@ -8,6 +8,8 @@
 
 $blue: #144da0;
 
+$text-muted: #495057;
+
 // scss-docs-start import-stack
 // Configuration
 @import "functions";
@@ -29,6 +31,7 @@ $blue: #144da0;
 @import "button-group";
 @import "nav";
 @import "navbar";
+//@import "card";
 @import "badge";
 @import "alert";
 @import "close";

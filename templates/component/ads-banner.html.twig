@@ -39,7 +39,7 @@
             {{ source('svg/badge-ad.svg') }} <strong class="ms-1">Ads are nice.</strong>
         </p>
 
-        <div class="collapse collapse-once" id="collapseAdsBanner">
+        <div class="collapse collapse-once" id="collapseAdsBanner{{ id }}">
             <p>
                 Aren't they? Well, they help me pay the bills, but they can also get in the way quite easily. So you
                 decide if you want to see them. :)
@@ -56,11 +56,12 @@
                 </button>
             </div>
 
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+            </button>
         </div>
 
-        <a class="stretched-link" data-bs-toggle="collapse" href="#collapseAdsBanner" role="button"
-           aria-expanded="false" aria-controls="collapseAdsBanner" aria-label="Expand"></a>
+        <a class="stretched-link" data-bs-toggle="collapse" href="#collapseAdsBanner{{ id }}" role="button"
+           aria-expanded="false" aria-controls="collapseAdsBanner{{ id }}" aria-label="Expand"></a>
     </div>
 {% endblock %}
 
@@ -165,7 +166,7 @@
                             enablePersonalizedAds();
 
                             resumeAds();
-                        });
+                        }, false);
                         buttonNo.addEventListener('click', function (event) {
                             setAdsConsent('false');
 
@@ -175,7 +176,7 @@
                             disablePersonalizedAds();
 
                             pauseAds();
-                        });
+                        }, false);
                     }
                 );
 

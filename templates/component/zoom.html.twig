@@ -1,46 +1,41 @@
 {# component: zoom #}
 
+{% block style_transition %}/** component: zoom */ font-size 500ms linear{% endblock %}
+
 {% block style %}
     <!-- component: zoom -->
     <style>
-        body {
-            /**
-             * There is a collision between this transition and the "filter" transition!
-             */
-            transition: font-size 500ms linear;
-        }
-
-        body[data-app-zoom="-5"] {
+        body[data-app-zoom="-5"] > div:first-of-type {
             font-size: 11px;
         }
-        body[data-app-zoom="-4"] {
+        body[data-app-zoom="-4"] > div:first-of-type {
             font-size: 12px;
         }
-        body[data-app-zoom="-3"] {
+        body[data-app-zoom="-3"] > div:first-of-type {
             font-size: 13px;
         }
-        body[data-app-zoom="-2"] {
+        body[data-app-zoom="-2"] > div:first-of-type {
             font-size: 14px;
         }
-        body[data-app-zoom="-1"] {
+        body[data-app-zoom="-1"] > div:first-of-type {
             font-size: 15px;
         }
-        body[data-app-zoom="0"] {
+        body[data-app-zoom="0"] > div:first-of-type {
             font-size: 16px;
         }
-        body[data-app-zoom="1"] {
+        body[data-app-zoom="1"] > div:first-of-type {
             font-size: 17px;
         }
-        body[data-app-zoom="2"] {
+        body[data-app-zoom="2"] > div:first-of-type {
             font-size: 18px;
         }
-        body[data-app-zoom="3"] {
+        body[data-app-zoom="3"] > div:first-of-type {
             font-size: 19px;
         }
-        body[data-app-zoom="4"] {
+        body[data-app-zoom="4"] > div:first-of-type {
             font-size: 20px;
         }
-        body[data-app-zoom="5"] {
+        body[data-app-zoom="5"] > div:first-of-type {
             font-size: 21px;
         }
     </style>
@@ -52,7 +47,7 @@
 
 {% block html %}
     <!-- component: zoom -->
-    <div class="d-flex btn-group mx-2" role="group" aria-label="Zoom" data-app-component="zoom">
+    <div class="d-flex btn-group mx-1" role="group" aria-label="Zoom" data-app-component="zoom">
         <button type="button" class="btn btn-outline-primary">
             {{ source('svg/zoom-out.svg') }}
         </button>

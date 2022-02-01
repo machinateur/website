@@ -8,6 +8,8 @@ parameters:
   app.ad_script: '%env(APP_AD_SCRIPT)%'
   app.ad_client: '%env(APP_AD_CLIENT)%'
   app.ad_config: '%env(json:file:resolve:APP_AD_CONFIG)%'
+  github.username: '%env(GITHUB_USERNAME)%'
+  github.secret: '%env(GITHUB_SECRET)%'
 
 services:
   # default configuration for services in *this* file

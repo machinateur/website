@@ -1,0 +1,104 @@
+{# component: scroll-to-top #}
+
+{% block style %}
+    <!-- component: scroll-to-top -->
+    <style>
+        body[data-app-scroll-to-top] button[data-app-component="scroll-to-top"] {
+            transition: opacity 250ms linear;
+        }
+
+        body[data-app-scroll-to-top="true"] button[data-app-component="scroll-to-top"] {
+            opacity: 1.0;
+        }
+
+        body[data-app-scroll-to-top="false"] button[data-app-component="scroll-to-top"] {
+            opacity: 0.0;
+        }
+    </style>
+{% endblock %}
+
+{% block data %}
+    data-app-scroll-to-top="{{ value|default(false) ? 'true' : 'false' }}"
+{% endblock %}
+
+{% block html %}
+    <!-- component: scroll-to-top -->
+    <button type="button" class="btn btn-primary btn-lg border-2 rounded-pill p-3 position-fixed"
+            style="bottom: 2rem; right: 2rem;" data-app-component="scroll-to-top" aria-label="Scroll to top">
+        {% include 'svg/arrow-up.svg.twig' with {
+            'width': 32,
+            'height': 32,
+        } %}
+    </button>
+{% endblock %}
+
+{% block script %}
+    <!-- component: scroll-to-top -->
+    <script type="text/javascript">
+        (function () {
+            'use strict';
+
+            var intersectionElementList = document.querySelectorAll('.navbar');
+
+            /**
+             * @param {IntersectionObserverEntry[]} entryList
+             * @param {IntersectionObserver} observer
+             */
+            function intersectionCallback(entryList, observer) {
+                document.body.dataset.appScrollToTop = !entryList.reduce(
+                    /**
+                     * @param {boolean} isIntersecting
+                     * @param {IntersectionObserverEntry} entry
+                     * @return {boolean}
+                     */
+                    function (isIntersecting, entry) {
+                        return isIntersecting || entry.isIntersecting;
+                    }, false
+                ) ? 'true' : 'false';
+            }
+
+            var intersectionObserver = new IntersectionObserver(intersectionCallback, {
+                root: null,
+                rootMargin: '0px',
+                threshold: [
+                    0.0,
+                    //0.1,
+                    //0.9,
+                    1.0,
+                ],
+            });
+
+            window.addEventListener('load', function (event) {
+                if (1 <= intersectionElementList.length) {
+                    intersectionObserver.observe(
+                        intersectionElementList.item(0)
+                    );
+                }
+
+                if (2 <= intersectionElementList.length) {
+                    intersectionObserver.observe(
+                        intersectionElementList.item(intersectionElementList.length - 1)
+                    );
+                }
+            }, false);
+
+            var list = document.querySelectorAll('button[data-app-component="scroll-to-top"]');
+
+            Array.prototype.slice.call(list)
+                .forEach(
+                    /**
+                     * @param {HTMLButtonElement} component
+                     */
+                    function (component) {
+                        component.addEventListener('click', function (event) {
+                            window.scroll({
+                                top: 0,
+                                left: 0,
+                                behavior: 'smooth',
+                            });
+                        }, false);
+                    }
+                );
+        })();
+    </script>
+{% endblock %}

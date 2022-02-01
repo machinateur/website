@@ -1,17 +1,17 @@
-{# component: reader mode #}
+{# component: reader-mode #}
 
 {% block style %}
-    <!-- component: reader mode -->
+    <!-- component: reader-mode -->
     <style>
-        body .rm {
+        body[data-app-reader-mode] > div:first-of-type .rm {
             transition: opacity 500ms linear;
         }
 
-        body[data-app-reader-mode="true"] .rm {
+        body[data-app-reader-mode="true"] > div:first-of-type .rm {
             opacity: 0.0;
         }
 
-        body[data-app-reader-mode="false"] .rm {
+        body[data-app-reader-mode="false"] > div:first-of-type .rm {
             opacity: 1.0;
         }
     </style>
@@ -22,9 +22,9 @@
 {% endblock %}
 
 {% block html %}
-    <!-- component: reader mode -->
-    <div class="d-flex" data-app-component="reader-mode">
-        <input type="checkbox" class="btn-check" id="btnCheck{{ id }}" autocomplete="off">
+    <!-- component: reader-mode -->
+    <div class="d-flex mx-1" data-app-component="reader-mode">
+        <input class="btn-check" type="checkbox" id="btnCheck{{ id }}" autocomplete="off">
         <label class="btn btn-outline-primary" for="btnCheck{{ id }}">
             {{ source('svg/book.svg') }}
         </label>
@@ -32,7 +32,7 @@
 {% endblock %}
 
 {% block script %}
-    <!-- component: reader mode -->
+    <!-- component: reader-mode -->
     <script type="text/javascript">
         (function () {
             'use strict';

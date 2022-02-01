@@ -3,11 +3,13 @@
 {% set highlighted_code = highlighted_code|default(false) %}
 
 {% set reader_mode = reader_mode|default(false) %}
+{% set ink_mode = reader_mode|default(false) %}
 {% set dark_mode = dark_mode|default(false) %}
 {% set zoom_level = zoom_level|default(0) %}
 {% set main_content_id = main_content_id|default('#main') %}
 {% set cookie_consent = cookie_consent|default(false) %}
 {% set ads_consent = ads_consent|default(false) %}
+{% set stt_visible = stt_visible|default(true) %}
 
 {% set navbar_content = [
     {
@@ -53,6 +55,16 @@
 
 {% block style %}
     {{ parent() }}
+    {% set style_transition = [
+        block('style_transition', 'component/ink-mode.html.twig'),
+        block('style_transition', 'component/theme.html.twig'),
+        block('style_transition', 'component/zoom.html.twig'),
+    ]|join(', ') %}
+    <style>
+        body > div:first-of-type {
+            transition: {{ style_transition|raw }};
+        }
+    </style>
     {% if highlighted_code is same as(true) %}
         <link rel="stylesheet" href="/res/style/highlight/default.css">
     {% endif %}
@@ -71,6 +83,9 @@
         {{ block('style', 'component/reader-mode.html.twig')|raw }}
     {% endwith %}
     {% with %}
+        {{ block('style', 'component/ink-mode.html.twig')|raw }}
+    {% endwith %}
+    {% with %}
         {{ block('style', 'component/theme.html.twig')|raw }}
     {% endwith %}
     {% with %}
@@ -85,6 +100,9 @@
     {% with %}
         {{ block('style', 'component/ads-banner.html.twig')|raw }}
     {% endwith %}
+    {% with %}
+        {{ block('style', 'component/scroll-to-top.html.twig')|raw }}
+    {% endwith %}
 {% endblock %}
 
 {% block body_class %}bg-white{% endblock %}
@@ -92,6 +110,9 @@
 {% block body_data %}
     {% with { value: reader_mode } %}
         {{ block('data', 'component/reader-mode.html.twig')|raw }}
+    {% endwith %}
+    {% with { value: ink_mode } %}
+        {{ block('data', 'component/ink-mode.html.twig')|raw }}
     {% endwith %}
     {% with { value: dark_mode } %}
         {{ block('data', 'component/theme.html.twig')|raw }}
@@ -108,115 +129,133 @@
     {% with { value: ads_consent } %}
         {{ block('data', 'component/ads-banner.html.twig')|raw }}
     {% endwith %}
+    {% with { value: stt_visible } %}
+        {{ block('data', 'component/scroll-to-top.html.twig')|raw }}
+    {% endwith %}
 {% endblock %}
 
 {% block body %}
-    {% block body_content_prepend %}
-        {% block navbar %}
-            <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom border-top">
-                <div class="container-fluid">
-                    <a class="navbar-brand font-monospace py-3" href="{{ path('index_view', {
-                        'path': '',
-                    }) }}">
-                        <img src="/res/image/profile-machinateur.png" alt="" width="32" height="32"
-                             class="border rounded-circle" style="box-sizing: content-box;">
+    <div>
+        <div>
+            {% block body_content_prepend %}
+                {% block navbar %}
+                    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom border-top">
+                        <div class="container-fluid">
+                            <a class="navbar-brand font-monospace py-3" href="{{ path('index_view', {
+                                'path': '',
+                            }) }}">
+                                <img src="/res/image/profile-machinateur.png" alt="" width="32" height="32"
+                                     class="border rounded-circle" style="box-sizing: content-box;">
 
-                        <span>machinateur.dev</span>
-                    </a>
+                                <span>machinateur.dev</span>
+                            </a>
 
-                    <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                        <div class="navbar-nav justify-content-around w-100 mx-auto my-2 my-lg-0 py-1">
-                            {% block navbar_content %}
-                                {% for navbar_link in navbar_content %}
-                                    <a class="nav-link{% if navbar_link.path is same as(current_path) %} active"
-                                       aria-current="page{% endif %}" href="{{ path('index_view', {
-                                        'path': navbar_link.path,
-                                    }) }}">{{ navbar_link.label }}</a>
-                                {% endfor %}
-                            {% endblock %}
+                            <button type="button" class="navbar-toggler ms-auto" data-bs-toggle="collapse"
+                                    data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
+                                    aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                                <div class="navbar-nav justify-content-around w-100 mx-auto my-2 my-lg-0 py-1">
+                                    {% block navbar_content %}
+                                        {% for navbar_link in navbar_content %}
+                                            <a class="nav-link{% if navbar_link.path is same as(current_path) %} active"
+                                               aria-current="page{% endif %}" href="{{ path('index_view', {
+                                                'path': navbar_link.path,
+                                            }) }}">{{ navbar_link.label }}</a>
+                                        {% endfor %}
+                                    {% endblock %}
+                                </div>
+
+                                <div class="d-flex text-center border border-0-lg rounded rounded-3 p-1">
+                                    {% with { id: 0 } %}
+                                        {{ block('html', 'component/reader-mode.html.twig')|raw }}
+                                    {% endwith %}
+                                    {% with { id: 1 } %}
+                                        {{ block('html', 'component/ink-mode.html.twig')|raw }}
+                                    {% endwith %}
+                                    {% with { id: 0 } %}
+                                        {{ block('html', 'component/theme.html.twig')|raw }}
+                                    {% endwith %}
+
+                                    <div class="ms-auto invisible">
+                                    </div>
+
+                                    {% with { id: 0 } %}
+                                        {{ block('html', 'component/zoom.html.twig')|raw }}
+                                    {% endwith %}
+                                    {% with { id: 0 } %}
+                                        {{ block('html', 'component/main-content.html.twig')|raw }}
+                                    {% endwith %}
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                {% endblock %}
+            {% endblock %}
+
+            <div class="bg-light border-top border-5 min-vh-100" id="{{ main_content_id[1:] }}"
+                 style="border-color: {{ random_color }}!important;">
+                <div class="container">
+                    {% with { id: 0 } %}
+                        {{ block('html', 'component/cookie-banner.html.twig')|raw }}
+                    {% endwith %}
+                    {% with { id: 0 } %}
+                        {{ block('html', 'component/ads-banner.html.twig')|raw }}
+                    {% endwith %}
+
+                    {% with { ad: ad_config.above_content|default({}) } %}
+                        {% include 'component/ads/above-content.html.twig' %}
+                    {% endwith %}
+
+                    {% block body_content %}
+                    {% endblock %}
+                </div>
+            </div>
+
+            {% block body_content_append %}
+                <div class="navbar navbar-light bg-white border-bottom border-top">
+                    <div class="container-fluid justify-content-around">
+                        <div class="px-5 py-3">
+                            Copyright &copy; {{ 'now'|date('Y') }}, machinateur.dev
                         </div>
 
-                        <div class="d-flex text-center border border-0-lg rounded rounded-3 p-1">
-                            {% with { id: 0 } %}
-                                {{ block('html', 'component/reader-mode.html.twig')|raw }}
-                            {% endwith %}
-                            {% with { id: 0 } %}
-                                {{ block('html', 'component/theme.html.twig')|raw }}
-                            {% endwith %}
+                        <div class="px-5 py-3">
+                            <a class="text-decoration-none px-2" href="https://github.com/machinateur"
+                               target="_blank" title="machinateur on GitHub" rel="external noopener noreferrer">
+                                {{ source('svg/github.svg') }}
+                            </a>
+                            <a class="text-decoration-none px-2" href="https://twitter.com/machinateur"
+                               target="_blank" title="machinateur on Twitter" rel="external noopener noreferrer">
+                                {{ source('svg/twitter.svg') }}
+                            </a>
+                        </div>
 
-                            <div class="ms-auto invisible">
-                            </div>
-
-                            {% with { id: 0 } %}
-                                {{ block('html', 'component/zoom.html.twig')|raw }}
-                            {% endwith %}
-                            {% with { id: 0 } %}
-                                {{ block('html', 'component/main-content.html.twig')|raw }}
-                            {% endwith %}
+                        <div class="text-center w-100 small px-5 py-3">
+                            Made with <span style="color: #dc3545;">{{ source('svg/heart-fill.svg') }}</span> in Germany
                         </div>
                     </div>
                 </div>
-            </nav>
-        {% endblock %}
-    {% endblock %}
-
-    <div class="bg-light border-top border-5 min-vh-100" id="{{ main_content_id[1:] }}"
-         style="border-color: {{ random_color }}!important;">
-        <div class="container">
-            {% with { id: 0 } %}
-                {{ block('html', 'component/cookie-banner.html.twig')|raw }}
-            {% endwith %}
-            {% with { id: 0 } %}
-                {{ block('html', 'component/ads-banner.html.twig')|raw }}
-            {% endwith %}
-
-            {% with { ad: ad_config.above_content|default({}) } %}
-                {% include 'component/ads/above-content.html.twig' %}
-            {% endwith %}
-
-            {% block body_content %}
             {% endblock %}
         </div>
     </div>
 
-    {% block body_content_append %}
-        <div class="navbar navbar-light bg-white border-bottom border-top">
-            <div class="container-fluid justify-content-around">
-                <div class="px-5 py-3">
-                    Copyright &copy; {{ 'now'|date('Y') }}, machinateur.dev
-                </div>
-
-                <div class="px-5 py-3">
-                    <a class="text-decoration-none px-2" href="https://github.com/machinateur"
-                       target="_blank" title="machinateur on GitHub" rel="noopener">
-                        {{ source('svg/github.svg') }}
-                    </a>
-                    <a class="text-decoration-none px-2" href="https://twitter.com/machinateur"
-                       target="_blank" title="machinateur on Twitter" rel="noopener">
-                        {{ source('svg/twitter.svg') }}
-                    </a>
-                </div>
-
-                <div class="text-center w-100 small px-5 py-3">
-                    Made with <span style="color: #dc3545;">{{ source('svg/heart-fill.svg') }}</span> in Germany
-                </div>
-            </div>
-        </div>
-    {% endblock %}
+    {% with { id: 0 } %}
+        {{ block('html', 'component/scroll-to-top.html.twig')|raw }}
+    {% endwith %}
 {% endblock %}
 
 {% block script %}
     {{ parent() }}
     {% if highlighted_code is same as(true) %}
-        <script src="/res/script/highlight/highlight.min.js" type="text/javascript"></script>
+        <script src="/res/script/highlight/highlight.min.js" type="text/javascript" defer></script>
         <script type="text/javascript">
             (function () {
-                hljs.highlightAll();
+                'use strict';
+
+                window.addEventListener('load', function (event) {
+                    hljs.highlightAll();
+                }, false);
             })();
         </script>
     {% endif %}
@@ -225,6 +264,9 @@
     {% endwith %}
     {% with %}
         {{ block('script', 'component/reader-mode.html.twig')|raw }}
+    {% endwith %}
+    {% with %}
+        {{ block('script', 'component/ink-mode.html.twig')|raw }}
     {% endwith %}
     {% with %}
         {{ block('script', 'component/theme.html.twig')|raw }}
@@ -240,5 +282,8 @@
     {% endwith %}
     {% with %}
         {{ block('script', 'component/ads-banner.html.twig')|raw }}
+    {% endwith %}
+    {% with %}
+        {{ block('script', 'component/scroll-to-top.html.twig')|raw }}
     {% endwith %}
 {% endblock %}

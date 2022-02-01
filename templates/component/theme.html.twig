@@ -1,27 +1,22 @@
 {# component: theme #}
 
+{% block style_transition %}/** component: theme */ filter 250ms linear{% endblock %}
+
 {% block style %}
     <!-- component: theme -->
     <style>
-        body {
-            /**
-             * There is a collision between this transition and the "font-size" transition!
-             */
-            transition: filter 250ms linear;
-        }
-
         /**
-         * WARNING: The filter property breaks fixed positioning!
+         * WARNING: The `filter` property breaks fixed positioning! Use wrapper div for mitigation.
          *  https://bugzilla.mozilla.org/show_bug.cgi?id=1311070#c8
          *  https://bugzilla.mozilla.org/show_bug.cgi?id=1125767#c5
          *  https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/The_stacking_context
          */
 
-        body[data-app-theme="dark"] {
+        body[data-app-theme="dark"] > div:first-of-type {
             filter: invert(100%);
         }
 
-        body[data-app-theme="light"] {
+        body[data-app-theme="light"] > div:first-of-type {
             filter: invert(0%);
         }
     </style>

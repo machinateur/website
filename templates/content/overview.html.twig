@@ -56,9 +56,10 @@
 
                     <div class="d-flex align-items-center">
                         <a class="d-flex align-items-center text-body text-decoration-none" href="{{ author_link }}"
-                           target="_blank" rel="noopener">
+                           target="_blank" rel="author external noopener noreferrer">
                             <img class="mb-0 me-2 rounded" src="{{ profile_picture }}"
-                                 data-src="{{ author_profile ~ '?size=32' }}" alt="" width="32" height="32">
+                                 data-src="{{ author_profile ~ '?size=32' }}" alt="" width="32" height="32"
+                                 referrerpolicy="no-referrer">
                             <span>{{ '@' ~ author }}</span>
                         </a>
 

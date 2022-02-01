@@ -1,0 +1,65 @@
+{# component: ink-mode #}
+
+{% block style_transition %}/** component: theme */ filter 250ms linear{% endblock %}
+
+{% block style %}
+    <!-- component: ink-mode -->
+    <style>
+        /**
+         * WARNING: The `filter` property breaks fixed positioning! Use wrapper div for mitigation.
+         *  https://bugzilla.mozilla.org/show_bug.cgi?id=1311070#c8
+         *  https://bugzilla.mozilla.org/show_bug.cgi?id=1125767#c5
+         *  https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/The_stacking_context
+         */
+
+        body[data-app-ink-mode="true"] > div:first-of-type > div:only-child {
+            filter: grayscale(100%);
+        }
+
+        body[data-app-ink-mode="false"] > div:first-of-type > div:only-child {
+            filter: grayscale(0%);
+        }
+    </style>
+{% endblock %}
+
+{% block data %}
+    data-app-ink-mode="{{ value|default(false) ? 'true' : 'false' }}"
+{% endblock %}
+
+{% block html %}
+    <!-- component: ink-mode -->
+    <div class="d-flex mx-1" data-app-component="ink-mode">
+        <input class="btn-check" type="checkbox" id="btnCheck{{ id }}" autocomplete="off">
+        <label class="btn btn-outline-primary" for="btnCheck{{ id }}">
+            {{ source('svg/back.svg') }}
+        </label>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <!-- component: ink-mode -->
+    <script type="text/javascript">
+        (function () {
+            'use strict';
+
+            var list = document.querySelectorAll('[data-app-component="ink-mode"]');
+
+            Array.prototype.slice.call(list)
+                .forEach(
+                    /**
+                     * @param {HTMLDivElement} component
+                     */
+                    function (component) {
+                        /** @type {HTMLInputElement} */
+                        var checkbox = component.querySelector('input[type="checkbox"]');
+
+                        checkbox.addEventListener('change', function (event) {
+                            document.body.dataset.appInkMode = !!checkbox.checked ? 'true' : 'false';
+                        }, false);
+
+                        checkbox.checked = 'true' === document.body.dataset.appInkMode;
+                    }
+                );
+        })();
+    </script>
+{% endblock %}

@@ -5,7 +5,7 @@
 {# metadata #}
 {% block post_title %}Hello world :){% endblock %}
 {% block post_author %}machinateur{% endblock %}
-{% block post_date %}2021-06-08{% endblock %}
+{% block post_date %}2022-01-22{% endblock %}
 {% block post_tags %}hello,world{% endblock %}
 {% block post_read_time %}3 min read{% endblock %}
 {# content #}
@@ -14,3 +14,4 @@
 {% block post_content %}
     {{ source('markdown/blog/hello-world.md', true)|markdown_to_html|raw }}
 {% endblock %}
+{% block post_subject_id %}35cfabde031916b3407bdacf2b8802a9{% endblock %}

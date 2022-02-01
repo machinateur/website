@@ -1,6 +1,11 @@
 {% extends '_page_theme.html.twig' %}
 
 {% set highlighted_code = true %}
+{% set has_comment_access = app.request.hasPreviousSession() and app.request.session.get(
+    constant('App\\Controller\\CommentController::SESSION_KEY_TOKEN')
+) is not null %}
+
+{% set image_zoom_factor = 2 %}
 
 {% block title %}{{ parent() }} - Blog - {{ block('post_title') }}{% endblock %}
 
@@ -16,6 +21,7 @@
         'image': block('post_image', p.relativePathname),
         'image_alt': block('post_image_alt', p.relativePathname),
         'content': block('post_content', p.relativePathname),
+        'subject_id': block('post_subject_id', p.relativePathname)
     },
     'path': p.relativePath|replace({
         '\\': '/',
@@ -36,6 +42,45 @@
 {% block post_image_alt %}{% endblock %}
 {% block post_content %}
 {% endblock %}
+{# comment gist #}
+{% block post_subject_id %}{% endblock %}
+
+{% block meta %}
+    {{ parent() }}
+    {% if this_blog_post.post_data.subject_id is not empty %}
+        <meta name="csrf-token" content="{{ csrf_token('app.comments.' ~ this_blog_post.post_data.subject_id) }}">
+    {% endif %}
+{% endblock %}
+
+{% block style %}
+    {{ parent() }}
+    {% with { value: image_zoom_factor } %}
+        {{ block('style', 'component/image-zoom.html.twig')|raw }}
+    {% endwith %}
+    <style>
+        div#content p > img {
+            width: 100%;
+        }
+    </style>
+    {% if this_blog_post.post_data.subject_id is not empty %}
+        <style>
+            div#commentList p > img {
+                width: 100%;
+            }
+
+            div#commentList > div#commentEmpty:not(:only-child) {
+                display: none;
+            }
+        </style>
+    {% endif %}
+{% endblock %}
+
+{% block body_data %}
+    {{ parent() }}
+    {% with { value: image_zoom_factor } %}
+        {{ block('data', 'component/image-zoom.html.twig')|raw }}
+    {% endwith %}
+{% endblock %}
 
 {% block body_content %}
     <div class="mx-auto py-5 px-3">
@@ -52,10 +97,11 @@
             <h1 class="display-1">{{ this_blog_post.post_data.title }}</h1>
 
             <div class="d-flex align-items-center mb-4 rm">
-                <a class="d-flex align-items-center text-muted text-decoration-none" href="{{ author_link }}"
-                   target="_blank" rel="noopener">
+                <a href="{{ author_link }}" target="_blank" rel="author external noopener noreferrer"
+                   class="d-flex align-items-center text-muted text-decoration-none">
                     <img class="mb-0 me-2 rounded" src="{{ profile_picture }}"
-                         data-src="{{ author_profile ~ '?size=32' }}" alt="" width="32" height="32">
+                         data-src="{{ author_profile ~ '?size=32' }}" alt="" width="32" height="32"
+                         referrerpolicy="no-referrer">
                     <span>{{ '@' ~ author }}</span>
                 </a>
 
@@ -71,7 +117,9 @@
                 {% endif %}
             </div>
 
-            {{ this_blog_post.post_data.content|raw }}
+            <div id="content" data-app-component="image-zoom">
+                {{ this_blog_post.post_data.content|raw }}
+            </div>
         </div>
 
         <div class="border-top py-4 rm">
@@ -87,25 +135,281 @@
         <div class="border-top py-4 rm">
             <h2 class="h4">Recent posts</h2>
 
-            <ul class="list-unstyled">
+            <ul class="list-unstyled" style="margin-bottom: -0.5rem;">
                 {% for blog_post in recent_blog_posts %}
-                    <li>
-                        <h4>
-                            <a class="text-decoration-none" href="{{ path('index_view', {
-                                'path': blog_post.path,
-                            }) }}">
-                                {{ blog_post.post_data.title }}
+                    <li class="h4">
+                        <a class="text-decoration-none" href="{{ path('index_view', {
+                            'path': blog_post.path,
+                        }) }}">
+                            {{ blog_post.post_data.title }}
 
-                                <small class="text-secondary" style="font-size: 75%;">
-                                    {{ blog_post.post_data.date|date('d M Y') }}
-                                </small>
-                            </a>
-                        </h4>
+                            <small class="text-secondary" style="font-size: 75%;">
+                                {{ blog_post.post_data.date|date('d M Y') }}
+                            </small>
+                        </a>
                     </li>
                 {% endfor %}
             </ul>
         </div>
-    </div>
 
-    {# TODO: Scroll to top button. #}
+        {% if this_blog_post.post_data.subject_id is not empty %}
+            <div class="border-top py-4 rm">
+                <h2 class="h4">Comments</h2>
+
+                <div class="bg-white border rounded" id="commentList">
+                    <div class="text-center py-5">
+                        <button type="button" class="btn btn-outline-primary btn-sm border-2" id="btnUpdateCommentList">
+                            Load comments
+                        </button>
+                    </div>
+                </div>
+
+                {% if has_comment_access is same as(true) %}
+                    <form id="comment" class="mt-3 py-1">
+                        <div class="my-3">
+                            <div id="commentText"></div>
+                        </div>
+
+                        <button type="submit" class="btn btn-outline-primary btn-sm border-2">
+                            Add comment
+                        </button>
+                    </form>
+
+                    <form method="post" action="{{ path('comment_unauthenticate_user') }}" id="unauthenticateUser"
+                          class="mt-3 py-1">
+                        <input type="hidden" name="csrf-token" value="{{ csrf_token('app.comments.unauth') }}">
+
+                        <input type="hidden" name="origin"
+                               value="{{ app.request.schemeAndHttpHost ~ path('index_view', {
+                                   'path': this_blog_post.path,
+                               }) }}">
+
+                        <p class="border-2 border-secondary text-secondary">
+                            Your are currently authenticated via GitHub to be able to write comments. You will
+                            automatically be logged out after the current session expired.
+                        </p>
+
+                        <button type="submit" class="btn btn-outline-secondary btn-sm border-2">
+                            Un-Authenticate now
+                        </button>
+
+                        {% set subject_link = 'https://gist.github.com/machinateur/' ~ this_blog_post.post_data.subject_id %}
+
+                        <a href="{{ subject_link }}" target="_blank" rel="external noopener noreferrer"
+                           class="btn btn-link text-muted text-decoration-none d-inline-flex align-items-center">
+                            <span class="me-2 text-decoration-underline">View original comments</span>
+
+                            <span class="small">{{ source('svg/box-arrow-up-right.svg') }}</span>
+                        </a>
+                    </form>
+                {% else %}
+                    <form method="post" action="{{ path('comment_authenticate_user') }}" id="authenticateUser"
+                          class="mt-3 py-1">
+                        <input type="hidden" name="csrf-token" value="{{ csrf_token('app.comments.auth') }}">
+
+                        <input type="hidden" name="origin"
+                               value="{{ app.request.schemeAndHttpHost ~ path('index_view', {
+                                   'path': this_blog_post.path,
+                               }) }}">
+
+                        <p class="border-2 border-secondary text-secondary">
+                            You have to be authenticated via GitHub to write comments! You will be returned to the
+                            current page afterwards. You will automatically be logged out after the current session
+                            expired.
+                        </p>
+
+                        <button type="submit" class="btn btn-outline-primary btn-sm border-2">
+                            Authenticate via GitHub now
+                        </button>
+
+                        {% set subject_link = 'https://gist.github.com/machinateur/' ~ this_blog_post.post_data.subject_id %}
+
+                        <a href="{{ subject_link }}" target="_blank" rel="external noopener noreferrer"
+                           class="btn btn-link text-muted text-decoration-none d-inline-flex align-items-center">
+                            <span class="me-2 text-decoration-underline">View original comments</span>
+
+                            <span class="small">{{ source('svg/box-arrow-up-right.svg') }}</span>
+                        </a>
+                    </form>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    {% with %}
+        {{ block('script', 'component/image-zoom.html.twig')|raw }}
+    {% endwith %}
+    {% if this_blog_post.post_data.subject_id is not empty %}
+        <script type="text/javascript">
+            // Patch csrf-token header inclusion for XMLHttpRequest (native javascript) as recommended by OWASP:
+            //  https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#javascript-guidance-for-auto-inclusion-of-csrf-tokens-as-an-ajax-request-header
+
+            (function () {
+                'use strict';
+
+                var csrfToken = document.querySelector("meta[name='csrf-token']")
+                    .getAttribute("content");
+
+                function isSafeMethod(method) {
+                    // These http methods do not require csrf-token header and protection.
+                    return (/^(GET|HEAD|OPTIONS)$/.test(method));
+                }
+
+                /** @type {Function} */
+                var _open = XMLHttpRequest.prototype.open;
+                XMLHttpRequest.prototype.open = function () {
+                    var res = _open.apply(this, arguments);
+
+                    if (!isSafeMethod(arguments[0])) {
+                        this.setRequestHeader('csrf-token', csrfToken);
+                    }
+
+                    return res;
+                };
+            })();
+        </script>
+        <script type="text/javascript">
+            (function () {
+                'use strict';
+
+                var url = '{{ path('comment_list_comments', {
+                    'subjectId': this_blog_post.post_data.subject_id,
+                }) }}';
+
+                /** @type {HTMLDivElement} */
+                var container = document.querySelector('div#commentList');
+                /** @type {HTMLButtonElement} */
+                var button = document.querySelector('button#btnUpdateCommentList');
+
+                button.addEventListener('click', function (event) {
+                    var httpRequest = new XMLHttpRequest();
+
+                    button.disabled = true;
+
+                    httpRequest.addEventListener('readystatechange', function (event) {
+                        if (httpRequest.readyState !== XMLHttpRequest.DONE) {
+                            return;
+                        }
+
+                        if (httpRequest.status === 200) {
+                            container.innerHTML = httpRequest.responseText;
+                        } else {
+                            var alert = document.createElement('div');
+                            alert.className = 'alert alert-light border border-danger text-danger m-3 p-1';
+                            alert.innerText = 'Error: ' + httpRequest.status;
+                            if (!!httpRequest.statusText) {
+                                alert.innerText += ' ' + httpRequest.statusText;
+                            }
+
+                            container.insertAdjacentElement('beforeend', alert);
+                        }
+                    }, false);
+
+                    httpRequest.open('GET', url, true);
+                    httpRequest.setRequestHeader('Accept', 'text/html');
+                    httpRequest.send();
+                }, false);
+            })();
+        </script>
+        {% if has_comment_access is same as(true) %}
+            <script type="text/javascript" src="/res/script/ckeditor5/ckeditor.js" defer></script>
+            <script type="text/javascript">
+                // TODO: Optimize JS blocking time. To do that, make sure to dynamically add the script after page load
+                //  event. Then, only execute code after the script tag has loaded. In case of ckeditor, it might be
+                //  more performant to wait a bit more, so the page does not become unresponsive while rendering. Use
+                //  `document.currentScript` to prepend the ckeditor script element.
+
+                (function () {
+                    'use strict';
+
+                    var url = '{{ path('comment_add_new_comment', {
+                        'subjectId': this_blog_post.post_data.subject_id,
+                    }) }}';
+
+                    /** @type {HTMLDivElement} */
+                    var container = document.querySelector('div#commentList');
+                    /** @type {HTMLFormElement} */
+                    var form = document.querySelector('form#comment');
+                    /** @type {HTMLButtonElement} */
+                    var button = form.querySelector('button[type="submit"]');
+
+                    var editor = null;
+
+                    window.addEventListener('load', function (event) {
+                        var textarea = document.querySelector('div#commentText');
+
+                        // Via https://stackoverflow.com/a/56550285/2557685.
+                        function MinHeightPlugin(editor) {
+                            this.editor = editor;
+                        }
+
+                        MinHeightPlugin.prototype.init = function () {
+                            this.editor.ui.view.editable.extendTemplate({
+                                attributes: {
+                                    style: {
+                                        minHeight: '150px',
+                                    },
+                                },
+                            });
+                        };
+
+                        ClassicEditor.builtinPlugins.push(MinHeightPlugin);
+                        ClassicEditor
+                            .create(textarea)
+                            .then(function (instance) {
+                                editor = instance;
+                            })
+                            .catch(function (error) {
+                                var alert = document.createElement('div');
+                                alert.className = 'alert alert-light border border-danger text-danger m-3 p-1';
+                                alert.innerText = 'Error: ' + error;
+
+                                container.insertAdjacentElement('beforeend', alert);
+                            });
+                    }, false);
+
+                    form.addEventListener('submit', function (event) {
+                        event.preventDefault();
+
+                        var httpRequest = new XMLHttpRequest();
+
+                        button.disabled = true;
+
+                        httpRequest.addEventListener('readystatechange', function (event) {
+                            if (httpRequest.readyState !== XMLHttpRequest.DONE) {
+                                return;
+                            }
+
+                            if (httpRequest.status === 200) {
+                                container.insertAdjacentHTML('beforeend', httpRequest.responseText);
+
+                                editor.setData('');
+                            } else {
+                                var alert = document.createElement('div');
+                                alert.className = 'alert alert-light border border-danger text-danger m-3 p-1';
+                                alert.innerText = 'Error: ' + httpRequest.status;
+                                if (!!httpRequest.statusText) {
+                                    alert.innerText += ' ' + httpRequest.statusText;
+                                }
+
+                                container.insertAdjacentElement('beforeend', alert);
+                            }
+
+                            button.disabled = false;
+                        }, false);
+
+                        var value = editor.getData();
+
+                        httpRequest.open('POST', url, true);
+                        httpRequest.setRequestHeader('Content-Type', 'text/markdown');
+                        httpRequest.setRequestHeader('Accept', 'text/html');
+                        httpRequest.send(value);
+                    }, false);
+                })();
+            </script>
+        {% endif %}
+    {% endif %}
 {% endblock %}

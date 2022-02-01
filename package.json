@@ -19,13 +19,14 @@
   "homepage": "https://github.com/machinateur/website#readme",
   "private": true,
   "dependencies": {
-    "@popperjs/core": "^2.9.2",
-    "bootstrap": "^5.0.1",
-    "bootstrap-icons": "^1.5.0",
-    "highlight.js": "^11.0.1"
+    "@popperjs/core": "^2.11.2",
+    "bootstrap": "^5.0.2",
+    "bootstrap-icons": "^1.7.2",
+    "ckeditor5": "^31.1.0",
+    "highlight.js": "^11.4.0"
   },
   "devDependencies": {
-    "puppeteer": "^10.0.0",
-    "sass": "^1.34.1"
+    "puppeteer": "^13.1.1",
+    "sass": "^1.49.0"
   }
 }

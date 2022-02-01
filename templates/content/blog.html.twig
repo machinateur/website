@@ -44,9 +44,8 @@
             {% set search_months = recent_blog_posts|map((p) => p.post_data.date|date('M Y'))|unique %}
 
             <div class="py-2">
-                <button class="btn btn-outline-dark border-2" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseSearch"
-                        aria-expanded="false" aria-controls="collapseSearch">
+                <button type="button" class="btn btn-outline-dark border-2" data-bs-toggle="collapse"
+                        data-bs-target="#collapseSearch" aria-expanded="false" aria-controls="collapseSearch">
                     {{ source('svg/search.svg') }} Search...
                 </button>
             </div>
@@ -57,7 +56,7 @@
                         <div class="p-3" style="line-height: 3;">
                             <span>Search for</span>
                             <label for="searchText">text</label>
-                            <input type="text" class="form-control d-inline w-auto" placeholder="" id="searchText">
+                            <input class="form-control d-inline w-auto" type="text" placeholder="" id="searchText">
                             <span>in posts by</span>
                             <label for="searchAuthor">author</label>
                             <select class="form-select d-inline w-auto" id="searchAuthor">
@@ -109,9 +108,10 @@
 
                     <div class="d-flex align-items-center">
                         <a class="d-flex align-items-center text-body text-decoration-none" href="{{ author_link }}"
-                           target="_blank" rel="noopener">
+                           target="_blank" rel="author external noopener noreferrer">
                             <img class="mb-0 me-2 rounded" src="{{ profile_picture }}"
-                                 data-src="{{ author_profile ~ '?size=32' }}" alt="" width="32" height="32">
+                                 data-src="{{ author_profile ~ '?size=32' }}" alt="" width="32" height="32"
+                                 referrerpolicy="no-referrer">
                             <span>{{ '@' ~ author }}</span>
                         </a>
 
@@ -142,12 +142,10 @@
             {% endfor %}
         </div>
 
-        <div class="py-3 border-top">
-            <div class="text-center">
-                <a class="btn btn-outline-primary btn-lg border-2" href="{{ main_content_id }}">
-                    Back to page start
-                </a>
-            </div>
+        <div class="py-3 border-top text-center">
+            <a class="btn btn-outline-primary btn-lg border-2" href="{{ main_content_id }}">
+                Back to page start
+            </a>
         </div>
     </div>
 {% endblock %}
@@ -172,7 +170,7 @@
                                 &&
                                 (!(!!month) || 'any' === month || month === (function () {
                                     var date = new Date(entry.data.date);
-                                    return ['Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov',
+                                    return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov',
                                         'Dec'][date.getMonth()] + ' ' + date.getFullYear();
                                 })())
                             ) ? 'block' : 'none';
@@ -194,10 +192,10 @@
                 filter(searchText.value, searchAuthor.options[searchAuthor.selectedIndex].value, searchMonth.options[searchMonth.selectedIndex].value);
             };
 
-            searchText.addEventListener('change', handleChange);
-            searchText.addEventListener('input', handleChange);
-            searchAuthor.addEventListener('change', handleChange);
-            searchMonth.addEventListener('change', handleChange);
+            searchText.addEventListener('change', handleChange, false);
+            searchText.addEventListener('input', handleChange, false);
+            searchAuthor.addEventListener('change', handleChange, false);
+            searchMonth.addEventListener('change', handleChange, false);
         })();
     </script>
 {% endblock %}

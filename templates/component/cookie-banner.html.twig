@@ -26,7 +26,7 @@
             {{ source('svg/question-square.svg') }} <strong class="ms-1">Heads up!</strong>
         </p>
 
-        <div class="collapse collapse-once show" id="collapseCookieBanner">
+        <div class="collapse collapse-once show" id="collapseCookieBanner{{ id }}">
             <p>
                 I use cookies in my site to offer you a better browsing experience, personalise content, preferences and
                 ads, as many others do. I also use cookies to analyse traffic. By continuing to use this site, you
@@ -47,8 +47,8 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
-        <a class="stretched-link" data-bs-toggle="collapse" href="#collapseCookieBanner" role="button"
-           aria-expanded="false" aria-controls="collapseCookieBanner" aria-label="Expand"></a>
+        <a class="stretched-link" data-bs-toggle="collapse" href="#collapseCookieBanner{{ id }}" role="button"
+           aria-expanded="false" aria-controls="collapseCookieBanner{{ id }}" aria-label="Expand"></a>
     </div>
 {% endblock %}
 
@@ -135,13 +135,13 @@
 
                             document.body.dataset.appCookieBanner = 'false';
                             document.body.dataset.appCookieBannerState = 'true';
-                        });
+                        }, false);
                         buttonNo.addEventListener('click', function (event) {
                             setCookieConsent('false');
 
                             document.body.dataset.appCookieBanner = 'false';
                             document.body.dataset.appCookieBannerState = 'false';
-                        });
+                        }, false);
                     }
                 );
 

@@ -13,3 +13,5 @@
 {% block post_content %}
     {{ source('markdown/blog/some-old-post.md', true)|markdown_to_html|raw }}
 {% endblock %}
+{# comment gist #}
+{% block post_subject_id %}{% endblock %}

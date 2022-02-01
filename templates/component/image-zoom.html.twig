@@ -1,0 +1,53 @@
+{# component: image-zoom #}
+
+{% block style %}
+    <!-- component: image-zoom -->
+    <style>
+        [data-app-component="image-zoom"] p > img {
+            transition: transform 0.25s ease;
+
+            cursor: zoom-in;
+        }
+
+        [data-app-component="image-zoom"] p > img.zoom-active {
+            cursor: zoom-out;
+        }
+    </style>
+{% endblock %}
+
+{% block data %}
+    data-app-image-zoom="{{ value|default(2) }}"
+{% endblock %}
+
+{% block script %}
+    <!-- component: image-zoom -->
+    <script type="text/javascript">
+        (function () {
+            'use strict';
+
+            var list = document.querySelectorAll('[data-app-component="image-zoom"]');
+
+            Array.prototype.slice.call(list)
+                .forEach(
+                    /**
+                     * @param {HTMLDivElement} component
+                     */
+                    function (component) {
+                        /** @type {HTMLImageElement} */
+                        var image = component.querySelector(':scope > p > img');
+
+                        image.addEventListener('click', function (event) {
+                            if (image.classList.toggle('zoom-active')) {
+                                var scaleFactor = parseInt(document.body.dataset.appImageZoom, 10);
+                                scaleFactor = Math.max(1, scaleFactor);
+
+                                image.style.transform = `scale(${scaleFactor})`;
+                            } else {
+                                image.style.transform = '';
+                            }
+                        }, false);
+                    }
+                );
+        })();
+    </script>
+{% endblock %}
