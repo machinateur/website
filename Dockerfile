@@ -2,7 +2,7 @@
 FROM php:8.1-apache
 
 # enable apache mod_rewrite
-RUN a2enmod rewrite ssl
+RUN a2enmod rewrite ssl expires
 
 # install system dependencies
 RUN apt-get update \
