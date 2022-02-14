@@ -66,6 +66,8 @@
                         .find(function (row) {
                             return row.startsWith('cookie_consent=');
                         });
+                } else {
+                    value = '';
                 }
 
                 if ('undefined' === typeof value || '' === value) {
