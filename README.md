@@ -34,7 +34,8 @@ touch .env.local
 Make sure to edit your `.env.local` file accordingly.
 
 ```bash
-docker-compose up -d
+docker compose build
+docker compose up -d
 ```
 
 Now open `https://127.0.0.1:1312/` to see if everything is fine.
