@@ -100,17 +100,15 @@ class CommentController extends ControllerAbstract
                 ->expiresAfter(
                     new DateInterval('PT1H')
                 );
-            // No tags for now, they won't work anyway.
+            // No tags for now, they won't work well anyway with fs.
             //$item
             //    ->tag('comments');
 
             // Load the gist comments from given subject id.
             /** @var array|array[] $comments */
-            $comments = $this->client->gists()
+            return $comments = $this->client->gists()
                 ->comments()
                 ->all($subjectId);
-
-            return $comments;
         });
 
         // Render comments server side, then return them.

@@ -25,9 +25,13 @@
 
 namespace App\Controller;
 
+use DateInterval;
+use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as ControllerAbstract;
 use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -59,6 +63,21 @@ class IndexController extends ControllerAbstract
         'ad_config',
     ];
 
+    private Environment $twig;
+
+    private CacheItemPoolInterface $cache;
+
+    /**
+     * IndexController constructor.
+     * @param Environment $twig
+     * @param CacheItemPoolInterface $contentCache
+     */
+    public function __construct(Environment $twig, CacheItemPoolInterface $contentCache)
+    {
+        $this->twig = $twig;
+        $this->cache = $contentCache;
+    }
+
     /**
      * @Route("/{path}", name="view", requirements={
      *     "path" = "^(?:\/?[a-z0-9]+(?:-[a-z0-9]+)*)+$",
@@ -83,32 +102,65 @@ class IndexController extends ControllerAbstract
 
         $view = 'content/' . $path . '.html.twig';
 
-        /** @var Environment $twig */
-        $twig = $this->container->get('twig');
-        $twigLoader = $twig->getLoader();
+        $twigLoader = $this->twig->getLoader();
 
         // Return 404 in case the path does not exist.
         if (false === $twigLoader->exists($view)) {
             throw new NotFoundHttpException();
         }
 
+        $viewBasePath = $this->getParameter('twig.default_path');
+
         /** @var string[] $contextGlobals */
-        $contextGlobals = array_keys($twig->getGlobals());
+        $contextGlobals = array_keys(
+            $this->twig->mergeGlobals([])
+        );
 
         $context = [];
         $context['current_path'] = $path;
         $context['current_view'] = $view;
-        $context['blog_posts'] =
-            iterator_to_array(
-                Finder::create()
-                    ->files()
-                    ->name('/^[a-z0-9]+(?:-[a-z0-9]+)*.html.twig$/')
-                    ->path('content/blog/')
-                    ->in(
-                        $this->getParameter('twig.default_path')
-                    ),
-                false
+
+        /** @var null|SplFileInfo[] $blogPosts */
+        $blogPosts = null;
+        /** @var string[] $blogPostsPathnames */
+        $blogPostsPathnames = $this->cache->get('app.blog_posts',
+            function (CacheItemInterface $item) use ($viewBasePath, &$blogPosts): array {
+                // Make it expire after one day.
+                $item
+                    ->expiresAfter(
+                        new DateInterval('P1D')
+                    );
+
+                /** @var SplFileInfo[] $blogPosts */
+                $blogPosts = iterator_to_array(
+                    Finder::create()
+                        ->files()
+                        ->name('/^[a-z0-9]+(?:-[a-z0-9]+)*.html.twig$/')
+                        ->path('content/blog/')
+                        ->in(
+                            $viewBasePath
+                        ),
+                    false
+                );
+
+                return array_map(
+                    function (SplFileInfo $fileInfo): string {
+                        return $fileInfo->getRelativePathname();
+                    }, $blogPosts
+                );
+            }
+        );
+
+        if (is_null($blogPosts)) {
+            $blogPosts = array_map(
+                function (string $relativePathname) use ($viewBasePath): SplFileInfo {
+                    return new SplFileInfo($viewBasePath . '/' . $relativePathname,
+                        dirname($relativePathname), $relativePathname);
+                }, $blogPostsPathnames
             );
+        }
+
+        $context['blog_posts'] = $blogPosts;
 
         // Copy the parameters from container to context.
         foreach (static::$EXPOSED_PARAMETERS as $parameter) {
@@ -119,7 +171,7 @@ class IndexController extends ControllerAbstract
 
             // Get the parameter value or fallback to null.
             try {
-                $parameterValue = $this->getParameter("app.{$parameter}");
+                $parameterValue = $this->getParameter('app.' . $parameter);
             } catch (ParameterNotFoundException) {
                 $parameterValue = null;
             }
@@ -129,7 +181,7 @@ class IndexController extends ControllerAbstract
 
         // Render the template with context.
         try {
-            $content = $twig->render($view, $context);
+            $content = $this->twig->render($view, $context);
         } catch (TwigError $error) {
             // Return 400 in case the template yields an error.
             throw new BadRequestHttpException('0oops...', $error);

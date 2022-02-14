@@ -18,3 +18,5 @@ framework:
     pools:
       comment_cache:
         adapter: cache.adapter.filesystem
+      content_cache:
+        adapter: cache.adapter.filesystem
