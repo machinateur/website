@@ -40,23 +40,6 @@ docker compose up -d
 
 Now open `https://127.0.0.1:1312/` to see if everything is fine.
 
-### Docker
-
-```bash
-git clone git@github.com:machinateur/website.git
-cd website
-touch .env.local
-```
-
-Make sure to edit your `.env.local` file accordingly.
-
-```bash
-docker compose build
-docker compose up -d
-```
-
-Now open `https://127.0.0.1:1312/` to see if everything is fine.
-
 Going to `http://127.0.0.1:1311/` should result in an HTTPS error, as the redirect to `https://` on that port fails.
 
 ### Optimization
@@ -89,9 +72,7 @@ php bin/console cache:clear
 
 ### Log locations and rotations
 
-Logs are stored under `var/log/%kernel.environment%.log`. How many files are kept can be controlled using the
-`APP_LOG_ROTATION_COUNT` environment variable, which defaults to `7` (keeping logs from the last 7 days including
-today for later reference).
+Logs are stored under `var/log/%kernel.environment%.log`.
 
 ## Deployment
 
