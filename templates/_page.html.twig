@@ -21,6 +21,7 @@
             <style>
                 {{ style|raw }}
             </style>
+            {# https://web.dev/defer-non-critical-css/ #}
             <link rel="preload" href="/res/style/bootstrap.min.css" as="style"
                   onload="this.onload=null;this.rel='stylesheet';">
             <noscript>

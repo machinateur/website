@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+
+  app:
+    build: '.'
+    ports:
+      - '1312:443'
+      - '1311:80'
+    volumes:
+      - './:/var/www/website/'

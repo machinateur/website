@@ -4,6 +4,10 @@ The [machinateur.dev](https://machinateur.dev/) website. Somewhere between stati
 
 ## Installation
 
+The website can either be run in a classic environment or using docker.
+
+### Classic
+
 ```bash
 git clone git@github.com:machinateur/website.git
 cd website
@@ -15,6 +19,23 @@ Make sure to edit your `.env.local` file accordingly.
 
 ```bash
 symfony serve --port=1312
+```
+
+Now open `https://127.0.0.1:1312/` to see if everything is fine.
+
+### Docker
+
+```bash
+git clone git@github.com:machinateur/website.git
+cd website
+touch .env.local
+```
+
+Make sure to edit your `.env.local` file accordingly.
+
+```bash
+docker compose build
+docker compose up -d
 ```
 
 Now open `https://127.0.0.1:1312/` to see if everything is fine.
