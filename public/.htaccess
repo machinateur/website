@@ -1,3 +1,11 @@
+# Comment in the following lines to temporarily enable authentciation. Make
+# sure to place the .htpasswd file accordingly.
+#AuthType Basic
+#AuthName "Restricted Content"
+#AuthUserFile  /usr/www/users/gameplj/machinateur.dev/.htpasswd
+
+#Require valid-user
+
 # Use the front controller as index file. It serves as a fallback solution when
 # every other rewrite/redirect fails (e.g. in an aliased environment without
 # mod_rewrite). Additionally, this reduces the matching process for the
