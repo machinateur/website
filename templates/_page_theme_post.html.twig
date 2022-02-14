@@ -13,6 +13,7 @@
 {% set recent_blog_posts = blog_posts|map((p) => {
     'fileinfo': p,
     'post_data': {
+        'display': 1 == block('post_display', p.relativePathname),
         'title': block('post_title', p.relativePathname),
         'author': block('post_author', p.relativePathname),
         'date': block('post_date', p.relativePathname),
@@ -26,11 +27,14 @@
     'path': p.relativePath|replace({
         '\\': '/',
     })['content'|length:]|trim('/', 'left') ~ '/'~ p.filenameWithoutExtension[:-'.html'|length],
-})|sort((a, b) => b.post_data.date <=> a.post_data.date)|filter((v, k) => v.post_data.date <= 'now'|date('Y-m-d'))|slice(0, 3) %}
+})|sort((a, b) => b.post_data.date <=> a.post_data.date)
+    |filter((v, k) => v.post_data.display is same as(true))
+    |filter((v, k) => v.post_data.date <= 'now'|date('Y-m-d')) %}
 {% set this_blog_post = recent_blog_posts|reduce((carry, p) => (carry is not null ? carry : (p.fileinfo.relativePathname|replace({
     '\\': '/',
 }) is same as(current_view) ? p : null)), null) %}
 
+{% block post_display %}1{% endblock %}
 {# metadata #}
 {% block post_title %}{% endblock %}
 {% block post_author %}{% endblock %}
@@ -136,7 +140,7 @@
             <h2 class="h4">Recent posts</h2>
 
             <ul class="list-unstyled" style="margin-bottom: -0.5rem;">
-                {% for blog_post in recent_blog_posts %}
+                {% for blog_post in recent_blog_posts|slice(0, 3) %}
                     <li class="h4">
                         <a class="text-decoration-none" href="{{ path('index_view', {
                             'path': blog_post.path,

@@ -17,6 +17,7 @@
 {% set recent_blog_posts = blog_posts|map((p) => {
     'fileinfo': p,
     'post_data': {
+        'display': 1 == block('post_display', p.relativePathname),
         'title': block('post_title', p.relativePathname),
         'author': block('post_author', p.relativePathname),
         'date': block('post_date', p.relativePathname),
@@ -29,7 +30,10 @@
     'path': p.relativePath|replace({
         '\\': '/',
     })['content'|length:]|trim('/', 'left') ~ '/'~ p.filenameWithoutExtension[:-'.html'|length],
-})|sort((a, b) => b.post_data.date <=> a.post_data.date)|filter((v, k) => v.post_data.date <= 'now'|date('Y-m-d'))|slice(0, 3) %}
+})|sort((a, b) => b.post_data.date <=> a.post_data.date)
+    |filter((v, k) => v.post_data.display is same as(true))
+    |filter((v, k) => v.post_data.date <= 'now'|date('Y-m-d'))
+    |slice(0, 3) %}
 
 {% block body_content %}
     <div class="mx-auto py-5 px-3">
