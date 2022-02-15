@@ -26,7 +26,7 @@
 
 # clone source
 if [ ! -d "./var/build/bootstrap" ]; then
-  git clone --depth 1 --branch v5.0.2 https://github.com/twbs/bootstrap.git ./var/build/bootstrap
+  git clone --depth 1 --branch v5.1.3 https://github.com/twbs/bootstrap.git ./var/build/bootstrap
   rm -rf ./var/build/bootstrap/.git
 fi
 
