@@ -85,6 +85,15 @@ composer install --no-dev --optimize-autoloader
 composer dump-env prod
 ```
 
+### Custom `.htaccess` for production
+
+The provided `.htaccess` has several commented sections, which can (and should) be enabled upon deployment to the
+production environment. While running inside the docker container, these are set by the apache virtual-host
+configuration.
+
+In a shared hosting production environment, as it is currently used, these sections and directives should be set by the
+`.htaccess` file. It's not the best solution, but still viable for environments without direct configuration access.
+
 ### FTP upload files and folders
 
 * `bin/`
@@ -120,9 +129,13 @@ composer dump-env prod
 
 *Optional: `.htpasswd`, if auth is enabled in `public/.htaccess`.*
 
-### Credential generation and configuration
+### Credential generation and configuration (for testing)
 
-The `htpasswd` cli tool is available to add/update credentials.
+When using the `.htpasswd` approach for testing, the `htpasswd` cli tool is available to add/update credentials. It's
+installed inside the docker container out of the box (since it comes with apache).
+
+It's recommended to place a `.htpasswd-raw` file alongside the normal `.htpasswd` (**both outside of `public/`**), so
+the original credentials for each user won't have to be re-created when lost.
 
 ## License
 
