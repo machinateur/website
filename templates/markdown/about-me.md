@@ -34,18 +34,22 @@ Most of my open-source work has been done under another alias, so it's still kin
 A little fun-fact or side-note, if you will, on how I initially found out about programming, long story short:
 click [this link](https://minecraft.fandom.com/wiki/Java_Edition_Beta_1.8.1). `:D`
 
-My repertoire of programming languages spans from [PHP](https://www.php.net) throughout the frontend stuff (_html_,
-_css_, _javascript_), to [java](https://www.oracle.com/java/technologies/) (little dusty). Different sql dialects
-(_mariadb_, _mysql_, _oracle_) too. [Python](https://www.python.org) is somewhat new to the list, but I consider myself
-still learning it.
+My repertoire of programming languages spans from [PHP](https://www.php.net) throughout the frontend stuff (_HTML_,
+_CSS_, _JavaScript_), to [Java](https://www.oracle.com/java/technologies/) (little dusty). Different SQL dialects
+(_MariaDB_, _MySQL_, _Oracle/PLSQL_) too. [Python](https://www.python.org) is somewhat new to the list, but I consider
+myself still learning it.
 
-Currently, my favourite technologies and projects to work with are [symfony](https://symfony.com),
-[twig](https://twig.symfony.com), [doctrine](https://www.doctrine-project.org),
-[jms-serializer](https://jmsyst.com/libs/serializer), [slim framework](https://www.slimframework.com). I could just go
+Currently, my favourite technologies and projects to work with are [Symfony](https://symfony.com),
+[Twig](https://twig.symfony.com), [Doctrine](https://www.doctrine-project.org),
+[JMS Serializer](https://jmsyst.com/libs/serializer), [Slim Framework](https://www.slimframework.com). I could just go
 on with the list, but these are the most significant ones. Containerization with
-[docker](https://www.docker.com/use-cases) is really interesting, and I'd like to use it more in the future.
+[Docker](https://www.docker.com/use-cases) is really interesting, and I'd like to use it more in the future.
 
-Feel free to contact me via [hello@machinateur.dev](mailto:hello@machinateur.dev).
+I've just recently started getting into electronics too, involving [Raspberry Pi](https://www.raspberrypi.com/),
+[Arduino](https://www.arduino.cc) and [ESP32](https://www.espressif.com/en/products/socs/esp32) and of course the usual
+stuff like circuit design, soldering, etc.
+
+Feel free to contact me via [hello \[at\] machinateur \[dot\] dev](mailto:).
 
 ---
 
