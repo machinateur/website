@@ -54,6 +54,8 @@ class IndexController extends ControllerAbstract
     private static string $DEFAULT_PATH = 'overview';
 
     private static array $EXPOSED_PARAMETERS = [
+        // App Version
+        'version',
         // Google Analytics
         'ga_measurement_id',
         // Google AdSense

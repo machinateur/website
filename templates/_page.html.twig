@@ -22,13 +22,13 @@
                 {{ style|raw }}
             </style>
             {# https://web.dev/defer-non-critical-css/ #}
-            <link rel="preload" href="/res/style/bootstrap.min.css" as="style"
+            <link rel="preload" href="/res/style/bootstrap.min.css?v={{ version|url_encode }}" as="style"
                   onload="this.onload=null;this.rel='stylesheet';">
             <noscript>
-                <link href="/res/style/bootstrap.min.css" rel="stylesheet" type="text/css">
+                <link href="/res/style/bootstrap.min.css?v={{ version|url_encode }}" rel="stylesheet" type="text/css">
             </noscript>
         {% else %}
-            <link href="/res/style/bootstrap.min.css" rel="stylesheet" type="text/css">
+            <link href="/res/style/bootstrap.min.css?v={{ version|url_encode }}" rel="stylesheet" type="text/css">
         {% endif %}
     {% endblock %}
 </head>
@@ -36,7 +36,7 @@
 {% block body %}
 {% endblock %}
 {% block script %}
-    <script src="/res/script/bootstrap.bundle.min.js" type="text/javascript" defer></script>
+    <script src="/res/script/bootstrap.bundle.min.js?v={{ version|url_encode }}" type="text/javascript" defer></script>
 {% endblock %}
 </body>
 </html>

@@ -320,7 +320,7 @@
             })();
         </script>
         {% if has_comment_access is same as(true) %}
-            <script type="text/javascript" src="/res/script/ckeditor5/ckeditor.js" defer></script>
+            <script type="text/javascript" src="/res/script/ckeditor5/ckeditor.js?v={{ version|url_encode }}" defer></script>
             <script type="text/javascript">
                 // TODO: Optimize JS blocking time. To do that, make sure to dynamically add the script after page load
                 //  event. Then, only execute code after the script tag has loaded. In case of ckeditor, it might be

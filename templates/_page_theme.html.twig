@@ -67,10 +67,10 @@
     </style>
     {% if highlighted_code is same as(true) %}
         {# https://web.dev/defer-non-critical-css/ #}
-        <link rel="preload" href="/res/style/highlight/default.css" as="style"
+        <link rel="preload" href="/res/style/highlight/default.css?v={{ version|url_encode }}" as="style"
               onload="this.onload=null;this.rel='stylesheet';">
         <noscript>
-            <link href="/res/style/highlight/default.css" rel="stylesheet" type="text/css">
+            <link href="/res/style/highlight/default.css?v={{ version|url_encode }}" rel="stylesheet" type="text/css">
         </noscript>
     {% endif %}
     <style>
@@ -256,7 +256,7 @@
 {% block script %}
     {{ parent() }}
     {% if highlighted_code is same as(true) %}
-        <script src="/res/script/highlight/highlight.min.js" type="text/javascript" defer></script>
+        <script src="/res/script/highlight/highlight.min.js?v={{ version|url_encode }}" type="text/javascript" defer></script>
         <script type="text/javascript">
             (function () {
                 'use strict';
