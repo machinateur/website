@@ -134,16 +134,7 @@ class IndexController extends ControllerAbstract
                     );
 
                 /** @var SplFileInfo[] $blogPosts */
-                $blogPosts = iterator_to_array(
-                    Finder::create()
-                        ->files()
-                        ->name('/^[a-z0-9]+(?:-[a-z0-9]+)*.html.twig$/')
-                        ->path('content/blog/')
-                        ->in(
-                            $viewBasePath
-                        ),
-                    false
-                );
+                $blogPosts = $this->getBlogPosts($viewBasePath);
 
                 return array_map(
                     function (SplFileInfo $fileInfo): string {
@@ -154,12 +145,16 @@ class IndexController extends ControllerAbstract
         );
 
         if (is_null($blogPosts)) {
-            $blogPosts = array_map(
-                function (string $relativePathname) use ($viewBasePath): SplFileInfo {
-                    return new SplFileInfo($viewBasePath . '/' . $relativePathname,
-                        dirname($relativePathname), $relativePathname);
-                }, $blogPostsPathnames
-            );
+            if (true == $this->getParameter('kernel.debug')) {
+                $blogPosts = $this->getBlogPosts($viewBasePath);
+            } else {
+                $blogPosts = array_map(
+                    function (string $relativePathname) use ($viewBasePath): SplFileInfo {
+                        return new SplFileInfo($viewBasePath . '/' . $relativePathname,
+                            dirname($relativePathname), $relativePathname);
+                    }, $blogPostsPathnames
+                );
+            }
         }
 
         $context['blog_posts'] = $blogPosts;
@@ -197,38 +192,24 @@ class IndexController extends ControllerAbstract
     }
 
     /**
-     * @Route("/{path}/source", name="view_source", requirements={
-     *     "path" = "^(?:\/?[a-z0-9]+(?:-[a-z0-9]+)*)+$",
-     * }, methods={
-     *     "GET",
-     * }, priority=1)
-     *
-     * @see https://regex101.com/r/GRZ0vv/1
-     *
-     * @param Request $request
-     * @param string|null $path
-     * @return Response
+     * @param string|null $viewBasePath
+     * @return SplFileInfo[]
      */
-    public function view_source(Request $request, ?string $path = null): Response
+    private function getBlogPosts(?string $viewBasePath = null): array
     {
-        if (null === $path) {
-            // Redirect to default route.
-            return $this->redirectToRoute('index_view_source', [
-                'path' => static::$DEFAULT_PATH,
-            ], 302);
+        if (null === $viewBasePath) {
+            $viewBasePath = $this->getParameter('twig.default_path');
         }
 
-        // Return raw markdown content, when the source parameter is present.
-        $source = $this->getParameter('twig.default_path') . '/markdown/' . $path . '.md';
-
-        if (!file_exists($source)) {
-            throw new NotFoundHttpException('No markdown content available.');
-        }
-
-        $sourceContent = file_get_contents($source);
-
-        return new Response($sourceContent, 200, [
-            'Content-Type' => 'text/markdown',
-        ]);
+        return iterator_to_array(
+            Finder::create()
+                ->files()
+                ->name('/^[a-z0-9]+(?:-[a-z0-9]+)*.html.twig$/')
+                ->path('content/blog/')
+                ->in(
+                    $viewBasePath
+                ),
+            false
+        );
     }
 }
