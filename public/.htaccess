@@ -1,10 +1,48 @@
 # Comment in the following lines to temporarily enable authentciation. Make
 # sure to place the .htpasswd file accordingly.
+
 #AuthType Basic
 #AuthName "Restricted Content"
 #AuthUserFile  /usr/www/users/gameplj/machinateur.dev/.htpasswd
 
 #Require valid-user
+
+# Comment in the following lines to enable gzip compression.
+
+#<IfModule mod_deflate.c>
+#    AddOutputFilterByType DEFLATE application/javascript
+#    AddOutputFilterByType DEFLATE application/json
+#    AddOutputFilterByType DEFLATE application/xml
+#    AddOutputFilterByType DEFLATE image/svg+xml
+#    AddOutputFilterByType DEFLATE image/x-icon
+#    AddOutputFilterByType DEFLATE text/html
+#    AddOutputFilterByType DEFLATE text/css
+#    AddOutputFilterByType DEFLATE text/javascript
+#    AddOutputFilterByType DEFLATE text/xml
+#    AddOutputFilterByType DEFLATE text/plain
+#</IfModule>
+
+# Comment in the flollowing lines to enable image/css caching.
+
+#<IfModule mod_expires.c>
+#    # Enable the directives - assuming they're not enabled globally.
+#    ExpiresActive on
+#
+#    # Send the 'Expires' header for each of these mimetypes (as defined by server).
+#    ExpiresByType image/png "access plus 1 month"
+#    ExpiresByType image/gif "access plus 1 month"
+#    ExpiresByType image/jpeg "access plus 1 month"
+#
+#    # Our css may change a bit sometimes, so define shorter expiration.
+#    ExpiresByType text/css "access plus 1 days"
+#
+#    # As usual, ms has a special MIME type for icons...
+#    # http://www.iana.org/assignments/media-types/image/vnd.microsoft.icon
+#    AddType image/vnd.microsoft.icon .ico
+#    # But now that we have the icon MIME type, we can use it.
+#    # Our favicon doesn't change much, if at all.
+#    ExpiresByType image/vnd.microsoft.icon "access plus 3 months"
+#</IfModule>
 
 # Use the front controller as index file. It serves as a fallback solution when
 # every other rewrite/redirect fails (e.g. in an aliased environment without
