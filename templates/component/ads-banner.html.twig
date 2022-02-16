@@ -83,6 +83,8 @@
                         .find(function (row) {
                             return row.startsWith('ads_consent=');
                         });
+                } else {
+                    value = '';
                 }
 
                 if (!hasCookieConsent() || 'undefined' === typeof value || '' === value) {

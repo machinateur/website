@@ -1,20 +1,51 @@
 <!-- Global site tag (gtag.js) - Google Analytics -->
 {% if ga_measurement_id is not empty %}
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ ga_measurement_id }}"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ ga_measurement_id }}"
+            crossorigin="anonymous"></script>
 {% else %}
     {% set ga_measurement_id = 'G-XXXXXXXXXX' %}
 {% endif %}
 <script>
     window.dataLayer = window.dataLayer || [];
 
+    // Additional functionality for european GDPR compliance...
+    //  https://developers.google.com/tag-platform/devguides/consent#tracking_consent_status
+    //  https://developers.google.com/tag-platform/gtagjs/install#google-analytics
+    //  https://developers.google.com/analytics/devguides/collection/gtagjs/user-opt-out
+
     function gtag() {
-        dataLayer.push(arguments);
+        window.dataLayer.push(arguments);
     }
 
-    gtag('js', new Date());
-    gtag('config', '{{ ga_measurement_id }}', {
-        'anonymize_ip': true,
-    });
+    function initGa() {
+        gtag('js', new Date());
+        gtag('config', '{{ ga_measurement_id }}', {
+            'anonymize_ip': true,
+        });
+        gtag('consent', 'default', {
+            'ad_storage': 'denied',
+            'analytics_storage': 'denied',
+            'functionality_storage': 'denied',
+            'personalization_storage': 'denied',
+            'security_storage': 'denied',
+            // Wait for consentGa() call...
+            'wait_for_update': 500,
+        });
+    }
+
+    function consentGa() {
+        if ([] === window.dataLayer) {
+            initGa();
+        }
+
+        gtag('consent', 'update', {
+            'ad_storage': 'granted',
+            'analytics_storage': 'granted',
+            'functionality_storage': 'granted',
+            'personalization_storage': 'granted',
+            'security_storage': 'granted',
+        });
+    }
 
     function disableGa() {
         window['ga-disable-{{ ga_measurement_id }}'] = true;

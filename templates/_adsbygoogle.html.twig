@@ -1,11 +1,12 @@
 {% if ad_script is not empty and ad_client is not empty %}
-    <script async src="{{ ad_script }}" data-ad-client="{{ ad_client }}"></script>
+    <script async src="{{ ad_script }}" data-ad-client="{{ ad_client }}" crossorigin="anonymous"></script>
 {% endif %}
 <script>
     window.adsbygoogle = window.adsbygoogle || [];
 
     // Additional functionality for european GDPR compliance...
-    //  https://support.google.com/adsense/answer/7670312
+    //  https://support.google.com/adsense/answer/7670312?hl=en
+    //  https://support.google.com/adsense/answer/9042142?hl=en
     //  https://ec.europa.eu/info/law/law-topic/data-protection/data-protection-eu_en
 
     function disablePersonalizedAds() {
@@ -25,4 +26,6 @@
     }
 
     pauseAds();
+
+    // TODO: Defer loading of the google ads script based on consent.
 </script>
