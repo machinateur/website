@@ -137,9 +137,6 @@
     {% with { value: stt_visible } %}
         {{ block('data', 'component/scroll-to-top.html.twig')|raw }}
     {% endwith %}
-    {% with %}
-        {{ block('data', 'component/tooltip.html.twig')|raw }}
-    {% endwith %}
 {% endblock %}
 
 {% block body %}
