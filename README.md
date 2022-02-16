@@ -91,8 +91,9 @@ The provided `.htaccess` has several commented sections, which can (and should) 
 production environment. While running inside the docker container, these are set by the apache virtual-host
 configuration.
 
-In a shared hosting production environment, as it is currently used, these sections and directives should be set by the
-`.htaccess` file. It's not the best solution, but still viable for environments without direct configuration access.
+In a shared hosting production environment, as it is currently being used, these sections and directives should be set
+by the `.htaccess` file. It's not the best solution, but still viable for environments without direct configuration
+access.
 
 ### FTP upload files and folders
 
