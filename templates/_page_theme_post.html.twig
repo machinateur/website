@@ -34,6 +34,12 @@
     '\\': '/',
 }) is same as(current_view) ? p : null)), null) %}
 
+{# set tw_card to null to disable it #}
+{% set tw_card = tw_card|default({
+    'site': 'machinateur',
+    'description': block('description'),
+}|merge(this_blog_post.post_data)) %}
+
 {% block post_display %}1{% endblock %}
 {# metadata #}
 {% block post_title %}{% endblock %}
@@ -51,6 +57,17 @@
 
 {% block meta %}
     {{ parent() }}
+
+    {% if this_blog_post.post_data.display is same as(true) %}
+        {% if tw_card is defined and tw_card is not null %}
+            {% with { value: tw_card } %}
+                {{ block('meta', 'component/twitter-card.html.twig')|raw }}
+            {% endwith %}
+        {% endif %}
+    {% else %}
+        <meta name="robots" content="noindex">
+    {% endif %}
+
     {% if this_blog_post.post_data.subject_id is not empty %}
         <meta name="csrf-token" content="{{ csrf_token('app.comments.' ~ this_blog_post.post_data.subject_id) }}">
     {% endif %}

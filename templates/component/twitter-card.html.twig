@@ -1,10 +1,24 @@
-{# TODO: Implement twitter card module. #}
+{# component: twitter-card #}
 
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@nytimes">
-<meta name="twitter:creator" content="@SarahMaslinNir">
-<meta name="twitter:title" content="Parade of Fans for Houston’s Funeral">
-<meta name="twitter:description"
-      content="NEWARK - The guest list and parade of limousines with celebrities emerging from them seemed more suited to a red carpet event in Hollywood or New York than than a gritty stretch of Sussex Avenue near the former site of the James M. Baxter Terrace public housing project here.">
-<meta name="twitter:image"
-      content="http://graphics8.nytimes.com/images/2012/02/19/us/19whitney-span/19whitney-span-articleLarge.jpg">
+{% block meta %}
+    <meta name="twitter:card" content="{{ 'summary' }}">
+    <meta name="twitter:site" content="{{ '@' ~ value.site|default('machinateur') }}">
+    {% if value.author is defined and value.author is not empty %}
+        <meta name="twitter:creator" content="{{ '@' ~ value.author }}">
+    {% endif %}
+    {% if value.title is defined and value.title is not empty %}
+        {# length: 70 #}
+        <meta name="twitter:title" content="{{ value.title|striptags|u.truncate(70, '...', true) }}">
+    {% endif %}
+    {% if value.description is defined and value.description is not empty %}
+        {# length: 200 #}
+        <meta name="twitter:description" content="{{ value.description|striptags|u.truncate(200, '...', true) }}">
+    {% endif %}
+    {% if value.image is defined and value.image is not empty %}
+        <meta name="twitter:image" content="{{ value.image }}">
+        {% if value.image_alt is defined and value.image_alt is not empty %}
+            {# length: 420 #}
+            <meta name="twitter:image:alt" content="{{ value.image_alt|striptags|u.truncate(420, '...', true) }}">
+        {% endif %}
+    {% endif %}
+{% endblock %}
