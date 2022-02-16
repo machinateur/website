@@ -48,8 +48,8 @@ npm run dist
 # copy build result
 cp -f ./dist/css/bootstrap.min.css ../../../public/res/style/bootstrap.min.css
 cp -f ./dist/css/bootstrap.min.css.map ../../../public/res/style/bootstrap.min.css.map
-cp -f ./dist/js/bootstrap.min.js ../../../public/res/script/bootstrap.bundle.min.js
-cp -f ./dist/js/bootstrap.min.js.map ../../../public/res/script/bootstrap.bundle.min.js.map
+cp -f ./dist/js/bootstrap.bundle.min.js ../../../public/res/script/bootstrap.bundle.min.js
+cp -f ./dist/js/bootstrap.bundle.min.js.map ../../../public/res/script/bootstrap.bundle.min.js.map
 
 # exit directory
 cd ../../../
