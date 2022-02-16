@@ -1,6 +1,6 @@
 {# component: ink-mode #}
 
-{% block style_transition %}/** component: theme */ filter 250ms linear{% endblock %}
+{% block style_transition %}/** component: ink-mode */ filter 250ms linear{% endblock %}
 
 {% block style %}
     <!-- component: ink-mode -->
@@ -30,7 +30,8 @@
     <!-- component: ink-mode -->
     <div class="d-flex mx-1" data-app-component="ink-mode">
         <input class="btn-check" type="checkbox" id="btnCheck{{ id }}" autocomplete="off">
-        <label class="btn btn-outline-primary" for="btnCheck{{ id }}">
+        <label class="btn btn-outline-primary" for="btnCheck{{ id }}" title="Ink Mode" data-bs-toggle="tooltip"
+               data-bs-placement="bottom">
             {{ source('svg/back.svg') }}
         </label>
     </div>

@@ -48,10 +48,12 @@
 {% block html %}
     <!-- component: zoom -->
     <div class="d-flex btn-group mx-1" role="group" aria-label="Zoom" data-app-component="zoom">
-        <button type="button" class="btn btn-outline-primary">
+        <button type="button" class="btn btn-outline-primary" title="Decrease text size" data-bs-toggle="tooltip"
+                data-bs-placement="bottom">
             {{ source('svg/zoom-out.svg') }}
         </button>
-        <button type="button" class="btn btn-outline-primary">
+        <button type="button" class="btn btn-outline-primary" title="Increase text size" data-bs-toggle="tooltip"
+                data-bs-placement="bottom">
             {{ source('svg/zoom-in.svg') }}
         </button>
     </div>

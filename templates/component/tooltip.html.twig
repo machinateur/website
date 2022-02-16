@@ -1,0 +1,27 @@
+{# component: tooltip #}
+
+{% block data %}
+{% endblock %}
+
+{% block script %}
+    <!-- component: tooltip -->
+    <script type="text/javascript">
+        (function () {
+            'use strict';
+
+            var list = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+
+            window.addEventListener('load', function (event) {
+                Array.prototype.slice.call(list)
+                    .forEach(
+                        /**
+                         * @param {HTMLElement} component
+                         */
+                        function (component) {
+                            return new bootstrap.Tooltip(component)
+                        }
+                    );
+            }, false);
+        })();
+    </script>
+{% endblock %}

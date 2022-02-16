@@ -25,7 +25,8 @@
     <!-- component: reader-mode -->
     <div class="d-flex mx-1" data-app-component="reader-mode">
         <input class="btn-check" type="checkbox" id="btnCheck{{ id }}" autocomplete="off">
-        <label class="btn btn-outline-primary" for="btnCheck{{ id }}">
+        <label class="btn btn-outline-primary" for="btnCheck{{ id }}" title="Reader Mode" data-bs-toggle="tooltip"
+               data-bs-placement="bottom">
             {{ source('svg/book.svg') }}
         </label>
     </div>
