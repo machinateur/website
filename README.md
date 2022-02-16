@@ -72,7 +72,8 @@ php bin/console cache:clear
 
 ### Log locations and rotations
 
-Logs are stored under `var/log/%kernel.environment%.log`.
+Logs are stored under `var/log/%kernel.environment%.log`. The number of log files in rotation is currently set to `0`,
+so they are actually never rotated, but all get their own neat little timestamp.
 
 ## Deployment
 
