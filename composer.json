@@ -10,6 +10,7 @@
     "ext-iconv": "*",
     "doctrine/annotations": "^1.13.2",
     "erusev/parsedown": "^1.7.4",
+    "erusev/parsedown-extra": "^0.8.1",
     "guzzlehttp/guzzle": "^7.4.1",
     "http-interop/http-factory-guzzle": "^1.2",
     "knplabs/github-api": "^3.4",

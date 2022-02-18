@@ -23,6 +23,9 @@
     "erusev/parsedown": {
         "version": "1.7.4"
     },
+    "erusev/parsedown-extra": {
+        "version": "0.8.1"
+    },
     "guzzlehttp/guzzle": {
         "version": "7.4.1"
     },

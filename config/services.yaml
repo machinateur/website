@@ -33,3 +33,8 @@ services:
   App\Command\SitemapCommand:
     calls:
       - setContentPath: [ '%twig.default_path%' ]
+
+  # patch any existing service definitions below
+
+  twig.markdown.default:
+    class: App\Twig\Extra\DefaultMarkdown
