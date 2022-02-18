@@ -25,25 +25,22 @@
         (function () {
             'use strict';
 
-            var list = document.querySelectorAll('[data-app-component="image-zoom"]');
+            var list = document.querySelectorAll('[data-app-component="image-zoom"] > p > img');
 
             Array.prototype.slice.call(list)
                 .forEach(
                     /**
-                     * @param {HTMLDivElement} component
+                     * @param {HTMLImageElement} component
                      */
                     function (component) {
-                        /** @type {HTMLImageElement} */
-                        var image = component.querySelector(':scope > p > img');
-
-                        image.addEventListener('click', function (event) {
-                            if (image.classList.toggle('zoom-active')) {
+                        component.addEventListener('click', function (event) {
+                            if (component.classList.toggle('zoom-active')) {
                                 var scaleFactor = parseInt(document.body.dataset.appImageZoom, 10);
                                 scaleFactor = Math.max(1, scaleFactor);
 
-                                image.style.transform = `scale(${scaleFactor})`;
+                                component.style.transform = `scale(${scaleFactor})`;
                             } else {
-                                image.style.transform = '';
+                                component.style.transform = '';
                             }
                         }, false);
                     }
