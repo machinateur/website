@@ -201,7 +201,7 @@
             {% endblock %}
 
             <div class="bg-light border-top border-5 min-vh-100" id="{{ main_content_id[1:] }}"
-                 style="border-color: {{ random_color }}!important;">
+                 style="border-color: {{ random_color }} !important;">
                 <div class="container">
                     {% with { id: 0 } %}
                         {{ block('html', 'component/cookie-banner.html.twig')|raw }}

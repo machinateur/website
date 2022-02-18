@@ -85,6 +85,16 @@
             width: 100%;
         }
     </style>
+    <style>
+        div#content blockquote {
+            font-size: 1.25rem;
+            margin: 0 0 1rem
+        }
+
+        div#content blockquote:last-child {
+            margin-bottom: 0;
+        }
+    </style>
     {% if this_blog_post.post_data.subject_id is not empty %}
         <style>
             div#commentList p > img {
@@ -117,7 +127,7 @@
             {% set author_link = 'https://github.com/' ~ author %}
             {% set author_profile = author_link ~ '.png' %}
 
-            <h1 class="display-1">{{ this_blog_post.post_data.title }}</h1>
+            <h1 id="{{ this_blog_post.post_data.title|lower|slug }}" class="display-1">{{ this_blog_post.post_data.title }}</h1>
 
             <div class="d-flex align-items-center mb-4 rm">
                 <a href="{{ author_link }}" target="_blank" rel="author external noopener noreferrer"
@@ -146,7 +156,7 @@
         </div>
 
         <div class="border-top py-4 rm">
-            <h2 class="h4">Topics</h2>
+            <h2 id="topics" class="h4">Topics</h2>
 
             {% for tag in this_blog_post.post_data.tags %}
                 <span class="badge rounded-pill bg-secondary">
@@ -156,7 +166,7 @@
         </div>
 
         <div class="border-top py-4 rm">
-            <h2 class="h4">Recent posts</h2>
+            <h2 id="recent-posts" class="h4">Recent posts</h2>
 
             <ul class="list-unstyled" style="margin-bottom: -0.5rem;">
                 {% for blog_post in recent_blog_posts|slice(0, 3) %}
@@ -177,7 +187,7 @@
 
         {% if this_blog_post.post_data.subject_id is not empty %}
             <div class="border-top py-4 rm">
-                <h2 class="h4">Comments</h2>
+                <h2 id="comments" class="h4">Comments</h2>
 
                 <div class="bg-white border rounded" id="commentList">
                     <div class="text-center py-5">
