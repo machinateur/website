@@ -1,0 +1,58 @@
+
+/.idea/
+
+# from https://github.com/dunglas/symfony-docker/blob/main/.dockerignore
+**/.dockerignore
+**/.DS_Store
+**/.git/
+**/.gitattributes
+**/.gitignore
+**/.gitmodules
+**/docker-compose.*.yaml
+**/docker-compose.*.yml
+**/docker-compose.yaml
+**/docker-compose.yml
+**/Dockerfile
+**/Thumbs.db
+bin/*
+!bin/console
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> symfony/phpunit-bridge ###
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
+
+/node_modules/
+
+ads-config.json
+
+/.htpasswd
+/.htpasswd-raw
+
+# docker
+/docker/
+# symfony cli
+.php-version
+# scripts
+*.sh
+build-coverage.js
+
+phpunit.xml.dist
+
+/res/
+/tests/
