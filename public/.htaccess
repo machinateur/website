@@ -32,9 +32,11 @@
 #    ExpiresByType image/png "access plus 1 month"
 #    ExpiresByType image/gif "access plus 1 month"
 #    ExpiresByType image/jpeg "access plus 1 month"
+#    ExpiresByType image/svg+xml "access plus 1 month"
 #
-#    # Our css may change a bit sometimes, so define shorter expiration.
-#    ExpiresByType text/css "access plus 1 days"
+#    # Our css and js may change a bit sometimes, so define shorter expiration.
+#    ExpiresByType text/css "access plus 2 weeks"
+#    ExpiresByType text/javascript "access plus 2 weeks"
 #
 #    # As usual, ms has a special MIME type for icons...
 #    # http://www.iana.org/assignments/media-types/image/vnd.microsoft.icon
