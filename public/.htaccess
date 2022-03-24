@@ -37,6 +37,7 @@
 #    # Our css and js may change a bit sometimes, so define shorter expiration.
 #    ExpiresByType text/css "access plus 2 weeks"
 #    ExpiresByType text/javascript "access plus 2 weeks"
+#    ExpiresByType application/javascript "access plus 2 weeks"
 #
 #    # As usual, ms has a special MIME type for icons...
 #    # http://www.iana.org/assignments/media-types/image/vnd.microsoft.icon
