@@ -22,7 +22,7 @@
 #    AddOutputFilterByType DEFLATE text/plain
 #</IfModule>
 
-# Comment in the flollowing lines to enable image/css caching.
+# Comment in the flollowing lines to enable resource caching.
 
 #<IfModule mod_expires.c>
 #    # Enable the directives - assuming they're not enabled globally.
