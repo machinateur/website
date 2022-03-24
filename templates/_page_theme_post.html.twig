@@ -127,7 +127,9 @@
             {% set author_link = 'https://github.com/' ~ author %}
             {% set author_profile = author_link ~ '.png' %}
 
-            <h1 id="{{ this_blog_post.post_data.title|lower|slug }}" class="display-1">{{ this_blog_post.post_data.title }}</h1>
+            <h1 id="{{ this_blog_post.post_data.title|lower|slug }}" class="display-1">
+                {{ this_blog_post.post_data.title }}
+            </h1>
 
             <div class="d-flex align-items-center mb-4 rm">
                 <a href="{{ author_link }}" target="_blank" rel="author external noopener noreferrer"
@@ -140,7 +142,8 @@
 
                 <span class="d-flex align-items-center ms-3 text-center"
                       title="{{ this_blog_post.post_data.date|date('D, d M Y H:i:s') }}">
-                    <span class="me-2">{{ source('svg/calendar-event.svg') }}</span> {{ this_blog_post.post_data.date|date('M d, Y') }}
+                    <span class="me-2">{{ source('svg/calendar-event.svg') }}</span>
+                    {{ this_blog_post.post_data.date|date('M d, Y') }}
                 </span>
 
                 {% if this_blog_post.post_data.read_time is not empty %}
