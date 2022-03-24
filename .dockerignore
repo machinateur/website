@@ -44,8 +44,6 @@ ads-config.json
 /.htpasswd
 /.htpasswd-raw
 
-# docker
-/docker/
 # symfony cli
 .php-version
 # scripts
