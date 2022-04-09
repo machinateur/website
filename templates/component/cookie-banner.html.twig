@@ -61,10 +61,11 @@
             function getCookieConsent() {
                 var value = document.cookie;
 
-                if (-1 < value.indexOf(';')) {
+                if (0 !== value.length) {
                     value = value.split(';')
                         .find(function (row) {
-                            return row.startsWith('cookie_consent=');
+                            return row.trim()
+                                .startsWith('cookie_consent=');
                         });
                 } else {
                     value = '';

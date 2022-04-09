@@ -78,10 +78,11 @@
             function getAdsConsent() {
                 var value = document.cookie;
 
-                if (-1 < value.indexOf(';')) {
+                if (0 !== value.length) {
                     value = value.split(';')
                         .find(function (row) {
-                            return row.startsWith('ads_consent=');
+                            return row.trim()
+                                .startsWith('ads_consent=');
                         });
                 } else {
                     value = '';
