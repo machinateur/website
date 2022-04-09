@@ -36,7 +36,7 @@ use Twig\Extra\Markdown\MarkdownInterface;
  */
 class DefaultMarkdown extends DefaultMarkdownBase
 {
-    protected ?MarkdownInterface $converter;
+    protected ?MarkdownInterface $converter = null;
 
     public function __construct()
     {
