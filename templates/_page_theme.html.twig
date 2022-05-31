@@ -206,9 +206,11 @@
                     {% with { id: 0 } %}
                         {{ block('html', 'component/cookie-banner.html.twig')|raw }}
                     {% endwith %}
+                    {#
                     {% with { id: 0 } %}
                         {{ block('html', 'component/ads-banner.html.twig')|raw }}
                     {% endwith %}
+                    #}
 
                     {% with { ad: ad_config.above_content|default({}) } %}
                         {% include 'component/ads/above-content.html.twig' %}
@@ -286,9 +288,11 @@
     {% with %}
         {{ block('script', 'component/cookie-banner.html.twig')|raw }}
     {% endwith %}
+    {#
     {% with %}
         {{ block('script', 'component/ads-banner.html.twig')|raw }}
     {% endwith %}
+    #}
     {% with %}
         {{ block('script', 'component/scroll-to-top.html.twig')|raw }}
     {% endwith %}
