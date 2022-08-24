@@ -17,8 +17,9 @@ RUN mkdir -p /etc/apache2/ssl \
     "/C=DE/ST=Hesse/L=Frankfurt/O=machinateur/OU=private/CN=machinateur.dev" \
     -keyout /etc/apache2/ssl/ssl.key -out /etc/apache2/ssl/ssl.crt
 
-# no extensions needed (for now)
+# required extensions (for now)
 #RUN docker-php-ext-install zip
+RUN docker-php-ext-install intl
 
 # download composer latest 2.2.x lts version
 RUN wget https://getcomposer.org/download/latest-2.2.x/composer.phar \
