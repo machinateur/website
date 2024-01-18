@@ -1,0 +1,17 @@
+{% extends '_page_theme_post.html.twig' %}
+
+{% block description %}A showcase on how to build a fume extractor for soldering.{% endblock %}
+
+{# metadata #}
+{% block post_title %}Talking to Arduino from PHP using phpduino{% endblock %}
+{% block post_author %}machinateur{% endblock %}
+{% block post_date %}2024-01-18{% endblock %}
+{% block post_tags %}php, library, arduino, serial port{% endblock %}
+{% block post_read_time %}xxx min read{% endblock %}
+{# content #}
+{% block post_image %}/res/image/blog/talking-to-arduino-from-php-using-phpduino/post-thumbnail.jpeg{% endblock %}
+{% block post_image_alt %}An Arduino connected via USB serial.{% endblock %}
+{% block post_content %}
+    {{ source('markdown/blog/talking-to-arduino-from-php-using-phpduino.md', true)|markdown_to_html|raw }}
+{% endblock %}
+{% block post_subject_id %}{% endblock %}
