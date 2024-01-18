@@ -1,0 +1,17 @@
+{% extends '_page_theme_post.html.twig' %}
+
+{% block description %}Showcase of a simple library to handle standard roman numerals.{% endblock %}
+
+{# metadata #}
+{% block post_title %}Roman Numerals Made Easy{% endblock %}
+{% block post_author %}machinateur{% endblock %}
+{% block post_date %}2022-02-20{% endblock %}
+{% block post_tags %}programming, php{% endblock %}
+{% block post_read_time %}xxx min read{% endblock %}
+{# content #}
+{% block post_image %}/res/image/blog/standard-roman-numerals-made-easy-in-php/post-thumbnail.jpeg{% endblock %}
+{% block post_image_alt %}A Clock with Roman Numerals on its Face.{% endblock %}
+{% block post_content %}
+    {{ source('markdown/blog/standard-roman-numerals-made-easy-in-php.md', true)|markdown_to_html|raw }}
+{% endblock %}
+{% block post_subject_id %}{% endblock %}
