@@ -27,3 +27,5 @@ ads-config.json
 
 /.htpasswd
 /.htpasswd-raw
+
+.env.local
