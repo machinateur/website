@@ -127,7 +127,7 @@
             {% set author_link = 'https://github.com/' ~ author %}
             {% set author_profile = author_link ~ '.png' %}
 
-            <h1 id="{{ this_blog_post.post_data.title|lower|slug }}" class="display-1">
+            <h1 id="{{ this_blog_post.post_data.title|lower|slug }}" class="display-1 mb-3">
                 {{ this_blog_post.post_data.title }}
             </h1>
 
@@ -163,6 +163,7 @@
 
             {% for tag in this_blog_post.post_data.tags %}
                 <span class="badge rounded-pill bg-secondary">
+                    {# TODO: Add logo aliasing for tags #}
                     {{ tag|trim(' ', 'both') }}
                 </span>
             {% endfor %}
