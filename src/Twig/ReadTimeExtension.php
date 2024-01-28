@@ -39,11 +39,6 @@ use Twig\TwigFunction;
 class ReadTimeExtension extends ExtensionAbstract
 {
     /**
-     * @var int
-     */
-    protected const WORDS_PER_MINUTE = 200;
-
-    /**
      * @return array|TwigFilter[]
      */
     public function getFilters(): array
@@ -65,16 +60,23 @@ class ReadTimeExtension extends ExtensionAbstract
 
     /**
      * @param string $content
+     * @param int $words_per_minute
      * @return int
      * @throws Exception
      * @noinspection PhpMissingParamTypeInspection
      */
-    public function read_time($content): int
+    public function read_time($content, $words_per_minute = 200): int
     {
         if (!is_string($content)) {
             $this->throwTypeError('The "read_time" filter/function expects a string as content value, got "%s".', $content);
         }
 
-        return (int)\ceil(\str_word_count(\strip_tags($content)) / static::WORDS_PER_MINUTE);
+        if (is_numeric($words_per_minute)) {
+            $words_per_minute = (int)$words_per_minute;
+        } else {
+            $this->throwTypeError('The "read_time" filter/function expects a numeric value for words_per_minute, got "%s".', $words_per_minute);
+        }
+
+        return (int)\ceil(\str_word_count(\strip_tags($content)) / $words_per_minute);
     }
 }
