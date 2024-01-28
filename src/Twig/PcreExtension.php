@@ -65,6 +65,7 @@ class PcreExtension extends ExtensionAbstract
      * @throws Exception
      * @noinspection PhpMissingParamTypeInspection
      * @noinspection PhpUnusedParameterInspection
+     * @noinspection PhpMissingReturnTypeInspection
      */
     public function pcre_replace($value, $pattern, $replacement = '', $limit = -1)
     {
