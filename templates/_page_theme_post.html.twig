@@ -48,7 +48,7 @@
 {% block post_author %}{% endblock %}
 {% block post_date %}{% endblock %}
 {% block post_tags %}{% endblock %}
-{% block post_read_time %}{% endblock %}
+{% block post_read_time %}{{ block('post_content')|read_time }} min read{% endblock %}
 {# content #}
 {% block post_image %}{% endblock %}
 {% block post_image_alt %}{% endblock %}
