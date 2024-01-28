@@ -38,6 +38,7 @@ abstract class ExtensionAbstract extends AbstractExtension
      * @param string $message
      * @param mixed $value
      * @throws RuntimeError
+     * @noinspection PhpMissingParamTypeInspection
      */
     protected function throwTypeError(string $message, $value): void
     {
