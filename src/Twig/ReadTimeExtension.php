@@ -72,10 +72,12 @@ class ReadTimeExtension extends ExtensionAbstract
         }
 
         if (is_numeric($words_per_minute)) {
-            $words_per_minute = (int)$words_per_minute;
+            $words_per_minute = abs((int)$words_per_minute);
         } else {
             $this->throwTypeError('The "read_time" filter/function expects a numeric value for words_per_minute, got "%s".', $words_per_minute);
         }
+
+        $words_per_minute = max(180, $words_per_minute);
 
         return (int)\ceil(\str_word_count(\strip_tags($content)) / $words_per_minute);
     }
