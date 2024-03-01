@@ -50,18 +50,9 @@
 {% block post_tags %}{% endblock %}
 {% block post_read_time %}{{ block('post_content')|read_time }} min read{% endblock %}
 {# content #}
-{% block post_image %}/res/image/blog/{{ current_view }}/post-thumbnail.jpeg{% endblock %}
+{% block post_image %}{% endblock %}
 {% block post_image_alt %}{% endblock %}
 {% block post_content %}
-    {%- set current_view_name = current_view['content/blog/'|length:-'.html.twig'|length] -%}
-    {%- set content = source('markdown/blog/' ~ current_view_name ~ '.md', true) -%}
-    {%- set content_title = '# ' ~ block('post_title') -%}
-
-    {%- if content starts with content_title -%}
-        {%- set content = content[content_title|length:] -%}
-    {%- endif -%}
-
-    {{ content|markdown_to_html|raw }}
 {% endblock %}
 {# comment gist #}
 {% block post_subject_id %}{% endblock %}
