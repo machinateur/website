@@ -4,7 +4,7 @@ When it comes to sanitization of HTML content, HTMLPurifier ([`ezyang/htmlpurifi
  is a popular library. Sanitization is commonly used in content management systems
  and really all kinds of software that deals with web content.
 
-Not long ago I had tou find out the hard way, that it has its drawbacks, in terms of usability.
+Not long ago I had to find out the hard way, that it has its drawbacks, in terms of usability.
 That's because it does not come with HTML5 support.
 
 That said, let me just mention that this article is quite shopware 6 specific.
@@ -440,7 +440,7 @@ shopware:
               sets: ['basic', 'style'] # maybe also HTML5
 ```
 
-That field does not exist, but I'll come to that in shortly.
+That field does not exist, but I'll come to that shortly.
 
 Apart from that, there's a not insignificant part involved in sticking the both parts of the document template together.
 
