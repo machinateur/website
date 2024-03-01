@@ -1,3 +1,5 @@
+# Talking to Arduino from PHP using phpduino
+
 This is what [phpduino](https://github.com/machinateur/phpduino) does.
 
 ```php
