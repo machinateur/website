@@ -1,6 +1,6 @@
 # How to sanitize full HTML 5 documents with HTMLPurifier
 
-When it comes to sanitization of HTML content,HTMLPurifier ([`ezyang/htmlpurifier`](https://github.com/ezyang/htmlpurifier))
+When it comes to sanitization of HTML content, HTMLPurifier ([`ezyang/htmlpurifier`](https://github.com/ezyang/htmlpurifier))
  is a popular library. Sanitization is commonly used in content management systems
  and really all kinds of software that deals with web content.
 
