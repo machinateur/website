@@ -354,7 +354,7 @@ At last, the `\Shopware\Core\Framework\Util\HtmlSanitizer` should be decorated i
 
 ```yaml
 services:
-    Machinateur\Shopware\Framework\Util\HtmlSanitizer:
+    Machinateur\Shopware\Core\Framework\Util\HtmlSanitizer:
         decorates: 'Shopware\Core\Framework\Util\HtmlSanitizer'
 ```
 
@@ -451,9 +451,120 @@ The new class should inherit all other parts of the definition. The new fields f
  the `AllowHtml` flag, with parameter `false`.
 That way, no validation is done through the sanitizer (which gets called by the field serializer).
 
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace Machinateur\Shopware\Core\Content\MailTemplate\Aggregate;
+
+use Shopware\Core\Content\MailTemplate\Aggregate\MailHeaderFooterTranslation\MailHeaderFooterTranslationDefinition as MailHeaderFooterTranslationDefinitionBase;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\AllowHtml;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\LongTextField;
+use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
+
+class MailHeaderFooterTranslationDefinition extends MailHeaderFooterTranslationDefinitionBase
+{
+    public function defineFields(): FieldCollection
+    {
+        $def = parent::defineFields();
+        $def->add(
+            (new LongTextField('header_html', 'headerHtml'))
+                ->addFlags(new AllowHtml(false))
+        );
+        $def->add(
+            (new LongTextField('footer_html', 'footerHtml'))
+                ->addFlags(new AllowHtml(false))
+        );
+
+        return $def;
+    }
+}
+```
+
+With the following YAML service definition:
+
+```yaml
+services:
+    Shopware\Core\Content\MailTemplate\Aggregate\MailHeaderFooterTranslation\MailHeaderFooterTranslationDefinition:
+        class: 'Machinateur\Shopware\Core\Content\MailTemplate\Aggregate\MailHeaderFooterTranslationDefinition'
+```
+
 Now we have to account for the validation ourselves, whenever the entity data of the `MailHeaderFooterTranslationEntity`
  is updated. This in turn can be achieved using the event system of shopware.
 The docs explain how it's possible to access and change data.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace Machinateur\Shopware\Core\Content\MailTemplate\Aggregate;
+
+// ...
+
+class MailHeaderFooterWriteSubscriber implements EventSubscriberInterface
+{
+    public function __construct(
+        protected readonly HtmlSanitizer $sanitizer,
+        protected readonly EntityRepository $mailHeaderFooterTranslationRepository,
+    ) {
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            PreWriteValidationEvent::class => 'beforeWrite',
+        ];
+    }
+
+    public function beforeWrite(PreWriteValidationEvent $event): void
+    {
+        foreach ($event->getCommands() as $command) {
+            $definition = $command->getDefinition();
+
+            // Only apply to the specific header/footer entity.
+            if ('mail_header_footer_translation' !== $definition->getEntityName()) {
+                continue;
+            }
+
+            \assert($definition instanceof MailHeaderFooterTranslationDefinition);
+
+            // Skip if no relevant fields is changed.
+            if (!$command->hasField('header_html')
+                && !$command->hasField('footer_html')) {
+                continue;
+            }
+
+            // Load the current entity data.
+            $entity = $this->getExistingEntity($command, $event->getContext());
+            if (null === $entity) {
+                continue;
+            }
+
+            // Random divider UUID.
+            $divider = Uuid::randomHex();
+
+            $payload = $command->getPayload();
+            $payload['header_html'] ??= $entity->get('headerHtml');
+            $payload['footer_html'] ??= $entity->get('footerHtml');
+
+            $text = sprintf('%s%s%s',
+                $payload['header_html'], $divider, $payload['footer_html']
+            );
+            $text = $this->sanitizer->sanitize($text, field: 'mail_header_footer_translation.contentHtml');
+            // This is where the dummy name comes in again.  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+            [$headerHtml, $footerHtml] = explode($divider, $text, 2);
+
+            $command->addPayload('header_html', $headerHtml);
+            $command->addPayload('footer_html', $footerHtml);
+        }
+    }
+
+    // ...
+}
+```
 
 The key element is, that our custom logic should concatenate both parts, with a unique separator in between,
  then sanitize the contents, which should make a full document, when valid.
