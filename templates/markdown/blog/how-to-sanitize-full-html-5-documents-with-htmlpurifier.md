@@ -354,6 +354,8 @@ At last, the `\Shopware\Core\Framework\Util\HtmlSanitizer` should be decorated i
 
 ```yaml
 services:
+    # ...
+
     Machinateur\Shopware\Core\Framework\Util\HtmlSanitizer:
         decorates: 'Shopware\Core\Framework\Util\HtmlSanitizer'
 ```
@@ -486,9 +488,23 @@ With the following YAML service definition:
 
 ```yaml
 services:
+    Machinateur\Shopware\:
+        # the path is relative to `src/Resources/config/services.yaml`
+        resource: '../../'
+        exclude:
+         - '../../Core/Content/MailTemplate/Aggregate/MailHeaderFooterTranslation/MailHeaderFooterTranslationDefinition.php'
+         # ...
+
     Shopware\Core\Content\MailTemplate\Aggregate\MailHeaderFooterTranslation\MailHeaderFooterTranslationDefinition:
         class: 'Machinateur\Shopware\Core\Content\MailTemplate\Aggregate\MailHeaderFooterTranslationDefinition'
 ```
+
+The definition class is used instead of the original one from shopware,
+ while the same new class is excluded from the resource definition at the top.
+That is necessary to avoid issues with duplicate entity names, as the new definition would otherwise be discovered,
+ tagged and registered (autowiring process). This is a general way to overcome the strict entity extension rules,
+ put up by shopware.
+Doing this should be the last resort, when the usual entity extension capabilities are not sufficient, like in this case.
 
 Now we have to account for the validation ourselves, whenever the entity data of the `MailHeaderFooterTranslationEntity`
  is updated. This in turn can be achieved using the event system of shopware.
