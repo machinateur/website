@@ -492,8 +492,8 @@ services:
         # the path is relative to `src/Resources/config/services.yaml`
         resource: '../../'
         exclude:
-         - '../../Core/Content/MailTemplate/Aggregate/MailHeaderFooterTranslation/MailHeaderFooterTranslationDefinition.php'
-         # ...
+            - '../../Core/Content/MailTemplate/Aggregate/MailHeaderFooterTranslation/MailHeaderFooterTranslationDefinition.php'
+            # ...
 
     Shopware\Core\Content\MailTemplate\Aggregate\MailHeaderFooterTranslation\MailHeaderFooterTranslationDefinition:
         class: 'Machinateur\Shopware\Core\Content\MailTemplate\Aggregate\MailHeaderFooterTranslationDefinition'
