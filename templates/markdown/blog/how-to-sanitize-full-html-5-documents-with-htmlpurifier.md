@@ -446,7 +446,7 @@ That field does not exist, but I'll come to that shortly.
 
 Apart from that, there's a not insignificant part involved in sticking the both parts of the document template together.
 
-To do so, first the validation has to be switched off for the definition. SUch thing can be achieved by changing
+To do so, first the validation has to be switched off for the definition. Such thing can be achieved by changing
  the `class` of the service definition for the _entity definition_ in the service container. Override the fields by just
  re-adding the exiting ones to the defined fields from `parent`.
 The new class should inherit all other parts of the definition. The new fields for header/footer HTML should also get
