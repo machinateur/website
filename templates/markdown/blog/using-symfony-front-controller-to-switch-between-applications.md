@@ -27,13 +27,13 @@ Sometimes the opposite site of a system is built in a way that forces a new or d
 
 The particular limitation was related to the domain of the URL.
  And for websites the domain name being used is a pretty big deal, right?
-And nobody wants users to scroll around the testing data set.
+And nobody wants users to scroll around their testing data set.
 
 Usually a production websites above particular sizes run nearly identical instances of some sort,
  which serve testing and development purposes.
 Those systems are usually inaccessible to the public, but for developers, designers, testers.
 
-Now, it's really hard to have both, your production and testing environment, running on the same domain.
+Now, it's really hard to have both, your _production and testing environment_, running on the same domain.
  Set aside the usability implications, it's not straightforward to separate them in a bearable way.
 
 And while adding a wrapper for doctrine's connection class to switch based on request value,
@@ -53,18 +53,20 @@ My header would be called `X-App-Environment` and it was to accept `prod` and `t
 If given the choice, I would've relied on web-server configuration,
  as [supported by `ModRewrite`](https://httpd.apache.org/docs/2.4/mod/mod_rewrite.html#rewritecond).
 
-> Syntax: `RewriteCond <TestString> <CondPattern> [flags]`
->
-> ...
->
-> \4. `%{HTTP:header}`, where header can be any HTTP MIME-header name,
->   can always be used to obtain the value of a header sent in the HTTP request.
->    Example: `%{HTTP:Proxy-Connection}` is the value of the HTTP header `Proxy-Connection:`.
->   If a HTTP header is used in a condition this header is added to the Vary header of the response
->    in case the condition evaluates to true for the request. It is not added if the condition evaluates to false
->    for the request. Adding the HTTP header to the Vary header of the response is needed for proper caching.
->   It has to be kept in mind that conditions follow a short circuit logic in the case of the `ornext|OR` flag
->    so that certain conditions might not be evaluated at all.
+<div class="border border-1 border-dark radius-1 rounded p-3 my-3">
+  <p>Syntax: `RewriteCond {TestString} {CondPattern} [flags]`</p>
+
+  <p>
+    \4. `%{HTTP:header}`, where header can be any HTTP MIME-header name,
+      can always be used to obtain the value of a header sent in the HTTP request.
+       Example: `%{HTTP:Proxy-Connection}` is the value of the HTTP header `Proxy-Connection:`.
+      If a HTTP header is used in a condition this header is added to the Vary header of the response
+       in case the condition evaluates to true for the request. It is not added if the condition evaluates to false
+       for the request. Adding the HTTP header to the Vary header of the response is needed for proper caching.
+      It has to be kept in mind that conditions follow a short circuit logic in the case of the `ornext|OR` flag
+       so that certain conditions might not be evaluated at all.
+  </p>
+</div>
 
 So something like the follow condition should work (I haven't tested it, though).
 
