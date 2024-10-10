@@ -68,12 +68,15 @@ If given the choice, I would've relied on web-server configuration,
   </p>
 </div>
 
-So something like the follow condition should work (I haven't tested it, though).
+So something like the follow condition would probably work (I haven't tested it, though).
 
 ```
 RewriteCond "%{HTTP:X-App-Environment}" "prod|test"
 # ...
 ```
+
+Sadly, it was also no option to adapt server configuration, as is often the case with managed hosting providers.
+ So the solution also had to take that into consideration.
 
 ---
 
