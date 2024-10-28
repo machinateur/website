@@ -11,7 +11,7 @@
 {% block post_image %}/res/image/blog/talking-to-arduino-from-php-using-phpduino/post-thumbnail.jpeg{% endblock %}
 {% block post_image_alt %}An Arduino connected via USB serial.{% endblock %}
 {% block post_content %}
-    {%- set content = source('markdown/blog/talking-to-arduino-from-php-using-phpduino.md', true) -%}
+    {%- set content       = source('markdown/blog/talking-to-arduino-from-php-using-phpduino.md', true) -%}
     {%- set content_title = '# ' ~ block('post_title') -%}
 
     {%- if content starts with content_title -%}

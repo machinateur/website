@@ -13,19 +13,21 @@
     </style>
 {% endblock %}
 
-{% set profile_picture = 'data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=' %}
+{% set profile_picture   = 'data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=' %}
+{# TODO: Move to twig function on PHP side. #}
 {% set recent_blog_posts = blog_posts|map((p) => {
     'fileinfo': p,
     'post_data': {
-        'display': 1 == block('post_display', p.relativePathname),
-        'title': block('post_title', p.relativePathname),
-        'author': block('post_author', p.relativePathname),
-        'date': block('post_date', p.relativePathname),
-        'tags': block('post_tags', p.relativePathname)|split(','),
-        'read_time': block('post_read_time', p.relativePathname),
-        'image': block('post_image', p.relativePathname),
-        'image_alt': block('post_image_alt', p.relativePathname),
-        'content': block('post_content', p.relativePathname),
+        'display': 1 == block('post_display',    p.relativePathname),
+        'title':        block('post_title',      p.relativePathname),
+        'author':       block('post_author',     p.relativePathname),
+        'date':         block('post_date',       p.relativePathname),
+        'tags':         block('post_tags',       p.relativePathname)|split(','),
+        'read_time':    block('post_read_time',  p.relativePathname),
+        'image':        block('post_image',      p.relativePathname),
+        'image_alt':    block('post_image_alt',  p.relativePathname),
+        'content':      block('post_content',    p.relativePathname),
+        'subject_id':   block('post_subject_id', p.relativePathname),
     },
     'path': p.relativePath|replace({
         '\\': '/',

@@ -2,7 +2,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2022 machinateur
+ * Copyright (c) 2021-2024 machinateur
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,10 +35,13 @@ use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Class SitemapCommand
+ *
  * @package App\Command
  */
 class SitemapCommand extends Command
 {
+    // TODO: Write better docs-blocks.
+
     protected static $defaultName = 'app:sitemap';
 
     /**
@@ -54,7 +57,7 @@ class SitemapCommand extends Command
     /**
      * @var string
      */
-    private const DEFAULT_PORT = '8000';
+    private const DEFAULT_PORT = '80';
 
     private string $contentPath;
 
@@ -104,7 +107,7 @@ class SitemapCommand extends Command
             $this->setContentPath($twigPath);
         }
 
-        $pages = iterator_to_array(
+        $pages = \iterator_to_array(
             Finder::create()
                 ->files()
                 ->depth('<= 2')
@@ -116,29 +119,37 @@ class SitemapCommand extends Command
             false
         );
 
-        $sitemapContent = implode("\n", array_filter(array_map(function (SplFileInfo $fileInfo) use ($input): string {
-            $urlScheme = $input->getOption('url-scheme');
-            $urlHost = $input->getOption('url-host');
-            $urlPort = $input->getOption('url-port');
-            if (self::DEFAULT_PORT != $urlPort) {
-                $urlPort = ':' . $urlPort;
-            }
-            $urlPath = str_replace('\\', '/', substr($fileInfo->getRelativePathname(),
-                strlen('content'), -strlen('.html.twig')));
-            return "{$urlScheme}://{$urlHost}{$urlPort}{$urlPath}";
-        }, $pages), function (string $url) use ($input): bool {
-            $filterArray = $input->getOption('filter');
+        $sitemapContent = \implode("\n",
+                \array_filter(
+                    \array_map(
+                        static function (SplFileInfo $fileInfo) use ($input): string {
+                            $urlScheme = $input->getOption('url-scheme');
+                            $urlHost   = $input->getOption('url-host');
+                            $urlPort   = $input->getOption('url-port');
+                            if (self::DEFAULT_PORT != $urlPort) {
+                                $urlPort = ':' . $urlPort;
+                            }
+                            $urlPath   = \str_replace('\\', '/', \substr($fileInfo->getRelativePathname(),
+                                \strlen('content'), -\strlen('.html.twig')));
+                            return "{$urlScheme}://{$urlHost}{$urlPort}{$urlPath}";
+                        }, $pages
+                    ),
+                    static function (string $url) use ($input): bool {
+                        $filterArray = $input->getOption('filter');
 
-            foreach ($filterArray as $filter) {
-                if (1 === preg_match($filter, $url)) {
-                    return true;
-                }
-            }
+                        foreach ($filterArray as $filter) {
+                            if (1 === \preg_match($filter, $url)) {
+                                return true;
+                            }
+                        }
 
-            return 0 === count($filterArray);
-        }, 0)) . "\n";
+                        return 0 === \count($filterArray);
+                    }, 0
+                )
+            )
+            . "\n";
 
-        return (false !== file_put_contents($input->getArgument('sitemap-path'), $sitemapContent))
+        return (false !== \file_put_contents($input->getArgument('sitemap-path'), $sitemapContent))
             ? Command::SUCCESS
             : Command::FAILURE;
     }

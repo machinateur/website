@@ -2,7 +2,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2022 machinateur
+ * Copyright (c) 2021-2024 machinateur
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,7 @@ use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 
 /**
  * Class Kernel
+ *
  * @package App
  */
 class Kernel extends BaseKernel

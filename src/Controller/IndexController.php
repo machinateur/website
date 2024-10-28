@@ -2,7 +2,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2022 machinateur
+ * Copyright (c) 2021-2024 machinateur
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -51,9 +51,9 @@ use Twig\Error\Error as TwigError;
  */
 class IndexController extends ControllerAbstract
 {
-    private static string $DEFAULT_PATH = 'overview';
+    private const DEFAULT_PATH = 'overview';
 
-    private static array $EXPOSED_PARAMETERS = [
+    private const EXPOSED_PARAMETERS = [
         // App Version
         'version',
         // Google Analytics
@@ -65,20 +65,24 @@ class IndexController extends ControllerAbstract
         'ad_config',
     ];
 
-    private Environment $twig;
+    private readonly Environment $twig;
 
-    private CacheItemPoolInterface $cache;
+    private readonly CacheItemPoolInterface $cache;
 
     /**
      * IndexController constructor.
+     *
      * @param Environment $twig
      * @param CacheItemPoolInterface $contentCache
      */
     public function __construct(Environment $twig, CacheItemPoolInterface $contentCache)
     {
-        $this->twig = $twig;
+        $this->twig  = $twig;
         $this->cache = $contentCache;
     }
+
+    // TODO: Use attributes for routes.
+    // TODO: Extract logic to make it reusable (i.e. for RSS feed).
 
     /**
      * @Route("/{path}", name="view", requirements={
@@ -98,10 +102,11 @@ class IndexController extends ControllerAbstract
         if (null === $path) {
             // Redirect to default route.
             return $this->redirectToRoute('index_view', [
-                'path' => static::$DEFAULT_PATH,
+                'path' => static::DEFAULT_PATH,
             ], 302);
         }
 
+        // TODO: Is content type resolution possible?
         $view = 'content/' . $path . '.html.twig';
 
         $twigLoader = $this->twig->getLoader();
@@ -114,7 +119,7 @@ class IndexController extends ControllerAbstract
         $viewBasePath = $this->getParameter('twig.default_path');
 
         /** @var string[] $contextGlobals */
-        $contextGlobals = array_keys(
+        $contextGlobals = \array_keys(
             $this->twig->mergeGlobals([])
         );
 
@@ -128,15 +133,14 @@ class IndexController extends ControllerAbstract
         $blogPostsPathnames = $this->cache->get('app.blog_posts',
             function (CacheItemInterface $item) use ($viewBasePath, &$blogPosts): array {
                 // Make it expire after one day.
-                $item
-                    ->expiresAfter(
-                        new DateInterval('P1D')
-                    );
+                $item->expiresAfter(
+                    new \DateInterval('P1D')
+                );
 
                 /** @var SplFileInfo[] $blogPosts */
                 $blogPosts = $this->getBlogPosts($viewBasePath);
 
-                return array_map(
+                return \array_map(
                     function (SplFileInfo $fileInfo): string {
                         return $fileInfo->getRelativePathname();
                     }, $blogPosts
@@ -144,14 +148,14 @@ class IndexController extends ControllerAbstract
             }
         );
 
-        if (is_null($blogPosts)) {
+        if (\is_null($blogPosts)) {
             if (true == $this->getParameter('kernel.debug')) {
                 $blogPosts = $this->getBlogPosts($viewBasePath);
             } else {
-                $blogPosts = array_map(
-                    function (string $relativePathname) use ($viewBasePath): SplFileInfo {
+                $blogPosts = \array_map(
+                    static function (string $relativePathname) use ($viewBasePath): SplFileInfo {
                         return new SplFileInfo($viewBasePath . '/' . $relativePathname,
-                            dirname($relativePathname), $relativePathname);
+                            \dirname($relativePathname), $relativePathname);
                     }, $blogPostsPathnames
                 );
             }
@@ -160,9 +164,9 @@ class IndexController extends ControllerAbstract
         $context['blog_posts'] = $blogPosts;
 
         // Copy the parameters from container to context.
-        foreach (static::$EXPOSED_PARAMETERS as $parameter) {
+        foreach (static::EXPOSED_PARAMETERS as $parameter) {
             // Skip when the name is already taken, sorry.
-            if (array_key_exists($parameter, $context) || in_array($parameter, $contextGlobals, true)) {
+            if (\array_key_exists($parameter, $context) || \in_array($parameter, $contextGlobals, true)) {
                 continue;
             }
 
@@ -201,7 +205,7 @@ class IndexController extends ControllerAbstract
             $viewBasePath = $this->getParameter('twig.default_path');
         }
 
-        return iterator_to_array(
+        return \iterator_to_array(
             Finder::create()
                 ->files()
                 ->name('/^[a-z0-9]+(?:-[a-z0-9]+)*.html.twig$/')

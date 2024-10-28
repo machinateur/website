@@ -2,16 +2,16 @@
 
 {% set highlighted_code = highlighted_code|default(false) %}
 
-{% set reader_mode = reader_mode|default(false) %}
-{% set ink_mode = reader_mode|default(false) %}
-{% set dark_mode = dark_mode|default(false) %}
-{% set zoom_level = zoom_level|default(0) %}
-{% set main_content_id = main_content_id|default('#main') %}
-{% set cookie_consent = cookie_consent|default(false) %}
-{% set ads_consent = ads_consent|default(false) %}
-{% set stt_visible = stt_visible|default(true) %}
+{% set reader_mode      = reader_mode|default(false) %}
+{% set ink_mode         = reader_mode|default(false) %}
+{% set dark_mode        = dark_mode|default(false) %}
+{% set zoom_level       = zoom_level|default(0) %}
+{% set main_content_id  = main_content_id|default('#main') %}
+{% set cookie_consent   = cookie_consent|default(false) %}
+{% set ads_consent      = ads_consent|default(false) %}
+{% set stt_visible      = stt_visible|default(true) %}
 
-{% set navbar_content = [
+{% set navbar_content   = [
     {
         'label': 'Overview',
         'path': 'overview',
@@ -25,7 +25,7 @@
         'path': 'about-me',
     },
 ] %}
-{% set random_color = random([
+{% set random_color     = random([
     '#420039',
     '#A76571',
     '#F5E2C8',

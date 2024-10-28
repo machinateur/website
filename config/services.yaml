@@ -4,18 +4,18 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-  app.version: '%env(APP_VERSION)%'
+  app.version:           '%env(APP_VERSION)%'
   app.ga_measurement_id: '%env(APP_GA_MEASUREMENT_ID)%'
-  app.ad_script: '%env(APP_AD_SCRIPT)%'
-  app.ad_client: '%env(APP_AD_CLIENT)%'
-  app.ad_config: '%env(json:file:resolve:APP_AD_CONFIG)%'
-  github.username: '%env(GITHUB_USERNAME)%'
-  github.secret: '%env(GITHUB_SECRET)%'
+  app.ad_script:         '%env(APP_AD_SCRIPT)%'
+  app.ad_client:         '%env(APP_AD_CLIENT)%'
+  app.ad_config:         '%env(json:file:resolve:APP_AD_CONFIG)%'
+  github.username:       '%env(GITHUB_USERNAME)%'
+  github.secret:         '%env(GITHUB_SECRET)%'
 
 services:
   # default configuration for services in *this* file
   _defaults:
-    autowire: true      # Automatically injects dependencies in your services.
+    autowire:      true # Automatically injects dependencies in your services.
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
   # makes classes in src/ available to be used as services

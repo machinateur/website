@@ -1,44 +1,44 @@
 {% extends '_page_theme.html.twig' %}
 
-{% set highlighted_code = true %}
+{% set highlighted_code   = true %}
 {% set has_comment_access = app.request.hasPreviousSession() and app.request.session.get(
     constant('App\\Controller\\CommentController::SESSION_KEY_TOKEN')
 ) is not null %}
 
-{% set image_zoom_factor = 2 %}
+{% set image_zoom_factor  = 2 %}
 
 {% block title %}{{ parent() }} - Blog - {{ block('post_title') }}{% endblock %}
 
-{% set profile_picture = 'data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=' %}
-{% set recent_blog_posts = blog_posts|map((p) => {
+{% set profile_picture    = 'data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=' %}
+{% set recent_blog_posts  = blog_posts|map((p) => {
     'fileinfo': p,
     'post_data': {
-        'display': 1 == block('post_display', p.relativePathname),
-        'title': block('post_title', p.relativePathname),
-        'author': block('post_author', p.relativePathname),
-        'date': block('post_date', p.relativePathname),
-        'tags': block('post_tags', p.relativePathname)|split(','),
-        'read_time': block('post_read_time', p.relativePathname),
-        'image': block('post_image', p.relativePathname),
-        'image_alt': block('post_image_alt', p.relativePathname),
-        'content': block('post_content', p.relativePathname),
-        'subject_id': block('post_subject_id', p.relativePathname)
+        'display': 1 == block('post_display',    p.relativePathname),
+        'title':        block('post_title',      p.relativePathname),
+        'author':       block('post_author',     p.relativePathname),
+        'date':         block('post_date',       p.relativePathname),
+        'tags':         block('post_tags',       p.relativePathname)|split(','),
+        'read_time':    block('post_read_time',  p.relativePathname),
+        'image':        block('post_image',      p.relativePathname),
+        'image_alt':    block('post_image_alt',  p.relativePathname),
+        'content':      block('post_content',    p.relativePathname),
+        'subject_id':   block('post_subject_id', p.relativePathname),
     },
     'path': p.relativePath|replace({
         '\\': '/',
     })['content'|length:]|trim('/', 'left') ~ '/'~ p.filenameWithoutExtension[:-'.html'|length],
 }) %}
-{% set this_blog_post = recent_blog_posts|reduce((carry, p) => (carry is not null ? carry : (p.fileinfo.relativePathname|replace({
+{% set this_blog_post     = recent_blog_posts|reduce((carry, p) => (carry is not null ? carry : (p.fileinfo.relativePathname|replace({
     '\\': '/',
 }) is same as(current_view) ? p : null)), null) %}
-{% set recent_blog_posts = recent_blog_posts
+{% set recent_blog_posts  = recent_blog_posts
     |sort((a, b) => b.post_data.date <=> a.post_data.date)
     |filter((v, k) => v.post_data.display is same as(true))
     |filter((v, k) => v.post_data.date <= 'now'|date('Y-m-d')) %}
 
 {# set tw_card to null to disable it #}
 {% set tw_card = tw_card|default({
-    'site': 'machinateur',
+    'site':        'machinateur',
     'description': block('description'),
 }|merge(this_blog_post.post_data)) %}
 

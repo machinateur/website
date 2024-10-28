@@ -2,7 +2,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2022 machinateur
+ * Copyright (c) 2021-2024 machinateur
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -68,12 +68,13 @@ class CommentController extends ControllerAbstract
 
     /**
      * CommentController constructor.
+     *
      * @param CacheItemPoolInterface $commentCache
      * @param GitHubClient $client
      */
     public function __construct(CacheItemPoolInterface $commentCache, GitHubClient $client)
     {
-        $this->cache = $commentCache;
+        $this->cache  = $commentCache;
         $this->client = $client;
     }
 
@@ -96,13 +97,11 @@ class CommentController extends ControllerAbstract
         /** @var array|array[] $comments */
         $comments = $this->cache->get("app.comments.{$subjectId}", function (ItemInterface $item) use ($subjectId): array {
             // Make it expire after one hour.
-            $item
-                ->expiresAfter(
-                    new DateInterval('PT1H')
-                );
+            $item->expiresAfter(
+                new DateInterval('PT1H')
+            );
             // No tags for now, they won't work well anyway with fs.
-            //$item
-            //    ->tag('comments');
+            //$item->tag('comments');
 
             // Load the gist comments from given subject id.
             /** @var array|array[] $comments */
@@ -156,6 +155,8 @@ class CommentController extends ControllerAbstract
         if ($isUserUnauthenticated) {
             throw new AccessDeniedHttpException('Sorry, I\'m not allowed to add a comment on your behalf.');
         } else {
+            \assert(isset($token));
+
             // Authenticate user to be able to post a comment on their behalf.
             $this->client->authenticate($token, '', AuthMethod::ACCESS_TOKEN);
         }
@@ -192,7 +193,7 @@ class CommentController extends ControllerAbstract
 
         $context = [];
         $context['subject_id'] = $subjectId;
-        $context['comments'] = $comments;
+        $context['comments']   = $comments;
 
         try {
             $content = $twig->render($view, $context);
@@ -224,9 +225,9 @@ class CommentController extends ControllerAbstract
         $scope[] = 'gist';
 
         try {
-            $state = random_bytes(64);
-            $state = @bin2hex($state);
-        } catch (Exception $exception) {
+            $state = \random_bytes(64);
+            $state = @\bin2hex($state);
+        } catch (\Exception $exception) {
             throw new HttpException(500, 'Seems like there was an error. Please let me sort this out.', $exception);
         }
 
@@ -250,7 +251,7 @@ class CommentController extends ControllerAbstract
         }
 
         $isOriginInvalid =
-            ($request->getHost() !== parse_url($origin, PHP_URL_HOST));
+            ($request->getHost() !== \parse_url($origin, PHP_URL_HOST));
 
         if ($isOriginInvalid) {
             throw new BadRequestHttpException('There seems to be a problem with your request origin.');
@@ -261,18 +262,18 @@ class CommentController extends ControllerAbstract
         // Pack everything up.
         $dataPackage = [
             'client_id' => $this->getParameter('github.username'),
-            'scope' => implode(' ', $scope),
-            'state' => $state,
+            'scope'     => \implode(' ', $scope),
+            'state'     => $state,
         ];
 
         // Remove scope, in case it is empty at this point.
-        if (0 === count($scope)) {
+        if (0 === \count($scope)) {
             unset($dataPackage['scope']);
         }
 
         // Generate the target url.
         $url = self::URL_TO_AUTHORIZE
-            . '?' . http_build_query($dataPackage, '', '&', PHP_QUERY_RFC1738);
+            . '?' . \http_build_query($dataPackage, '', '&', \PHP_QUERY_RFC1738);
 
         return new RedirectResponse($url);
     }
@@ -300,7 +301,7 @@ class CommentController extends ControllerAbstract
         $session->remove(self::SESSION_KEY_STATE);
 
         $isStateInvalid =
-            (is_null($stateOriginal) || is_null($state) || false === hash_equals($stateOriginal, $state));
+            (\is_null($stateOriginal) || \is_null($state) || false === \hash_equals($stateOriginal, $state));
 
         if ($isStateInvalid) {
             throw new BadRequestHttpException('There seems to be a problem with your request.');
@@ -311,7 +312,7 @@ class CommentController extends ControllerAbstract
         $session->remove(self::SESSION_KEY_ORIGIN);
 
         $isOriginInvalid =
-            ($request->getHost() !== parse_url($origin, PHP_URL_HOST));
+            ($request->getHost() !== \parse_url($origin, \PHP_URL_HOST));
 
         if ($isOriginInvalid) {
             throw new BadRequestHttpException('There seems to be a problem with your request origin.');
@@ -319,23 +320,23 @@ class CommentController extends ControllerAbstract
 
         // Pack data to exchange the code for an access token.
         $dataPackage = [
-            'client_id' => $this->getParameter('github.username'),
+            'client_id'     => $this->getParameter('github.username'),
             'client_secret' => $this->getParameter('github.secret'),
-            'code' => $code,
+            'code'          => $code,
         ];
 
         // Request the access token.
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, self::URL_TO_ACCESS_TOKEN);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataPackage);
+        $ch = \curl_init();
+        \curl_setopt($ch, \CURLOPT_URL,            self::URL_TO_ACCESS_TOKEN);
+        \curl_setopt($ch, \CURLOPT_RETURNTRANSFER, true);
+        \curl_setopt($ch, \CURLOPT_POST,           true);
+        \curl_setopt($ch, \CURLOPT_POSTFIELDS,     $dataPackage);
 
-        $responseContent = curl_exec($ch);
+        $responseContent = \curl_exec($ch);
         /** @var array $response */
-        parse_str($responseContent, $response);
+        \parse_str($responseContent, $response);
 
-        curl_close($ch);
+        \curl_close($ch);
 
         // Check response content.
         $isResponseInvalid =

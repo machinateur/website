@@ -11,7 +11,7 @@
 {% block post_image %}/res/image/blog/using-symfony-front-controller-to-switch-between-applications/post-thumbnail.jpeg{% endblock %}
 {% block post_image_alt %}An abstract depiction of multiple Symfony applications next to each other.{% endblock %}
 {% block post_content %}
-    {%- set content = source('markdown/blog/using-symfony-front-controller-to-switch-between-applications.md', true) -%}
+    {%- set content       = source('markdown/blog/using-symfony-front-controller-to-switch-between-applications.md', true) -%}
     {%- set content_title = '# ' ~ block('post_title') -%}
 
     {%- if content starts with content_title -%}
