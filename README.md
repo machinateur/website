@@ -64,7 +64,7 @@ The overall performance is better in production environments due to caching.
 ### Cache
 
 The cache files are located under `var/cache/%kernel.environment%/`. To clear it, execute below command or simply delete
-the cache folder.
+ the cache folder.
 
 ```bash
 php bin/console cache:clear
@@ -73,7 +73,7 @@ php bin/console cache:clear
 ### Log locations and rotations
 
 Logs are stored under `var/log/%kernel.environment%.log`. The number of log files in rotation is currently set to `0`,
-so they are actually never rotated, but all get their own neat little timestamp.
+ so they are actually never rotated, but all get their own neat little timestamp.
 
 ## Deployment
 
@@ -89,55 +89,55 @@ composer dump-env prod
 ### Custom `.htaccess` for production
 
 The provided `.htaccess` has several commented sections, which can (and should) be enabled upon deployment to the
-production environment. While running inside the docker container, these are set by the apache virtual-host
-configuration.
+ production environment. While running inside the docker container, these are set by the apache virtual-host
+ configuration.
 
 In a shared hosting production environment, as it is currently being used, these sections and directives should be set
-by the `.htaccess` file. It's not the best solution, but still viable for environments without direct configuration
-access.
+ by the `.htaccess` file. It's not the best solution, but still viable for environments without direct configuration
+ access.
 
 ### FTP upload files and folders
 
-* `bin/`
-* `config/`
-* `docker/`
-* `public/`
-* `res/`
-* `src/`
-* `templates/`
-* `tests/`
-* `var/`
-* `vendor/`
-* `.env.local.php`
-* `.gitattributes`
-* `.gitignore`
-* `.php-version`
-* `ads-config.json`
-* `build.sh`
-* `build-coverage.sh`
-* `build-coverage.js`
-* `clear.sh`
-* `clear-coverage.sh`
-* `composer.json`
-* `composer.lock`
-* `docker-compose.yml`
-* `Dockerfile`
-* `LICENSE`
-* `package.json`
-* `package-lock.json`
-* `phpunit.xml.dist`
-* `README.md`
-* `symfony.lock`
+-`bin/`
+-`config/`
+-`docker/`
+-`public/`
+-`res/`
+-`src/`
+-`templates/`
+-`tests/`
+-`var/`
+-`vendor/`
+-`.env.local.php`
+-`.gitattributes`
+-`.gitignore`
+-`.php-version`
+-`ads-config.json`
+-`build.sh`
+-`build-coverage.sh`
+-`build-coverage.js`
+-`clear.sh`
+-`clear-coverage.sh`
+-`composer.json`
+-`composer.lock`
+-`docker-compose.yml`
+-`Dockerfile`
+-`LICENSE`
+-`package.json`
+-`package-lock.json`
+-`phpunit.xml.dist`
+-`README.md`
+-`symfony.lock`
 
 *Optional: `.htpasswd`, if auth is enabled in `public/.htaccess`.*
 
 ### Credential generation and configuration (for testing)
 
 When using the `.htpasswd` approach for testing, the `htpasswd` cli tool is available to add/update credentials. It's
-installed inside the docker container out of the box (since it comes with apache).
+ installed inside the docker container out of the box (since it comes with apache).
 
 It's recommended to place a `.htpasswd-raw` file alongside the normal `.htpasswd` (**both outside of `public/`**), so
-the original credentials for each user won't have to be re-created when lost.
+ the original credentials for each user won't have to be re-created when lost.
 
 ## License
 
