@@ -98,36 +98,36 @@ In a shared hosting production environment, as it is currently being used, these
 
 ### FTP upload files and folders
 
--`bin/`
--`config/`
--`docker/`
--`public/`
--`res/`
--`src/`
--`templates/`
--`tests/`
--`var/`
--`vendor/`
--`.env.local.php`
--`.gitattributes`
--`.gitignore`
--`.php-version`
--`ads-config.json`
--`build.sh`
--`build-coverage.sh`
--`build-coverage.js`
--`clear.sh`
--`clear-coverage.sh`
--`composer.json`
--`composer.lock`
--`docker-compose.yml`
--`Dockerfile`
--`LICENSE`
--`package.json`
--`package-lock.json`
--`phpunit.xml.dist`
--`README.md`
--`symfony.lock`
+- `bin/`
+- `config/`
+- `docker/`
+- `public/`
+- `res/`
+- `src/`
+- `templates/`
+- `tests/`
+- `var/`
+- `vendor/`
+- `.env.local.php`
+- `.gitattributes`
+- `.gitignore`
+- `.php-version`
+- `ads-config.json`
+- `build.sh`
+- `build-coverage.sh`
+- `build-coverage.js`
+- `clear.sh`
+- `clear-coverage.sh`
+- `composer.json`
+- `composer.lock`
+- `docker-compose.yml`
+- `Dockerfile`
+- `LICENSE`
+- `package.json`
+- `package-lock.json`
+- `phpunit.xml.dist`
+- `README.md`
+- `symfony.lock`
 
 *Optional: `.htpasswd`, if auth is enabled in `public/.htaccess`.*
 
