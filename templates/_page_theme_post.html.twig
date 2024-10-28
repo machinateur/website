@@ -152,6 +152,14 @@
                         <span class="me-2">{{ source('svg/clock.svg') }}</span> {{ this_blog_post.post_data.read_time }}
                     </span>
                 {% endif %}
+
+                <a href="{{ path('feed_view') }}" target="_blank"
+                   class="d-flex align-items-center ms-3 text-muted text-decoration-none">
+                    {% include 'svg/rss.svg.twig' with {
+                        'width':  16,
+                        'height': 16,
+                    } %}
+                </a>
             </div>
 
             <div id="content" data-app-component="image-zoom">
