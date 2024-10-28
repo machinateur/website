@@ -54,13 +54,13 @@ If given the choice, I would've relied on web-server configuration,
  as [supported by `ModRewrite`](https://httpd.apache.org/docs/2.4/mod/mod_rewrite.html#rewritecond).
 
 <div class="border border-1 border-dark radius-1 rounded p-3 my-3">
-  <p>Syntax: `RewriteCond {TestString} {CondPattern} [flags]`</p>
+  <p>Syntax: <code>RewriteCond {TestString} {CondPattern} [flags]</code></p>
 
   <p>
-    \4. `%{HTTP:header}`, where header can be any HTTP MIME-header name,
+    \4. <code>%{HTTP:header}</code>, where header can be any HTTP MIME-header name,
       can always be used to obtain the value of a header sent in the HTTP request.
-       Example: `%{HTTP:Proxy-Connection}` is the value of the HTTP header `Proxy-Connection:`.
-      If a HTTP header is used in a condition this header is added to the Vary header of the response
+       Example: <code>%{HTTP:Proxy-Connection}</code> is the value of the HTTP header <code>Proxy-Connection:</code>.
+      If an HTTP header is used in a condition this header is added to the Vary header of the response
        in case the condition evaluates to true for the request. It is not added if the condition evaluates to false
        for the request. Adding the HTTP header to the Vary header of the response is needed for proper caching.
       It has to be kept in mind that conditions follow a short circuit logic in the case of the `ornext|OR` flag

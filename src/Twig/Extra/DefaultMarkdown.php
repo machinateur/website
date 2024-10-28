@@ -2,7 +2,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2022 machinateur
+ * Copyright (c) 2021-2024 machinateur
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  * SOFTWARE.
  */
 
-namespace App\Twig\Extra;
+namespace Machinateur\Website\Twig\Extra;
 
 use ParsedownExtra;
 use Twig\Extra\Markdown\DefaultMarkdown as DefaultMarkdownBase;
@@ -31,8 +31,9 @@ use Twig\Extra\Markdown\ErusevMarkdown;
 use Twig\Extra\Markdown\MarkdownInterface;
 
 /**
- * Class DefaultMarkdown
- * @package App\Twig\Extra
+ * Add support for {@see ParsedownExtra} to the original {@see DefaultMarkdownBase} implementation.
+ *
+ * Decoration is applied by setting the original definition's class to this one in `config/services.yaml`.
  */
 class DefaultMarkdown extends DefaultMarkdownBase
 {
@@ -40,9 +41,9 @@ class DefaultMarkdown extends DefaultMarkdownBase
 
     public function __construct()
     {
-        if (class_exists(ParsedownExtra::class)) {
+        if (\class_exists(ParsedownExtra::class)) {
             $this->converter = new ErusevMarkdown(
-                new ParsedownExtra()
+                new ParsedownExtra(),
             );
 
             return;

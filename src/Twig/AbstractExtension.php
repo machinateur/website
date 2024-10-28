@@ -2,7 +2,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2022 machinateur
+ * Copyright (c) 2021-2024 machinateur
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,25 +23,21 @@
  * SOFTWARE.
  */
 
-namespace App\Twig;
+namespace Machinateur\Website\Twig;
 
 use Twig\Error\RuntimeError;
-use Twig\Extension\AbstractExtension;
+use Twig\Extension\AbstractExtension as TwigExtension;
 
 /**
- * Class ExtensionAbstract
- * @package App\Twig
+ * An abstract base class for all twig extensions in this project. Provides helper methods.
  */
-abstract class ExtensionAbstract extends AbstractExtension
+abstract class AbstractExtension extends TwigExtension
 {
     /**
-     * @param string $message
-     * @param mixed $value
      * @throws RuntimeError
-     * @noinspection PhpMissingParamTypeInspection
      */
     protected function throwTypeError(string $message, $value): void
     {
-        throw new RuntimeError(sprintf($message, is_object($value) ? get_class($value) : gettype($value)));
+        throw new RuntimeError(\sprintf($message, \is_object($value) ? \get_class($value) : \gettype($value)));
     }
 }

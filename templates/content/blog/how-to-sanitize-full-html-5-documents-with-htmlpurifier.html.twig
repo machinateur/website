@@ -8,9 +8,10 @@
 {% block post_date %}2024-03-01{% endblock %}
 {% block post_tags %}php, html, shopware, sanitization{% endblock %}
 {# content #}
+{% block post_image %}{% endblock %}
 {% block post_image_alt %}A screenshot of example code{% endblock %}
 {% block post_content %}
-    {%- set content = source('markdown/blog/how-to-sanitize-full-html-5-documents-with-htmlpurifier.md', true) -%}
+    {%- set content       = source('markdown/blog/how-to-sanitize-full-html-5-documents-with-htmlpurifier.md', true) -%}
     {%- set content_title = '# ' ~ block('post_title') -%}
 
     {%- if content starts with content_title -%}
