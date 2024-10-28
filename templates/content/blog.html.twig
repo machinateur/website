@@ -2,7 +2,12 @@
 
 {% block title %}{{ parent() }} - Blog Archive{% endblock %}
 
-{% block description %}Articles about programming, hacking, electronics and more. Browse and search the machinateur.dev blog archive by title, author and month.{% endblock %}
+{% block description %}
+    {%- apply normalize_text %}
+        Articles about programming, hacking, electronics and more.
+        Browse and search the machinateur.dev blog archive by title, author and month.
+    {% endapply -%}
+{% endblock %}
 
 {% block style %}
     {{ parent() }}
@@ -19,6 +24,7 @@
     'post_data': {
         'display': 1 == block('post_display',    p.relativePathname),
         'title':        block('post_title',      p.relativePathname),
+        'description':  block('description',     p.relativePathname),
         'author':       block('post_author',     p.relativePathname),
         'date':         block('post_date',       p.relativePathname),
         'tags':         block('post_tags',       p.relativePathname)|split(','),
@@ -42,7 +48,7 @@
 
     <div class="mx-auto py-5 px-3">
         <div class="border-bottom pb-3">
-            <h1 class="display-1">Blog</h1>
+            <h1 class="display-1 mb-4">Blog</h1>
 
             {% set search_authors = recent_blog_posts|map((p) => p.post_data.author)|unique %}
             {% set search_months  = recent_blog_posts|map((p) => p.post_data.date|date('M Y'))|unique %}
@@ -100,11 +106,11 @@
                         };
                     </script>
 
-                    {% set author = blog_post.post_data.author %}
-                    {% set author_link = 'https://github.com/' ~ author %}
+                    {% set author         = blog_post.post_data.author %}
+                    {% set author_link    = 'https://github.com/' ~ author %}
                     {% set author_profile = author_link ~ '.png' %}
 
-                    <a class="text-decoration-none" href="{{ path('index_view', {
+                    <a class="text-decoration-none" href="{{ path('page_view', {
                         'path': blog_post.path,
                     }) }}">
                         <h2 class="h1 fw-500">{{ blog_post.post_data.title }}</h2>

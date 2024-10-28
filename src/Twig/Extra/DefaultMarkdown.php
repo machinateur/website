@@ -31,22 +31,19 @@ use Twig\Extra\Markdown\ErusevMarkdown;
 use Twig\Extra\Markdown\MarkdownInterface;
 
 /**
- * Class DefaultMarkdown
+ * Add support for {@see ParsedownExtra} to the original {@see DefaultMarkdownBase} implementation.
  *
- * @package Machinateur\Website\Twig\Extra
+ * Decoration is applied by setting the original definition's class to this one in `config/services.yaml`.
  */
 class DefaultMarkdown extends DefaultMarkdownBase
 {
     protected ?MarkdownInterface $converter = null;
 
-    /**
-     * DefaultMarkdown constructor.
-     */
     public function __construct()
     {
-        if (class_exists(ParsedownExtra::class)) {
+        if (\class_exists(ParsedownExtra::class)) {
             $this->converter = new ErusevMarkdown(
-                new ParsedownExtra()
+                new ParsedownExtra(),
             );
 
             return;

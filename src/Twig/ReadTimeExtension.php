@@ -51,47 +51,39 @@ declare(strict_types=1);
 
 namespace Machinateur\Website\Twig;
 
-use Exception;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 /**
- * Class ReadTimeExtension
- *
- * @package Machinateur\Website\Twig
+ * A twig extension to add the `read_time` twig filter.
  */
 class ReadTimeExtension extends AbstractExtension
 {
-    /**
-     * @return array|TwigFilter[]
-     */
     public function getFilters(): array
     {
         return [
-            new TwigFilter('read_time', [$this, 'read_time']),
+            new TwigFilter('read_time', $this->read_time(...)),
         ];
     }
 
-    /**
-     * @return array|TwigFunction[]
-     */
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('read_time', [$this, 'read_time']),
+            new TwigFunction('read_time', $this->read_time(...)),
         ];
     }
 
     /**
+     * Calculate the time in minutes required for reading a text based on the given amount of words per minute.
+     *
      * @param string $content
-     * @param int $words_per_minute
-     * @return int
-     * @throws Exception
+     * @param int    $words_per_minute
+     * @throws \Exception
      * @noinspection PhpMissingParamTypeInspection
      */
     public function read_time($content, $words_per_minute = 200): int
     {
-        if (!\is_string($content)) {
+        if ( ! \is_string($content)) {
             $this->throwTypeError('The "read_time" filter/function expects a string as content value, got "%s".', $content);
         }
 

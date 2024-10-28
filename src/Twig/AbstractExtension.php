@@ -29,17 +29,12 @@ use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension as TwigExtension;
 
 /**
- * Class AbstractExtension
- *
- * @package Machinateur\Website\Twig
+ * An abstract base class for all twig extensions in this project. Provides helper methods.
  */
 abstract class AbstractExtension extends TwigExtension
 {
     /**
-     * @param string $message
-     * @param mixed $value
      * @throws RuntimeError
-     * @noinspection PhpMissingParamTypeInspection
      */
     protected function throwTypeError(string $message, $value): void
     {

@@ -29,39 +29,34 @@ use Exception;
 use Twig\TwigFilter;
 
 /**
- * Class MiscExtension
- *
- * @package Machinateur\Website\Twig
+ * A twig extension to add miscellaneous additional PHP functions for twig.
  */
 class MiscExtension extends AbstractExtension
 {
-    /**
-     * @return array|TwigFilter[]
-     */
     public function getFilters(): array
     {
         return [
-            new TwigFilter('unique', [$this, 'unique']),
+            new TwigFilter('unique', $this->unique(...)),
         ];
     }
 
     /**
-     * @param array $value
+     * A wrapper for PHP's {@see \array_unique()}. Also handles conversion of the `\SORT_` constants against their `$name` argument.
+     *
+     * @param array  $value
      * @param string $sort_name
-     * @return array
      * @throws Exception
      * @noinspection PhpMissingParamTypeInspection
-     * @noinspection PhpMissingReturnTypeInspection
      */
-    public function unique($value, $sort_name = 'regular')
+    public function unique($value, $sort_name = 'regular'): array
     {
-        if (!\is_array($value)) {
+        if ( ! \is_array($value)) {
             $this->throwTypeError('The "unique" filter only works with arrays or "Traversable", got "%s" as first argument.', $value);
         }
 
-        if (!\is_string($sort_name)) {
+        if ( ! \is_string($sort_name)) {
             $this->throwTypeError('The "unique" filter expects a string as sort_name value, got "%s".', $sort_name);
-        } elseif (!\in_array($sort_name, $whitelist = ['regular', 'numeric', 'string', 'locale_string'], true)) {
+        } elseif ( ! \in_array($sort_name, $whitelist = ['regular', 'numeric', 'string', 'locale_string'], true)) {
             $this->throwTypeError('The "unique" filter allows one of [' . \implode(', ', $whitelist)
                 . '] as sort_name value, got %s "' . $sort_name . '".', $sort_name);
         }

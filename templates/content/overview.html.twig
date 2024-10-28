@@ -14,12 +14,12 @@
 {% endblock %}
 
 {% set profile_picture   = 'data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=' %}
-{# TODO: Move to twig function on PHP side. #}
 {% set recent_blog_posts = blog_posts|map((p) => {
     'fileinfo': p,
     'post_data': {
         'display': 1 == block('post_display',    p.relativePathname),
         'title':        block('post_title',      p.relativePathname),
+        'description':  block('description',     p.relativePathname),
         'author':       block('post_author',     p.relativePathname),
         'date':         block('post_date',       p.relativePathname),
         'tags':         block('post_tags',       p.relativePathname)|split(','),
@@ -54,7 +54,7 @@
                     {% set author_link = 'https://github.com/' ~ author %}
                     {% set author_profile = author_link ~ '.png' %}
 
-                    <a class="text-decoration-none" href="{{ path('index_view', {
+                    <a class="text-decoration-none" href="{{ path('page_view', {
                         'path': blog_post.path,
                     }) }}">
                         <h2 class="h1 fw-500">{{ blog_post.post_data.title }}</h2>
@@ -98,7 +98,7 @@
 
         <div class="border-top py-3">
             <div class="text-center">
-                <a class="btn btn-outline-primary btn-lg border-2" href="{{ path('index_view', {
+                <a class="btn btn-outline-primary btn-lg border-2" href="{{ path('page_view', {
                     'path': 'blog',
                 }) }}">
                     More...
