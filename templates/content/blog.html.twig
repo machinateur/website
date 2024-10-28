@@ -53,11 +53,21 @@
             {% set search_authors = recent_blog_posts|map((p) => p.post_data.author)|unique %}
             {% set search_months  = recent_blog_posts|map((p) => p.post_data.date|date('M Y'))|unique %}
 
-            <div class="py-2">
+            <div class="d-flex align-items-center justify-content-between py-2">
                 <button type="button" class="btn btn-outline-dark border-2" data-bs-toggle="collapse"
                         data-bs-target="#collapseSearch" aria-expanded="false" aria-controls="collapseSearch">
                     {{ source('svg/search.svg') }} Search...
                 </button>
+
+                <a href="{{ path('feed_view') }}" target="_blank"
+                   class="d-flex align-items-center ms-3 text-muted">
+                    <span class="me-2 py-2">RSS Feed</span>
+
+                    {% include 'svg/rss.svg.twig' with {
+                        'width':  32,
+                        'height': 32,
+                    } %}
+                </a>
             </div>
 
             <div class="collapse" id="collapseSearch">
