@@ -23,7 +23,7 @@
  * SOFTWARE.
  */
 
-namespace App\Command;
+namespace Machinateur\Website\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -36,7 +36,7 @@ use Symfony\Component\Finder\SplFileInfo;
 /**
  * Class SitemapCommand
  *
- * @package App\Command
+ * @package Machinateur\Website\Command
  */
 class SitemapCommand extends Command
 {

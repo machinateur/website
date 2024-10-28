@@ -47,12 +47,12 @@
   },
   "autoload": {
     "psr-4": {
-      "App\\": "src/"
+      "Machinateur\\Website\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "App\\Tests\\": "tests/"
+      "Machinateur\\Website\\Tests\\": "tests/"
     }
   },
   "replace": {

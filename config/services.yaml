@@ -37,4 +37,4 @@ services:
   # patch any existing service definitions below
 
   twig.markdown.default:
-    class: App\Twig\Extra\DefaultMarkdown
+    class: Machinateur\Website\Twig\Extra\DefaultMarkdown

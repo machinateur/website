@@ -23,7 +23,7 @@
  * SOFTWARE.
  */
 
-namespace App;
+namespace Machinateur\Website;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
@@ -31,7 +31,7 @@ use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 /**
  * Class Kernel
  *
- * @package App
+ * @package Machinateur\Website
  */
 class Kernel extends BaseKernel
 {

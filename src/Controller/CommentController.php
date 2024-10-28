@@ -23,7 +23,7 @@
  * SOFTWARE.
  */
 
-namespace App\Controller;
+namespace Machinateur\Website\Controller;
 
 use DateInterval;
 use Exception;
@@ -51,7 +51,7 @@ use Twig\Error\Error as TwigError;
  *     "https",
  * }, priority=10)
  *
- * @package App\Controller
+ * @package Machinateur\Website\Controller
  */
 class CommentController extends ControllerAbstract
 {

@@ -48,7 +48,7 @@ But I became aware of another concept in symfony, called the **front-controller*
 
 It became clear to me after some time, such a separation would be possible using custom headers.
 
-My header would be called `X-App-Environment` and it was to accept `prod` and `test` as value.
+My header would be called `X-Machinateur\Website-Environment` and it was to accept `prod` and `test` as value.
 
 If given the choice, I would've relied on web-server configuration,
  as [supported by `ModRewrite`](https://httpd.apache.org/docs/2.4/mod/mod_rewrite.html#rewritecond).
@@ -71,7 +71,7 @@ If given the choice, I would've relied on web-server configuration,
 So something like the follow condition would probably work (I haven't tested it, though).
 
 ```
-RewriteCond "%{HTTP:X-App-Environment}" "prod|test"
+RewriteCond "%{HTTP:X-Machinateur\Website-Environment}" "prod|test"
 # ...
 ```
 
@@ -168,7 +168,7 @@ exit 1;
 ```
 
 All requests will go through here, and either call through to the application placed in `/var/www/app` or,
- if the `X-App-Environment` header is set to `test`, route to `/var/www/app-test`.
+ if the `X-Machinateur\Website-Environment` header is set to `test`, route to `/var/www/app-test`.
 
 It is possible to add further environments to the chain here, by adding new entries to the loop header's array.
 

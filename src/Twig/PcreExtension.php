@@ -23,7 +23,7 @@
  * SOFTWARE.
  */
 
-namespace App\Twig;
+namespace Machinateur\Website\Twig;
 
 use Exception;
 use Twig\Error\RuntimeError;
@@ -32,9 +32,9 @@ use Twig\TwigFilter;
 /**
  * Class PcreExtension
  *
- * @package App\Twig
+ * @package Machinateur\Website\Twig
  */
-class PcreExtension extends ExtensionAbstract
+class PcreExtension extends AbstractExtension
 {
     /**
      * PcreExtension constructor.

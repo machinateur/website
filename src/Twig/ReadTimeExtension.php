@@ -49,7 +49,7 @@ declare(strict_types=1);
  * SOFTWARE.
  */
 
-namespace App\Twig;
+namespace Machinateur\Website\Twig;
 
 use Exception;
 use Twig\TwigFilter;
@@ -58,9 +58,9 @@ use Twig\TwigFunction;
 /**
  * Class ReadTimeExtension
  *
- * @package App\Twig
+ * @package Machinateur\Website\Twig
  */
-class ReadTimeExtension extends ExtensionAbstract
+class ReadTimeExtension extends AbstractExtension
 {
     /**
      * @return array|TwigFilter[]

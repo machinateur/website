@@ -23,17 +23,17 @@
  * SOFTWARE.
  */
 
-namespace App\Twig;
+namespace Machinateur\Website\Twig;
 
 use Twig\Error\RuntimeError;
-use Twig\Extension\AbstractExtension;
+use Twig\Extension\AbstractExtension as TwigExtension;
 
 /**
- * Class ExtensionAbstract
+ * Class AbstractExtension
  *
- * @package App\Twig
+ * @package Machinateur\Website\Twig
  */
-abstract class ExtensionAbstract extends AbstractExtension
+abstract class AbstractExtension extends TwigExtension
 {
     /**
      * @param string $message

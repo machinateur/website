@@ -23,7 +23,7 @@
  * SOFTWARE.
  */
 
-namespace App\Twig;
+namespace Machinateur\Website\Twig;
 
 use Exception;
 use Twig\TwigFilter;
@@ -31,9 +31,9 @@ use Twig\TwigFilter;
 /**
  * Class MiscExtension
  *
- * @package App\Twig
+ * @package Machinateur\Website\Twig
  */
-class MiscExtension extends ExtensionAbstract
+class MiscExtension extends AbstractExtension
 {
     /**
      * @return array|TwigFilter[]

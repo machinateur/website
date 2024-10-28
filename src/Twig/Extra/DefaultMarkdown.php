@@ -23,7 +23,7 @@
  * SOFTWARE.
  */
 
-namespace App\Twig\Extra;
+namespace Machinateur\Website\Twig\Extra;
 
 use ParsedownExtra;
 use Twig\Extra\Markdown\DefaultMarkdown as DefaultMarkdownBase;
@@ -33,7 +33,7 @@ use Twig\Extra\Markdown\MarkdownInterface;
 /**
  * Class DefaultMarkdown
  *
- * @package App\Twig\Extra
+ * @package Machinateur\Website\Twig\Extra
  */
 class DefaultMarkdown extends DefaultMarkdownBase
 {

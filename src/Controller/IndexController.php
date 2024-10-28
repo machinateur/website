@@ -23,7 +23,7 @@
  * SOFTWARE.
  */
 
-namespace App\Controller;
+namespace Machinateur\Website\Controller;
 
 use DateInterval;
 use Psr\Cache\CacheItemInterface;
@@ -47,14 +47,14 @@ use Twig\Error\Error as TwigError;
  *     "https",
  * }, priority=0)
  *
- * @package App\Controller
+ * @package Machinateur\Website\Controller
  */
 class IndexController extends ControllerAbstract
 {
     private const DEFAULT_PATH = 'overview';
 
     private const EXPOSED_PARAMETERS = [
-        // App Version
+        // Machinateur\Website Version
         'version',
         // Google Analytics
         'ga_measurement_id',
