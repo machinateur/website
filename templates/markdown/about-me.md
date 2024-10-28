@@ -43,11 +43,14 @@ My repertoire of programming languages spans from [PHP](https://www.php.net) thr
  (_MariaDB_, _MySQL_, _Oracle/PLSQL_) too. [Python](https://www.python.org) is somewhat new to the list, but I consider
  myself still learning it.
 
-Currently, my favourite technologies and projects to work with are [Symfony](https://symfony.com),
+I've recently gone more and more into [Shopware](https://www.shopware.com/) shop and plugin development
+ as part of my day-job, using [Docker](https://www.docker.com/use-cases) and [Platform.sh](https://platform.sh).
+
+Among my favourite technologies and projects to work with are [Symfony](https://symfony.com),
  [Twig](https://twig.symfony.com), [Doctrine](https://www.doctrine-project.org),
- [JMS Serializer](https://jmsyst.com/libs/serializer), [Slim Framework](https://www.slimframework.com). I could just go
- on with the list, but these are the most significant ones. Containerization with
- [Docker](https://www.docker.com/use-cases) is really interesting, and I'd like to use it more in the future.
+ [JMS Serializer](https://jmsyst.com/libs/serializer), [Slim Framework](https://www.slimframework.com). I could just go on with the list, but these are the most significant ones.
+From time to time I enjoiy hacking up a plain old PHP-only, no-dependency library. In general, gluing technologies together,
+ bridging the gaps - hunting bugs across boundaries - that really makes my day.
 
 I've just recently started getting into electronics too, involving [Raspberry Pi](https://www.raspberrypi.com/),
  [Arduino](https://www.arduino.cc) and [ESP32](https://www.espressif.com/en/products/socs/esp32) and of course the usual
