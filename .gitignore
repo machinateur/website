@@ -29,3 +29,5 @@ ads-config.json
 /.htpasswd-raw
 
 .env.local
+
+/public/sitemap.txt

@@ -25,7 +25,7 @@
 #
 
 # create sitemap
-php bin/console app:sitemap "./var/build/coverage-sitemap.txt" --url-scheme="https" --url-host="127.0.0.1" --url-port="1312"
+php bin/console sitemap "./var/build/coverage-sitemap.txt" --url-scheme="https" --url-host="127.0.0.1" --url-port="1312"
 
 # clear style
 rm -f ./templates/style/*.css

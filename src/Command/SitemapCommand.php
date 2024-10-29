@@ -37,7 +37,7 @@ use Symfony\Component\Finder\SplFileInfo;
 /**
  * A command to generate the sitemap in text format.
  */
-#[AsCommand('app:sitemap')]
+#[AsCommand('sitemap')]
 class SitemapCommand extends Command
 {
     private const DEFAULT_SCHEME = 'https';
@@ -100,8 +100,12 @@ class SitemapCommand extends Command
                             $urlScheme = $input->getOption('url-scheme');
                             $urlHost   = $input->getOption('url-host');
                             $urlPort   = $input->getOption('url-port');
-                            if (80 != $urlPort) {
+                            if ('http' === $urlScheme && 80 != $urlPort) {
                                 $urlPort = ':' . $urlPort;
+                            } elseif ('https' === $urlScheme && 443 != $urlPort) {
+                                $urlPort = ':' . $urlPort;
+                            } else {
+                                $urlPort = '';
                             }
 
                             // Build path (transferred from twig logic).
