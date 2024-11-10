@@ -31,6 +31,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -40,12 +41,19 @@ use Symfony\Component\Finder\SplFileInfo;
 #[AsCommand('sitemap')]
 class SitemapCommand extends Command
 {
-    private const DEFAULT_SCHEME = 'https';
-    private const DEFAULT_HOST   = '127.0.0.1';
-    private const DEFAULT_PORT   = '8000';
+    use UrlInputTrait {
+        UrlInputTrait::configure as protected configureUrlInput;
+    }
+
+    public const DEFAULT_SCHEME = 'https';
+    public const DEFAULT_HOST   = 'machinateur.local';
+    public const DEFAULT_PORT   = '8000';
 
     private string $contentPath;
 
+    /**
+     * Called from the container, see `services.yaml`.
+     */
     public function getContentPath(): string
     {
         return $this->contentPath;
@@ -58,25 +66,25 @@ class SitemapCommand extends Command
 
     protected function configure(): void
     {
+        $defaultSitemapPath = \dirname(__DIR__, 2) . '/public/sitemap.txt';
+
         $this
-            ->setDescription('Create the sitemap (text format for google).')
-            ->addArgument('sitemap-path', InputArgument::REQUIRED,
-                'The path to write the sitemap to.')
+            ->setDescription('Create the sitemap (static text format for google).')
+            ->addArgument('sitemap-path', InputArgument::OPTIONAL,
+                'The path to write the sitemap to.', $defaultSitemapPath)
             ->addArgument('twig-path', InputArgument::OPTIONAL,
                 'The path to scan for content struct.')
-            ->addOption('url-scheme', null, InputOption::VALUE_REQUIRED,
-                'The url scheme to use.', self::DEFAULT_SCHEME)
-            ->addOption('url-host', null, InputOption::VALUE_REQUIRED,
-                'The url host to use.', self::DEFAULT_HOST)
-            ->addOption('url-port', null, InputOption::VALUE_REQUIRED,
-                'The url port to use.', self::DEFAULT_PORT)
             ->addOption('filter', 'f', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
                 'A filter regex pattern to match against the sitemap urls.')
         ;
+
+        $this->configureUrlInput();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $console = new SymfonyStyle($input, $output);
+
         if (null !== ($twigPath = $input->getArgument('twig-path'))) {
             $this->setContentPath($twigPath);
         }
@@ -93,27 +101,18 @@ class SitemapCommand extends Command
             false,
         );
 
+        $generateUrl = fn (string $urlPath): string => $this->getUrlFromInput($input, $urlPath);
+
         $sitemapContent = \implode("\n",
                 \array_filter(
                     \array_map(
-                        static function (SplFileInfo $fileInfo) use ($input): string {
-                            $urlScheme = $input->getOption('url-scheme');
-                            $urlHost   = $input->getOption('url-host');
-                            $urlPort   = $input->getOption('url-port');
-                            if ('http' === $urlScheme && 80 != $urlPort) {
-                                $urlPort = ':' . $urlPort;
-                            } elseif ('https' === $urlScheme && 443 != $urlPort) {
-                                $urlPort = ':' . $urlPort;
-                            } else {
-                                $urlPort = '';
-                            }
-
+                        static function (SplFileInfo $fileInfo) use ($generateUrl): string {
                             // Build path (transferred from twig logic).
                             $urlPath = \str_replace('\\', '/', \substr($fileInfo->getRelativePathname(),
                                 \strlen('content'), -\strlen('.html.twig')));
 
                             // Return the full URL.
-                            return "{$urlScheme}://{$urlHost}{$urlPort}{$urlPath}";
+                            return $generateUrl($urlPath);
                         }, $pages,
                     ),
                     static function (string $url) use ($input): bool {
@@ -132,7 +131,16 @@ class SitemapCommand extends Command
             )
             . "\n";
 
-        return (false !== \file_put_contents($input->getArgument('sitemap-path'), $sitemapContent))
+        $sitemapPath  = $input->getArgument('sitemap-path');
+        $bytesWritten = \file_put_contents($sitemapPath, $sitemapContent);
+
+        if (false !== $bytesWritten) {
+            $console->success(\sprintf('Sitemap successfully generated at path "%s", %d bytes written.', $sitemapPath, $bytesWritten));
+        } else {
+            $console->error(\sprintf('Sitemap could not be generated at path "%s"!', $sitemapPath));
+        }
+
+        return $bytesWritten
             ? Command::SUCCESS
             : Command::FAILURE;
     }
