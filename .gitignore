@@ -31,3 +31,4 @@ ads-config.json
 .env.local
 
 /public/sitemap.txt
+/public/feed.xml
