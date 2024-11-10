@@ -2,7 +2,7 @@
 
 {% set highlighted_code   = true %}
 {% set has_comment_access = app.request.hasPreviousSession() and app.request.session.get(
-    constant('Machinateur\Website\\Controller\\CommentController::SESSION_KEY_TOKEN')
+    constant('Machinateur\\Website\\Controller\\CommentController::SESSION_KEY_TOKEN')
 ) is not null %}
 
 {% set image_zoom_factor  = 2 %}
