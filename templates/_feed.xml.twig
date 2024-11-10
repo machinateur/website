@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-{% set recent_blog_posts = blog_posts|map((p) => {
+{%- set recent_blog_posts = blog_posts|map((p) => {
     'fileinfo': p,
     'post_data': {
         'display': 1 == block('post_display',    p.relativePathname),
@@ -41,17 +41,28 @@
             </link>
         </image>
         {% for blog_post in recent_blog_posts %}
-            <item>
-                <title>{{ blog_post.post_data.title }}</title>
-                <link>
-                    {{- url('page_view', {
-                        'path': blog_post.path,
-                    }) -}}
-                </link>
-                <description>{{ blog_post.post_data.description|normalize_text }}</description>
-                <author>{{ blog_post.post_data.author }}</author>
-                <pubDate>{{ blog_post.post_data.date }}</pubDate>
-            </item>
-        {% endfor %}
+        {{- '' }}
+        <item>
+            <title>{{ blog_post.post_data.title }}</title>
+            <link>
+                {{- url('page_view', {
+                    'path': blog_post.path,
+                }) -}}
+            </link>
+            <description>{{ blog_post.post_data.description|normalize_text }}</description>
+            <author>{{ blog_post.post_data.author }}</author>
+            <pubDate>{{ blog_post.post_data.date }}</pubDate>
+            {%- if blog_post.post_data.subject_id is not empty %}
+            {{ '' }}
+            <comments>{{ 'https://gist.github.com/machinateur/' ~ blog_post.post_data.subject_id }}</comments>
+            {%- endif -%}
+            {{- '' }}
+        </item>
+        {#- Ok, bear with me: This appeared to be necessary to fix the indenation after the loop. It was always 4x spaces to much. #}
+        {%- if loop.last -%}
+            {{ '' -}}
+        {%- endif -%}
+        {%- endfor -%}
+        {{- '' }}
     </channel>
 </rss>
