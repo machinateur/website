@@ -27,7 +27,6 @@ namespace Machinateur\Website\Controller;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Machinateur\Website\Service\BlogPostLoader;
-use Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
