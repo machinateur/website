@@ -51,6 +51,8 @@ class FeedController extends AbstractController
     #[Route(path: '', name: 'view', methods: [Request::METHOD_GET])]
     public function view(): Response
     {
+        // TODO: Use generated `feed.xml` as alternative.
+
         $context                 = [];
         $context['current_path'] = 'feed';
         $context['current_view'] = 'feed';
