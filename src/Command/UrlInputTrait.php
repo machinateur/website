@@ -46,7 +46,7 @@ trait UrlInputTrait
     /**
      * @throws InvalidArgumentException
      */
-    protected function getUrlFromInput(InputInterface $input, string $urlPath)
+    protected function getUrlFromInput(InputInterface $input, string $urlPath): string
     {
         $urlScheme = $input->getOption('url-scheme');
         $urlHost   = $input->getOption('url-host');
