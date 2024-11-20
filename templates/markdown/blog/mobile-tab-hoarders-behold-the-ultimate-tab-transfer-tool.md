@@ -1,4 +1,4 @@
-# Mobile tab hoarders, behold: The ultimate Tab Transfer tool
+# Mobile tab hoarders, behold: The ultimate tab-transfer tool
 
 Showcasing the latest release of tab-transfer:
 
