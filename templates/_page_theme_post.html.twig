@@ -182,19 +182,23 @@
             <h2 id="recent-posts" class="h4">Recent posts</h2>
 
             <ul class="list-unstyled" style="margin-bottom: -0.5rem;">
-                {% for blog_post in recent_blog_posts|slice(0, 3) %}
-                    <li class="h4">
-                        <a class="text-decoration-none" href="{{ path('page_view', {
-                            'path': blog_post.path,
-                        }) }}">
-                            {{ blog_post.post_data.title }}
+                {% with {
+                    'recent_blog_posts': recent_blog_posts|filter((v, k) => v.path is not same as(this_blog_post.path)),
+                } %}
+                    {% for blog_post in recent_blog_posts|slice(0, 3) %}
+                        <li class="h4">
+                            <a class="text-decoration-none" href="{{ path('page_view', {
+                                'path': blog_post.path,
+                            }) }}">
+                                {{ blog_post.post_data.title }}
 
-                            <small class="text-secondary" style="font-size: 75%;">
-                                {{ blog_post.post_data.date|date('d M Y') }}
-                            </small>
-                        </a>
-                    </li>
-                {% endfor %}
+                                <small class="text-secondary" style="font-size: 75%;">
+                                    {{ blog_post.post_data.date|date('d M Y') }}
+                                </small>
+                            </a>
+                        </li>
+                    {% endfor %}
+                {% endwith %}
             </ul>
         </div>
 
