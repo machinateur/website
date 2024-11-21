@@ -2,7 +2,12 @@
 
 {% block title %}{{ parent() }} - Blog Archive{% endblock %}
 
-{% block description %}Browse and search the machinateur.dev blog archive by title, author and month.{% endblock %}
+{% block description %}
+    {%- apply normalize_text %}
+        Articles about programming, hacking, electronics and more.
+        Browse and search the machinateur.dev blog archive by title, author and month.
+    {% endapply -%}
+{% endblock %}
 
 {% block style %}
     {{ parent() }}
@@ -13,19 +18,21 @@
     </style>
 {% endblock %}
 
-{% set profile_picture = 'data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=' %}
+{% set profile_picture   = 'data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=' %}
 {% set recent_blog_posts = blog_posts|map((p) => {
     'fileinfo': p,
     'post_data': {
-        'display': 1 == block('post_display', p.relativePathname),
-        'title': block('post_title', p.relativePathname),
-        'author': block('post_author', p.relativePathname),
-        'date': block('post_date', p.relativePathname),
-        'tags': block('post_tags', p.relativePathname)|split(','),
-        'read_time': block('post_read_time', p.relativePathname),
-        'image': block('post_image', p.relativePathname),
-        'image_alt': block('post_image_alt', p.relativePathname),
-        'content': block('post_content', p.relativePathname),
+        'display': 1 == block('post_display',    p.relativePathname),
+        'title':        block('post_title',      p.relativePathname),
+        'description':  block('description',     p.relativePathname),
+        'author':       block('post_author',     p.relativePathname),
+        'date':         block('post_date',       p.relativePathname),
+        'tags':         block('post_tags',       p.relativePathname)|split(','),
+        'read_time':    block('post_read_time',  p.relativePathname),
+        'image':        block('post_image',      p.relativePathname),
+        'image_alt':    block('post_image_alt',  p.relativePathname),
+        'content':      block('post_content',    p.relativePathname),
+        'subject_id':   block('post_subject_id', p.relativePathname),
     },
     'path': p.relativePath|replace({
         '\\': '/',
@@ -41,16 +48,26 @@
 
     <div class="mx-auto py-5 px-3">
         <div class="border-bottom pb-3">
-            <h1 class="display-1">Blog</h1>
+            <h1 class="display-1 mb-4">Blog</h1>
 
             {% set search_authors = recent_blog_posts|map((p) => p.post_data.author)|unique %}
-            {% set search_months = recent_blog_posts|map((p) => p.post_data.date|date('M Y'))|unique %}
+            {% set search_months  = recent_blog_posts|map((p) => p.post_data.date|date('M Y'))|unique %}
 
-            <div class="py-2">
+            <div class="d-flex align-items-center justify-content-between py-2">
                 <button type="button" class="btn btn-outline-dark border-2" data-bs-toggle="collapse"
                         data-bs-target="#collapseSearch" aria-expanded="false" aria-controls="collapseSearch">
                     {{ source('svg/search.svg') }} Search...
                 </button>
+
+                <a href="{{ path('feed_view') }}" target="_blank"
+                   class="d-flex align-items-center ms-3 text-muted">
+                    <span class="me-2 py-2">RSS Feed</span>
+
+                    {% include 'svg/rss.svg.twig' with {
+                        'width':  32,
+                        'height': 32,
+                    } %}
+                </a>
             </div>
 
             <div class="collapse" id="collapseSearch">
@@ -99,11 +116,11 @@
                         };
                     </script>
 
-                    {% set author = blog_post.post_data.author %}
-                    {% set author_link = 'https://github.com/' ~ author %}
+                    {% set author         = blog_post.post_data.author %}
+                    {% set author_link    = 'https://github.com/' ~ author %}
                     {% set author_profile = author_link ~ '.png' %}
 
-                    <a class="text-decoration-none" href="{{ path('index_view', {
+                    <a class="text-decoration-none" href="{{ path('page_view', {
                         'path': blog_post.path,
                     }) }}">
                         <h2 class="h1 fw-500">{{ blog_post.post_data.title }}</h2>

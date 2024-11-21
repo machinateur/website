@@ -1,0 +1,28 @@
+{% extends '_page_theme_post.html.twig' %}
+
+{% block description %}
+    {%- apply normalize_text %}
+        Showcasing the latest release of tab-transfer:
+        A tool to transfer Google Chrome tabs from your Android or iPhone to your computer.
+    {% endapply -%}
+{% endblock %}
+
+{# metadata #}
+{% block post_title %}Mobile tab hoarders, behold: The ultimate tab-transfer tool{% endblock %}
+{% block post_author %}machinateur{% endblock %}
+{% block post_date %}2024-11-10{% endblock %}
+{% block post_tags %}php, chrome, tab-transfer, android, iphone{% endblock %}
+{# content #}
+{% block post_image %}{% endblock %}
+{% block post_image_alt %}{% endblock %}
+{% block post_content %}
+    {%- set content       = source('markdown/blog/mobile-tab-hoarders-behold-the-ultimate-tab-transfer-tool.md', true) -%}
+    {%- set content_title = '# ' ~ block('post_title') -%}
+
+    {%- if content starts with content_title -%}
+        {%- set content = content[content_title|length:] -%}
+    {%- endif -%}
+
+    {{ content|markdown_to_html|raw }}
+{% endblock %}
+{% block post_subject_id %}9c85979a1757b28d11b0b0070bcb1273{% endblock %}

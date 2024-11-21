@@ -1,0 +1,23 @@
+{% extends '_page_theme_post.html.twig' %}
+
+{% block description %}Showcasing a library to enable serial communication from PHP, with a working Arduino example.{% endblock %}
+
+{# metadata #}
+{% block post_title %}Talking to Arduino from PHP using phpduino{% endblock %}
+{% block post_author %}machinateur{% endblock %}
+{% block post_date %}2024-01-20{% endblock %}
+{% block post_tags %}php, library, arduino, serial port{% endblock %}
+{# content #}
+{% block post_image %}/res/image/blog/talking-to-arduino-from-php-using-phpduino/post-thumbnail.jpeg{% endblock %}
+{% block post_image_alt %}An Arduino connected via USB serial.{% endblock %}
+{% block post_content %}
+    {%- set content       = source('markdown/blog/talking-to-arduino-from-php-using-phpduino.md', true) -%}
+    {%- set content_title = '# ' ~ block('post_title') -%}
+
+    {%- if content starts with content_title -%}
+        {%- set content = content[content_title|length:] -%}
+    {%- endif -%}
+
+    {{ content|markdown_to_html|raw }}
+{% endblock %}
+{% block post_subject_id %}{% endblock %}

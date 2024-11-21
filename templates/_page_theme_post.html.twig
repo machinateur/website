@@ -1,44 +1,45 @@
 {% extends '_page_theme.html.twig' %}
 
-{% set highlighted_code = true %}
+{% set highlighted_code   = true %}
 {% set has_comment_access = app.request.hasPreviousSession() and app.request.session.get(
-    constant('App\\Controller\\CommentController::SESSION_KEY_TOKEN')
+    constant('Machinateur\\Website\\Controller\\CommentController::SESSION_KEY_TOKEN')
 ) is not null %}
 
-{% set image_zoom_factor = 2 %}
+{% set image_zoom_factor  = 2 %}
 
 {% block title %}{{ parent() }} - Blog - {{ block('post_title') }}{% endblock %}
 
-{% set profile_picture = 'data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=' %}
-{% set recent_blog_posts = blog_posts|map((p) => {
+{% set profile_picture    = 'data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=' %}
+{% set recent_blog_posts  = blog_posts|map((p) => {
     'fileinfo': p,
     'post_data': {
-        'display': 1 == block('post_display', p.relativePathname),
-        'title': block('post_title', p.relativePathname),
-        'author': block('post_author', p.relativePathname),
-        'date': block('post_date', p.relativePathname),
-        'tags': block('post_tags', p.relativePathname)|split(','),
-        'read_time': block('post_read_time', p.relativePathname),
-        'image': block('post_image', p.relativePathname),
-        'image_alt': block('post_image_alt', p.relativePathname),
-        'content': block('post_content', p.relativePathname),
-        'subject_id': block('post_subject_id', p.relativePathname)
+        'display': 1 == block('post_display',    p.relativePathname),
+        'title':        block('post_title',      p.relativePathname),
+        'description':  block('description',     p.relativePathname),
+        'author':       block('post_author',     p.relativePathname),
+        'date':         block('post_date',       p.relativePathname),
+        'tags':         block('post_tags',       p.relativePathname)|split(','),
+        'read_time':    block('post_read_time',  p.relativePathname),
+        'image':        block('post_image',      p.relativePathname),
+        'image_alt':    block('post_image_alt',  p.relativePathname),
+        'content':      block('post_content',    p.relativePathname),
+        'subject_id':   block('post_subject_id', p.relativePathname),
     },
     'path': p.relativePath|replace({
         '\\': '/',
     })['content'|length:]|trim('/', 'left') ~ '/'~ p.filenameWithoutExtension[:-'.html'|length],
 }) %}
-{% set this_blog_post = recent_blog_posts|reduce((carry, p) => (carry is not null ? carry : (p.fileinfo.relativePathname|replace({
+{% set this_blog_post     = recent_blog_posts|reduce((carry, p) => (carry is not null ? carry : (p.fileinfo.relativePathname|replace({
     '\\': '/',
 }) is same as(current_view) ? p : null)), null) %}
-{% set recent_blog_posts = recent_blog_posts
+{% set recent_blog_posts  = recent_blog_posts
     |sort((a, b) => b.post_data.date <=> a.post_data.date)
     |filter((v, k) => v.post_data.display is same as(true))
     |filter((v, k) => v.post_data.date <= 'now'|date('Y-m-d')) %}
 
 {# set tw_card to null to disable it #}
 {% set tw_card = tw_card|default({
-    'site': 'machinateur',
+    'site':        'machinateur',
     'description': block('description'),
 }|merge(this_blog_post.post_data)) %}
 
@@ -48,7 +49,7 @@
 {% block post_author %}{% endblock %}
 {% block post_date %}{% endblock %}
 {% block post_tags %}{% endblock %}
-{% block post_read_time %}{% endblock %}
+{% block post_read_time %}{{ block('post_content')|read_time }} min read{% endblock %}
 {# content #}
 {% block post_image %}{% endblock %}
 {% block post_image_alt %}{% endblock %}
@@ -127,7 +128,7 @@
             {% set author_link = 'https://github.com/' ~ author %}
             {% set author_profile = author_link ~ '.png' %}
 
-            <h1 id="{{ this_blog_post.post_data.title|lower|slug }}" class="display-1">
+            <h1 id="{{ this_blog_post.post_data.title|lower|slug }}" class="display-1 mb-3">
                 {{ this_blog_post.post_data.title }}
             </h1>
 
@@ -151,6 +152,14 @@
                         <span class="me-2">{{ source('svg/clock.svg') }}</span> {{ this_blog_post.post_data.read_time }}
                     </span>
                 {% endif %}
+
+                <a href="{{ path('feed_view') }}" target="_blank"
+                   class="d-flex align-items-center ms-3 text-muted text-decoration-none">
+                    {% include 'svg/rss.svg.twig' with {
+                        'width':  16,
+                        'height': 16,
+                    } %}
+                </a>
             </div>
 
             <div id="content" data-app-component="image-zoom">
@@ -163,6 +172,7 @@
 
             {% for tag in this_blog_post.post_data.tags %}
                 <span class="badge rounded-pill bg-secondary">
+                    {# TODO: Add logo aliasing for tags #}
                     {{ tag|trim(' ', 'both') }}
                 </span>
             {% endfor %}
@@ -172,19 +182,23 @@
             <h2 id="recent-posts" class="h4">Recent posts</h2>
 
             <ul class="list-unstyled" style="margin-bottom: -0.5rem;">
-                {% for blog_post in recent_blog_posts|slice(0, 3) %}
-                    <li class="h4">
-                        <a class="text-decoration-none" href="{{ path('index_view', {
-                            'path': blog_post.path,
-                        }) }}">
-                            {{ blog_post.post_data.title }}
+                {% with {
+                    'recent_blog_posts': recent_blog_posts|filter((v, k) => v.path is not same as(this_blog_post.path)),
+                } %}
+                    {% for blog_post in recent_blog_posts|slice(0, 3) %}
+                        <li class="h4">
+                            <a class="text-decoration-none" href="{{ path('page_view', {
+                                'path': blog_post.path,
+                            }) }}">
+                                {{ blog_post.post_data.title }}
 
-                            <small class="text-secondary" style="font-size: 75%;">
-                                {{ blog_post.post_data.date|date('d M Y') }}
-                            </small>
-                        </a>
-                    </li>
-                {% endfor %}
+                                <small class="text-secondary" style="font-size: 75%;">
+                                    {{ blog_post.post_data.date|date('d M Y') }}
+                                </small>
+                            </a>
+                        </li>
+                    {% endfor %}
+                {% endwith %}
             </ul>
         </div>
 
@@ -216,12 +230,12 @@
                         <input type="hidden" name="csrf-token" value="{{ csrf_token('app.comments.unauth') }}">
 
                         <input type="hidden" name="origin"
-                               value="{{ app.request.schemeAndHttpHost ~ path('index_view', {
+                               value="{{ app.request.schemeAndHttpHost ~ path('page_view', {
                                    'path': this_blog_post.path,
                                }) }}">
 
                         <p class="border-2 border-secondary text-secondary">
-                            Your are currently authenticated via GitHub to be able to write comments. You will
+                            You are currently authenticated via GitHub to be able to write comments. You will
                             automatically be logged out after the current session expired.
                         </p>
 
@@ -244,7 +258,7 @@
                         <input type="hidden" name="csrf-token" value="{{ csrf_token('app.comments.auth') }}">
 
                         <input type="hidden" name="origin"
-                               value="{{ app.request.schemeAndHttpHost ~ path('index_view', {
+                               value="{{ app.request.schemeAndHttpHost ~ path('page_view', {
                                    'path': this_blog_post.path,
                                }) }}">
 

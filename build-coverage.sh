@@ -3,7 +3,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2021-2022 machinateur
+# Copyright (c) 2021-2024 machinateur
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@
 #
 
 # create sitemap
-php bin/console app:sitemap "./var/build/coverage-sitemap.txt" --url-scheme="https" --url-host="127.0.0.1" --url-port="1312"
+php bin/console sitemap "./var/build/coverage-sitemap.txt" --url-scheme="https" --url-host="127.0.0.1" --url-port="1312"
 
 # clear style
 rm -f ./templates/style/*.css

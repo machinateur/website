@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+{%- set recent_blog_posts = blog_posts|map((p) => {
+    'fileinfo': p,
+    'post_data': {
+        'display': 1 == block('post_display',    p.relativePathname),
+        'title':        block('post_title',      p.relativePathname),
+        'description':  block('description',     p.relativePathname),
+        'author':       block('post_author',     p.relativePathname),
+        'date':         block('post_date',       p.relativePathname),
+        'tags':         block('post_tags',       p.relativePathname)|split(','),
+        'read_time':    block('post_read_time',  p.relativePathname),
+        'image':        block('post_image',      p.relativePathname),
+        'image_alt':    block('post_image_alt',  p.relativePathname),
+        'subject_id':   block('post_subject_id', p.relativePathname),
+    },
+    'path': p.relativePath|replace({
+        '\\': '/',
+    })['content'|length:]|trim('/', 'left') ~ '/'~ p.filenameWithoutExtension[:-'.html'|length],
+})|sort((a, b) => b.post_data.date <=> a.post_data.date)
+    |filter((v, k) => v.post_data.display is same as(true))
+    |filter((v, k) => v.post_data.date <= 'now'|date('Y-m-d')) %}
+
+<rss version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xmlns="https://machinateur.dev/res/xsd/rss-2.0.xsd"
+     xsi:schemaLocation="https://machinateur.dev/res/xsd/rss-2.0.xsd">
+
+    <channel>
+        <title>machinateur.dev - Blog</title>
+        <link>
+            {{- url('page_home') -}}
+        </link>
+        <description>{{ block('description', 'content/blog.html.twig') }}</description>
+        <image>
+            <url>
+                {{- url('page_home')|trim('/', 'right') ~ '/res/image/profile-machinateur.png' -}}
+            </url>
+            <title>Profile picture</title>
+            <link>
+                {{- url('page_home') -}}
+            </link>
+        </image>
+        {% for blog_post in recent_blog_posts %}
+        {{- '' }}
+        <item>
+            <title>{{ blog_post.post_data.title }}</title>
+            <link>
+                {{- url('page_view', {
+                    'path': blog_post.path,
+                }) -}}
+            </link>
+            <description>{{ blog_post.post_data.description|normalize_text }}</description>
+            <author>{{ blog_post.post_data.author }}</author>
+            <pubDate>{{ blog_post.post_data.date }}</pubDate>
+            {%- if blog_post.post_data.subject_id is not empty %}
+            {{ '' }}
+            <comments>{{ 'https://gist.github.com/machinateur/' ~ blog_post.post_data.subject_id }}</comments>
+            {%- endif -%}
+            {{- '' }}
+        </item>
+        {#- Ok, bear with me: This appeared to be necessary to fix the indenation after the loop. It was always 4x spaces to much. #}
+        {%- if loop.last -%}
+            {{ '' -}}
+        {%- endif -%}
+        {%- endfor -%}
+        {{- '' }}
+    </channel>
+</rss>
