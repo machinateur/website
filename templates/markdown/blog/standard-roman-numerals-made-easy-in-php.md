@@ -1,5 +1,7 @@
+# Roman numerals made easy
+
 It's not always easy to understand and manage roman numerals. In this post, I'll showcase a library allowing for easy
-conversion between integer and roman numeral format.
+ conversion between integer and roman numeral format.
 
 > A PHP library to convert ordinary integers to roman numerals (and back). Just like that.
 
