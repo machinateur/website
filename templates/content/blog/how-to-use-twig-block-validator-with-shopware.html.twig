@@ -1,0 +1,23 @@
+{% extends '_page_theme_post.html.twig' %}
+
+{% block description %}A guide on how to use the Twig Block Validator in a typical Shopware 6 Storefront project.{% endblock %}
+
+{# metadata #}
+{% block post_title %}How to use the Twig Block Validator with Shopware 6{% endblock %}
+{% block post_author %}machinateur{% endblock %}
+{% block post_date %}2025-05-15{% endblock %}
+{% block post_tags %}php, twig, twig block validator, shopware{% endblock %}
+{# content #}
+{% block post_image %}{% endblock %}
+{% block post_image_alt %}{% endblock %}
+{% block post_content %}
+    {%- set content       = source('markdown/blog/how-to-use-twig-block-validator-with-shopware.md', true) -%}
+    {%- set content_title = '# ' ~ block('post_title') -%}
+
+    {%- if content starts with content_title -%}
+        {%- set content = content[content_title|length:] -%}
+    {%- endif -%}
+
+    {{ content|markdown_to_html|raw }}
+{% endblock %}
+{% block post_subject_id %}{% endblock %}
