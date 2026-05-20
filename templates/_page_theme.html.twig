@@ -2,16 +2,16 @@
 
 {% set highlighted_code = highlighted_code|default(false) %}
 
-{% set reader_mode = reader_mode|default(false) %}
-{% set ink_mode = reader_mode|default(false) %}
-{% set dark_mode = dark_mode|default(false) %}
-{% set zoom_level = zoom_level|default(0) %}
-{% set main_content_id = main_content_id|default('#main') %}
-{% set cookie_consent = cookie_consent|default(false) %}
-{% set ads_consent = ads_consent|default(false) %}
-{% set stt_visible = stt_visible|default(true) %}
+{% set reader_mode      = reader_mode|default(false) %}
+{% set ink_mode         = reader_mode|default(false) %}
+{% set dark_mode        = dark_mode|default(false) %}
+{% set zoom_level       = zoom_level|default(0) %}
+{% set main_content_id  = main_content_id|default('#main') %}
+{% set cookie_consent   = cookie_consent|default(false) %}
+{% set ads_consent      = ads_consent|default(false) %}
+{% set stt_visible      = stt_visible|default(true) %}
 
-{% set navbar_content = [
+{% set navbar_content   = [
     {
         'label': 'Overview',
         'path': 'overview',
@@ -25,7 +25,7 @@
         'path': 'about-me',
     },
 ] %}
-{% set random_color = random([
+{% set random_color     = random([
     '#420039',
     '#A76571',
     '#F5E2C8',
@@ -147,9 +147,7 @@
                 {% block navbar %}
                     <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom border-top">
                         <div class="container-fluid">
-                            <a class="navbar-brand font-monospace py-3" href="{{ path('index_view', {
-                                'path': '',
-                            }) }}">
+                            <a class="navbar-brand font-monospace py-3" href="{{ path('page_home') }}">
                                 <img src="/res/image/profile-machinateur.png" alt="" width="32" height="32"
                                      class="border rounded-circle" style="box-sizing: content-box;">
 
@@ -166,7 +164,7 @@
                                     {% block navbar_content %}
                                         {% for navbar_link in navbar_content %}
                                             <a class="nav-link{% if navbar_link.path is same as(current_path) %} active"
-                                               aria-current="page{% endif %}" href="{{ path('index_view', {
+                                               aria-current="page{% endif %}" href="{{ path('page_view', {
                                                 'path': navbar_link.path,
                                             }) }}">{{ navbar_link.label }}</a>
                                         {% endfor %}

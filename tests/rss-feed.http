@@ -1,0 +1,8 @@
+### Load the sitemap
+GET https://{{host}}/sitemap.xml
+
+### Load the feed
+GET https://{{host}}/feed
+
+### Load the feed (cached)
+GET https://{{host}}/feed.xml

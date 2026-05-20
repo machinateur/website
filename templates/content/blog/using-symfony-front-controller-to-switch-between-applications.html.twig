@@ -1,0 +1,23 @@
+{% extends '_page_theme_post.html.twig' %}
+
+{% block description %}An example use-case for the symfony front-controller and how it can be applied to distinguish between two applications under the same domain, only based on a custom header.{% endblock %}
+
+{# metadata #}
+{% block post_title %}Using symfony front-controller to switch between applications{% endblock %}
+{% block post_author %}machinateur{% endblock %}
+{% block post_date %}2024-10-10{% endblock %}
+{% block post_tags %}php, symfony, front controller{% endblock %}
+{# content #}
+{% block post_image %}/res/image/blog/using-symfony-front-controller-to-switch-between-applications/post-thumbnail.jpeg{% endblock %}
+{% block post_image_alt %}An abstract depiction of multiple Symfony applications next to each other.{% endblock %}
+{% block post_content %}
+    {%- set content       = source('markdown/blog/using-symfony-front-controller-to-switch-between-applications.md', true) -%}
+    {%- set content_title = '# ' ~ block('post_title') -%}
+
+    {%- if content starts with content_title -%}
+        {%- set content = content[content_title|length:] -%}
+    {%- endif -%}
+
+    {{ content|markdown_to_html|raw }}
+{% endblock %}
+{% block post_subject_id %}{% endblock %}

@@ -61,10 +61,72 @@ The lighthouse audits performed with `APP_ENV=dev` will warn about the `x-robots
 [set automatically by symfony](https://symfony.com/doc/current/reference/configuration/framework.html#disallow-search-engine-index).
 The overall performance is better in production environments due to caching.
 
+### Sitemap
+
+The sitemap has to be generated before each deployment using the `bin/console sitemap` command:
+
+```
+Description:
+  Create the sitemap (static text format for google).
+
+Usage:
+  sitemap [options] [--] [<sitemap-path> [<twig-path>]]
+
+Arguments:
+  sitemap-path                 The path to write the sitemap to. [default: "public/sitemap.txt"]
+  twig-path                    The path to scan for content struct.
+
+Options:
+  -f, --filter=FILTER          A filter regex pattern to match against the sitemap urls. (multiple values allowed)
+      --url-scheme=URL-SCHEME  The url scheme to use. [default: "https"]
+      --url-host=URL-HOST      The url host to use. [default: "machinateur.local"]
+      --url-port=URL-PORT      The url port to use. [default: "8000"]
+  -h, --help                   Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                  Do not output any message
+  -V, --version                Display this application version
+      --ansi|--no-ansi         Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction         Do not ask any interactive question
+  -e, --env=ENV                The Environment name. [default: "dev"]
+      --no-debug               Switch off debug mode.
+  -v|vv|vvv, --verbose         Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+```
+
+The default `sitemap-path` will already be set to `public/sitemap.txt`.
+
+### RSS feed
+
+The RSS feed can be generated statically using the `bin/console feed` command:
+
+```
+Description:
+  Create the RSS feed (static XML format).
+
+Usage:
+  feed [options] [--] [<path>]
+
+Arguments:
+  path                         The path to write the RSS feed to. [default: "public/feed.xml"]
+
+Options:
+      --url-scheme=URL-SCHEME  The url scheme to use. [default: "https"]
+      --url-host=URL-HOST      The url host to use. [default: "machinateur.local"]
+      --url-port=URL-PORT      The url port to use. [default: "8000"]
+  -h, --help                   Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                  Do not output any message
+  -V, --version                Display this application version
+      --ansi|--no-ansi         Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction         Do not ask any interactive question
+  -e, --env=ENV                The Environment name. [default: "dev"]
+      --no-debug               Switch off debug mode.
+  -v|vv|vvv, --verbose         Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+```
+
+The default `path` will already be set to `public/feed.xml`.
+
 ### Cache
 
 The cache files are located under `var/cache/%kernel.environment%/`. To clear it, execute below command or simply delete
-the cache folder.
+ the cache folder.
 
 ```bash
 php bin/console cache:clear
@@ -73,7 +135,7 @@ php bin/console cache:clear
 ### Log locations and rotations
 
 Logs are stored under `var/log/%kernel.environment%.log`. The number of log files in rotation is currently set to `0`,
-so they are actually never rotated, but all get their own neat little timestamp.
+ so they are actually never rotated, but all get their own neat little timestamp.
 
 ## Deployment
 
@@ -86,58 +148,60 @@ composer install --no-dev --optimize-autoloader
 composer dump-env prod
 ```
 
+Or use the `deploy.sh` to execute those commands (MINGW64).
+
 ### Custom `.htaccess` for production
 
 The provided `.htaccess` has several commented sections, which can (and should) be enabled upon deployment to the
-production environment. While running inside the docker container, these are set by the apache virtual-host
-configuration.
+ production environment. While running inside the docker container, these are set by the apache virtual-host
+ configuration.
 
 In a shared hosting production environment, as it is currently being used, these sections and directives should be set
-by the `.htaccess` file. It's not the best solution, but still viable for environments without direct configuration
-access.
+ by the `.htaccess` file. It's not the best solution, but still viable for environments without direct configuration
+ access.
 
 ### FTP upload files and folders
 
-* `bin/`
-* `config/`
-* `docker/`
-* `public/`
-* `res/`
-* `src/`
-* `templates/`
-* `tests/`
-* `var/`
-* `vendor/`
-* `.env.local.php`
-* `.gitattributes`
-* `.gitignore`
-* `.php-version`
-* `ads-config.json`
-* `build.sh`
-* `build-coverage.sh`
-* `build-coverage.js`
-* `clear.sh`
-* `clear-coverage.sh`
-* `composer.json`
-* `composer.lock`
-* `docker-compose.yml`
-* `Dockerfile`
-* `LICENSE`
-* `package.json`
-* `package-lock.json`
-* `phpunit.xml.dist`
-* `README.md`
-* `symfony.lock`
+- `bin/`
+- `config/`
+- `docker/`
+- `public/`
+- `res/`
+- `src/`
+- `templates/`
+- `tests/`
+- `var/`
+- `vendor/`
+- `.env.local.php`
+- `.gitattributes`
+- `.gitignore`
+- `.php-version`
+- `ads-config.json`
+- `build.sh`
+- `build-coverage.sh`
+- `build-coverage.js`
+- `clear.sh`
+- `clear-coverage.sh`
+- `composer.json`
+- `composer.lock`
+- `docker-compose.yml`
+- `Dockerfile`
+- `LICENSE`
+- `package.json`
+- `package-lock.json`
+- `phpunit.xml.dist`
+- `README.md`
+- `symfony.lock`
 
 *Optional: `.htpasswd`, if auth is enabled in `public/.htaccess`.*
 
 ### Credential generation and configuration (for testing)
 
 When using the `.htpasswd` approach for testing, the `htpasswd` cli tool is available to add/update credentials. It's
-installed inside the docker container out of the box (since it comes with apache).
+ installed inside the docker container out of the box (since it comes with apache).
 
 It's recommended to place a `.htpasswd-raw` file alongside the normal `.htpasswd` (**both outside of `public/`**), so
-the original credentials for each user won't have to be re-created when lost.
+ the original credentials for each user won't have to be re-created when lost.
 
 ## License
 

@@ -2,7 +2,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2022 machinateur
+ * Copyright (c) 2021-2024 machinateur
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,51 +23,47 @@
  * SOFTWARE.
  */
 
-namespace App\Twig;
+namespace Machinateur\Website\Twig;
 
 use Exception;
 use Twig\TwigFilter;
 
 /**
- * Class MiscExtension
- * @package App\Twig
+ * A twig extension to add miscellaneous additional PHP functions for twig.
  */
-class MiscExtension extends ExtensionAbstract
+class MiscExtension extends AbstractExtension
 {
-    /**
-     * @return array|TwigFilter[]
-     */
     public function getFilters(): array
     {
         return [
-            new TwigFilter('unique', [$this, 'unique']),
+            new TwigFilter('unique', $this->unique(...)),
         ];
     }
 
     /**
-     * @param array $value
+     * A wrapper for PHP's {@see \array_unique()}. Also handles conversion of the `\SORT_` constants against their `$name` argument.
+     *
+     * @param array  $value
      * @param string $sort_name
-     * @return array
      * @throws Exception
      * @noinspection PhpMissingParamTypeInspection
-     * @noinspection PhpMissingReturnTypeInspection
      */
-    public function unique($value, $sort_name = 'regular')
+    public function unique($value, $sort_name = 'regular'): array
     {
-        if (!is_array($value)) {
+        if ( ! \is_array($value)) {
             $this->throwTypeError('The "unique" filter only works with arrays or "Traversable", got "%s" as first argument.', $value);
         }
 
-        if (!is_string($sort_name)) {
+        if ( ! \is_string($sort_name)) {
             $this->throwTypeError('The "unique" filter expects a string as sort_name value, got "%s".', $sort_name);
-        } elseif (!in_array($sort_name, $whitelist = ['regular', 'numeric', 'string', 'locale_string'], true)) {
-            $this->throwTypeError('The "unique" filter allows one of [' . implode(', ', $whitelist)
+        } elseif ( ! \in_array($sort_name, $whitelist = ['regular', 'numeric', 'string', 'locale_string'], true)) {
+            $this->throwTypeError('The "unique" filter allows one of [' . \implode(', ', $whitelist)
                 . '] as sort_name value, got %s "' . $sort_name . '".', $sort_name);
         }
 
         /** @var int $sort_flag */
-        $sort_flag = constant('SORT_' . strtoupper($sort_name));
+        $sort_flag = \constant('SORT_' . \strtoupper($sort_name));
 
-        return array_unique($value, $sort_flag);
+        return \array_unique($value, $sort_flag);
     }
 }

@@ -3,7 +3,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2021-2022 machinateur
+# Copyright (c) 2021-2024 machinateur
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -29,3 +29,5 @@ export APP_DEBUG=0
 
 composer install --no-dev --optimize-autoloader
 composer dump-env prod
+
+php bin/console sitemap "./public/sitemap.txt" --url-scheme="https" --url-host="machinateur.dev" --url-port="443"

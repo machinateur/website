@@ -2,7 +2,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2022 machinateur
+ * Copyright (c) 2021-2024 machinateur
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,13 @@
  * SOFTWARE.
  */
 
-namespace App\Controller;
+namespace Machinateur\Website\Controller;
 
-use DateInterval;
-use Exception;
+use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Github\AuthMethod;
 use Github\Client as GitHubClient;
 use Psr\Cache\CacheItemPoolInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as ControllerAbstract;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,70 +43,55 @@ use Twig\Environment;
 use Twig\Error\Error as TwigError;
 
 /**
- * Class CommentController
+ * Define actions related to comments (from GitHub Gists).
  *
- * @Route("/comments", name="comment_", schemes={
- *     "https",
- * }, priority=10)
- *
- * @package App\Controller
+ * @IgnoreAnnotation("lang")
  */
-class CommentController extends ControllerAbstract
+#[Route(path: '/comments', name: 'comment_', schemes: ['https'], priority: 10)]
+class CommentController extends AbstractController
 {
-    public const SESSION_KEY_TOKEN = 'app.comments.github.access_token';
-    private const SESSION_KEY_STATE = 'app.comments.auth.state';
+    public const  SESSION_KEY_TOKEN  = 'app.comments.github.access_token';
+    private const SESSION_KEY_STATE  = 'app.comments.auth.state';
     private const SESSION_KEY_ORIGIN = 'app.comments.auth.origin';
 
-    private const URL_TO_AUTHORIZE = 'https://github.com/login/oauth/authorize';
+    private const URL_TO_AUTHORIZE    = 'https://github.com/login/oauth/authorize';
     private const URL_TO_ACCESS_TOKEN = 'https://github.com/login/oauth/access_token';
 
-    private CacheItemPoolInterface $cache;
+    private const ROUTE_CONDITION = /** @lang SymfonyExpressionLanguage */
+        "request.isXmlHttpRequest() or true == '%kernel.debug%'";
 
-    private GitHubClient $client;
-
-    /**
-     * CommentController constructor.
-     * @param CacheItemPoolInterface $commentCache
-     * @param GitHubClient $client
-     */
-    public function __construct(CacheItemPoolInterface $commentCache, GitHubClient $client)
-    {
-        $this->cache = $commentCache;
-        $this->client = $client;
-    }
+    public function __construct(
+        private readonly Environment            $twig,
+        private readonly CacheItemPoolInterface $commentCache,
+        private readonly GitHubClient           $client,
+    ) {}
 
     /**
-     * @Route("/{subjectId}", name="list_comments", requirements={
-     *     "subjectId" = "^[a-z0-9]{32}$",
-     * }, methods={
-     *     "GET",
-     * }, condition="request.isXmlHttpRequest() or true == '%kernel.debug%'")
+     * List all comments for a page.
+     *
+     * Use cache to save on rate limits, even though they would probably suffice.
      *
      * @see https://regex101.com/r/hA5Cha/1
-     *
-     * @param string $subjectId
-     * @return Response
      */
-    public function list_comments(Request $request, string $subjectId): Response
+    #[Route(path: '/{subjectId}', name: 'list_comments', requirements: [
+        'subjectId' => /** @lang PhpRegExp */ '^[a-z0-9]{32}$',
+    ], methods: [Request::METHOD_GET], condition: self::ROUTE_CONDITION)]
+    public function list_comments(string $subjectId): Response
     {
-        // Use cache to save on rate limits, even though they would probably suffice.
-
-        /** @var array|array[] $comments */
-        $comments = $this->cache->get("app.comments.{$subjectId}", function (ItemInterface $item) use ($subjectId): array {
+        /** @var array $comments */
+        $comments = $this->commentCache->get("app.comments.{$subjectId}", function (ItemInterface $item) use ($subjectId): array {
             // Make it expire after one hour.
-            $item
-                ->expiresAfter(
-                    new DateInterval('PT1H')
-                );
+            $item->expiresAfter(
+                new \DateInterval('PT1H'),
+            );
             // No tags for now, they won't work well anyway with fs.
-            //$item
-            //    ->tag('comments');
+            //$item->tag('comments');
 
             // Load the gist comments from given subject id.
-            /** @var array|array[] $comments */
-            return $comments = $this->client->gists()
+            return $this->client->gists()
                 ->comments()
-                ->all($subjectId);
+                ->all($subjectId)
+            ;
         });
 
         // Render comments server side, then return them.
@@ -116,19 +99,15 @@ class CommentController extends ControllerAbstract
     }
 
     /**
-     * @Route("/{subjectId}/new", name="add_new_comment", requirements={
-     *     "subjectId" = "^[a-z0-9]{32}$",
-     * }, methods={
-     *     "POST",
-     *     "PUT",
-     * }, condition="request.isXmlHttpRequest() or true == '%kernel.debug%'")
+     * Add a new comment to a page.
+     *
+     * The cache for that page is cleared, once the comment is placed.
      *
      * @see https://regex101.com/r/hA5Cha/1
-     *
-     * @param Request $request
-     * @param string $subjectId
-     * @return JsonResponse
      */
+    #[Route(path: '/{subjectId}/new', name: 'add_new_comment', requirements: [
+        'subjectId' => /** @lang PhpRegExp */ '^[a-z0-9]{32}$',
+    ], methods: [Request::METHOD_POST, Request::METHOD_PUT], condition: self::ROUTE_CONDITION)]
     public function add_new_comment(Request $request, string $subjectId): Response
     {
         // Only accept the request when the header says "Content-Type: text/markdown".
@@ -139,7 +118,7 @@ class CommentController extends ControllerAbstract
         // Verify csrf-token protection with 'app.comments.{$subjectId}'.
         $csrfToken = $request->headers->get('csrf-token');
 
-        if (!$this->isCsrfTokenValid("app.comments.{$subjectId}", $csrfToken)) {
+        if ( ! $this->isCsrfTokenValid("app.comments.{$subjectId}", $csrfToken)) {
             throw new AccessDeniedHttpException('Sorry, your csrf-token seems to be invalid. Could you try again?');
         }
 
@@ -147,8 +126,7 @@ class CommentController extends ControllerAbstract
 
         if ($request->hasPreviousSession()) {
             // Check access token existence.
-            $isUserUnauthenticated = null ===
-                ($token = $session->get(self::SESSION_KEY_TOKEN));
+            $isUserUnauthenticated = null === ($token = $session->get(self::SESSION_KEY_TOKEN));
         } else {
             $isUserUnauthenticated = true;
         }
@@ -156,6 +134,8 @@ class CommentController extends ControllerAbstract
         if ($isUserUnauthenticated) {
             throw new AccessDeniedHttpException('Sorry, I\'m not allowed to add a comment on your behalf.');
         } else {
+            \assert(isset($token));
+
             // Authenticate user to be able to post a comment on their behalf.
             $this->client->authenticate($token, '', AuthMethod::ACCESS_TOKEN);
         }
@@ -166,55 +146,41 @@ class CommentController extends ControllerAbstract
         // Submit the comment body.
         $comment = $this->client->gists()
             ->comments()
-            ->create($subjectId, $body);
+            ->create($subjectId, $body)
+        ;
 
         // Invalidate cache, as there is a new comment.
-        $this->cache->delete("app.comments.{$subjectId}");
+        $this->commentCache->delete("app.comments.{$subjectId}");
 
         // Return the new comment. Use null as first element to add new border-top style.
-        return $this->renderListOfComments($subjectId, [
-            null,
-            $comment,
-        ]);
+        return $this->renderListOfComments($subjectId, [null, $comment]);
     }
 
     /**
-     * @param string $subjectId
-     * @param array|array[] $comments
-     * @return Response
+     * Render the given list of comments for the given subject ID to an HTTP response ({@see Response::HTTP_OK}, `test/html`).
      */
     private function renderListOfComments(string $subjectId, array $comments): Response
     {
-        $view = '_comments.html.twig';
-
-        /** @var Environment $twig */
-        $twig = $this->container->get('twig');
-
-        $context = [];
+        $context               = [];
         $context['subject_id'] = $subjectId;
-        $context['comments'] = $comments;
+        $context['comments']   = $comments;
 
         try {
-            $content = $twig->render($view, $context);
+            $content = $this->twig->render('_comments.html.twig', $context);
         } catch (TwigError $error) {
             // Return 400 in case the template yields an error.
             throw new BadRequestHttpException('', $error);
         }
 
-        return new Response($content, 200, [
+        return new Response($content, Response::HTTP_OK, [
             'Content-Type' => 'text/html',
         ]);
     }
 
     /**
-     * @Route("/auth", name="authenticate_user", methods={
-     *     "GET",
-     *     "POST",
-     * })
-     *
-     * @param Request $request
-     * @return Response
+     * Initialize authentication through GitHub.
      */
+    #[Route(path: '/auth', name: 'authenticate_user', methods: [Request::METHOD_POST])]
     public function authenticate_user(Request $request): Response
     {
         // Set the scope.
@@ -224,9 +190,9 @@ class CommentController extends ControllerAbstract
         $scope[] = 'gist';
 
         try {
-            $state = random_bytes(64);
-            $state = @bin2hex($state);
-        } catch (Exception $exception) {
+            $state = \random_bytes(64);
+            $state = @\bin2hex($state);
+        } catch (\Exception $exception) {
             throw new HttpException(500, 'Seems like there was an error. Please let me sort this out.', $exception);
         }
 
@@ -239,18 +205,17 @@ class CommentController extends ControllerAbstract
             // Verify csrf-token protection with 'app.comments.auth'.
             $csrfToken = $request->request->get('csrf-token');
 
-            if (!$this->isCsrfTokenValid('app.comments.auth', $csrfToken)) {
+            if ( ! $this->isCsrfTokenValid('app.comments.auth', $csrfToken)) {
                 throw new AccessDeniedHttpException('Sorry, your csrf-token seems to be invalid. Could you try again?');
             }
 
             // Don't worry, this will get checked for validity later on.
             $origin = $request->request->get('origin');
         } else {
-            $origin = $this->generateUrl('index_view', [], UrlGeneratorInterface::ABSOLUTE_URL);
+            $origin = $this->generateUrl('page_home', referenceType: UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
-        $isOriginInvalid =
-            ($request->getHost() !== parse_url($origin, PHP_URL_HOST));
+        $isOriginInvalid = ($request->getHost() !== \parse_url($origin, PHP_URL_HOST));
 
         if ($isOriginInvalid) {
             throw new BadRequestHttpException('There seems to be a problem with your request origin.');
@@ -261,30 +226,30 @@ class CommentController extends ControllerAbstract
         // Pack everything up.
         $dataPackage = [
             'client_id' => $this->getParameter('github.username'),
-            'scope' => implode(' ', $scope),
-            'state' => $state,
+            'scope'     => \implode(' ', $scope),
+            'state'     => $state,
         ];
 
         // Remove scope, in case it is empty at this point.
-        if (0 === count($scope)) {
+        if (0 === \count($scope)) {
             unset($dataPackage['scope']);
         }
 
         // Generate the target url.
         $url = self::URL_TO_AUTHORIZE
-            . '?' . http_build_query($dataPackage, '', '&', PHP_QUERY_RFC1738);
+            . '?' . \http_build_query($dataPackage, '', '&', \PHP_QUERY_RFC1738);
 
         return new RedirectResponse($url);
     }
 
     /**
-     * @Route("/auth/callback", name="authentication_callback", methods={
-     *     "GET",
-     * })
+     * Return route after successful authentication on GitHub.
      *
-     * @param Request $request
-     * @return Response
+     * Fetch an access token and save it to the session.
+     *
+     * The request will be forwarded to the actual origin after clearing the session.
      */
+    #[Route(path: '/auth/callback', name: 'authentication_callback', methods: [Request::METHOD_GET])]
     public function authentication_callback(Request $request): Response
     {
         /** @var string $code */
@@ -299,8 +264,7 @@ class CommentController extends ControllerAbstract
         $stateOriginal = $session->get(self::SESSION_KEY_STATE);
         $session->remove(self::SESSION_KEY_STATE);
 
-        $isStateInvalid =
-            (is_null($stateOriginal) || is_null($state) || false === hash_equals($stateOriginal, $state));
+        $isStateInvalid = (null === $stateOriginal || null === $state || false === \hash_equals($stateOriginal, $state));
 
         if ($isStateInvalid) {
             throw new BadRequestHttpException('There seems to be a problem with your request.');
@@ -310,8 +274,7 @@ class CommentController extends ControllerAbstract
         $origin = $session->get(self::SESSION_KEY_ORIGIN);
         $session->remove(self::SESSION_KEY_ORIGIN);
 
-        $isOriginInvalid =
-            ($request->getHost() !== parse_url($origin, PHP_URL_HOST));
+        $isOriginInvalid = ($request->getHost() !== \parse_url($origin, \PHP_URL_HOST));
 
         if ($isOriginInvalid) {
             throw new BadRequestHttpException('There seems to be a problem with your request origin.');
@@ -319,27 +282,26 @@ class CommentController extends ControllerAbstract
 
         // Pack data to exchange the code for an access token.
         $dataPackage = [
-            'client_id' => $this->getParameter('github.username'),
+            'client_id'     => $this->getParameter('github.username'),
             'client_secret' => $this->getParameter('github.secret'),
-            'code' => $code,
+            'code'          => $code,
         ];
 
         // Request the access token.
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, self::URL_TO_ACCESS_TOKEN);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataPackage);
+        $ch = \curl_init();
+        \curl_setopt($ch, \CURLOPT_URL, self::URL_TO_ACCESS_TOKEN);
+        \curl_setopt($ch, \CURLOPT_RETURNTRANSFER, true);
+        \curl_setopt($ch, \CURLOPT_POST, true);
+        \curl_setopt($ch, \CURLOPT_POSTFIELDS, $dataPackage);
 
-        $responseContent = curl_exec($ch);
+        $responseContent = \curl_exec($ch);
         /** @var array $response */
-        parse_str($responseContent, $response);
+        \parse_str($responseContent, $response);
 
-        curl_close($ch);
+        \curl_close($ch);
 
         // Check response content.
-        $isResponseInvalid =
-            (!isset($response['access_token']) || !isset($response['scope']) || !isset($response['token_type']));
+        $isResponseInvalid = ( ! isset($response['access_token']) || ! isset($response['scope']) || ! isset($response['token_type']));
 
         if ($isResponseInvalid) {
             throw new BadRequestHttpException('There seems to be a problem with your request.');
@@ -352,14 +314,11 @@ class CommentController extends ControllerAbstract
     }
 
     /**
-     * @Route("/auth/no", name="unauthenticate_user", methods={
-     *     "GET",
-     *     "POST",
-     * })
+     * Return route after unsuccessful authentication on GitHub.
      *
-     * @param Request $request
-     * @return Response
+     * The request will be forwarded to the actual origin after clearing the session.
      */
+    #[Route(path: '/auth/no', name: 'unauthenticate_user', methods: [Request::METHOD_GET, Request::METHOD_POST])]
     public function unauthenticate_user(Request $request): Response
     {
         // Create an absolute origin url to redirect after finishing authentication.
@@ -367,18 +326,18 @@ class CommentController extends ControllerAbstract
             // Verify csrf-token protection with 'app.comments.unauth'.
             $csrfToken = $request->request->get('csrf-token');
 
-            if (!$this->isCsrfTokenValid('app.comments.unauth', $csrfToken)) {
+            if ( ! $this->isCsrfTokenValid('app.comments.unauth', $csrfToken)) {
                 throw new AccessDeniedHttpException('Sorry, your csrf-token seems to be invalid. Could you try again?');
             }
 
             // Don't worry, this will get checked for validity later on.
             $origin = $request->request->get('origin');
         } else {
-            $origin = $this->generateUrl('index_view', [], UrlGeneratorInterface::ABSOLUTE_URL);
+            $origin = $this->generateUrl('page_home', referenceType: UrlGeneratorInterface::ABSOLUTE_URL);
         }
+        /** @var string $origin */
 
-        $isOriginInvalid =
-            ($request->getHost() !== parse_url($origin, PHP_URL_HOST));
+        $isOriginInvalid = ($request->getHost() !== \parse_url($origin, \PHP_URL_HOST));
 
         if ($isOriginInvalid) {
             throw new BadRequestHttpException('There seems to be a problem with your request origin.');
