@@ -205,4 +205,6 @@ It's recommended to place a `.htpasswd-raw` file alongside the normal `.htpasswd
 
 ## License
 
-It's MIT.
+For all code it's [MIT](./LICENSE).
+
+All blog posts and other content is [CC-BY-4.0](./LICENSE-CC).

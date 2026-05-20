@@ -2,7 +2,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2024 machinateur
+ * Copyright (c) 2026 machinateur
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -139,6 +139,8 @@ class PageController extends AbstractController
      *  If not found, sets the parameter's value to null in the provided twig context.
      *
      * The provided context is modified by reference.
+     *
+     * @internal
      */
     public function mergeGlobals(array &$context): void
     {
