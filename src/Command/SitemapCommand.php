@@ -51,14 +51,14 @@ class SitemapCommand extends Command
 
     private string $contentPath;
 
-    /**
-     * Called from the container, see `services.yaml`.
-     */
     public function getContentPath(): string
     {
         return $this->contentPath;
     }
 
+    /**
+     * Called from the container, see `services.yaml`.
+     */
     public function setContentPath(string $contentPath): void
     {
         $this->contentPath = $contentPath;
@@ -66,6 +66,7 @@ class SitemapCommand extends Command
 
     protected function configure(): void
     {
+        // TODO: Use `%kernel.project_dir%/public` as parameter instead (setter).
         $defaultSitemapPath = \dirname(__DIR__, 2) . '/public/sitemap.txt';
 
         $this

@@ -56,6 +56,7 @@ class FeedCommand extends Command
 
     protected function configure(): void
     {
+        // TODO: Use `%kernel.project_dir%/public` as parameter instead (setter).
         $defaultFeedPath = \dirname(__DIR__, 2) . '/public/feed.xml';
 
         $this

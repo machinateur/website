@@ -139,6 +139,8 @@ class PageController extends AbstractController
      *  If not found, sets the parameter's value to null in the provided twig context.
      *
      * The provided context is modified by reference.
+     *
+     * @internal
      */
     public function mergeGlobals(array &$context): void
     {

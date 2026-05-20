@@ -34,7 +34,7 @@ use Twig\TwigFilter;
 class PcreExtension extends AbstractExtension
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function __construct()
     {
