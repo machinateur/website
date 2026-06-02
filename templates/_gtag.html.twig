@@ -8,7 +8,7 @@
 <script>
     window.dataLayer = window.dataLayer || [];
 
-    // Additional functionality for european GDPR compliance...
+    // Additional functionality for European GDPR compliance...
     //  https://developers.google.com/tag-platform/devguides/consent#tracking_consent_status
     //  https://developers.google.com/tag-platform/gtagjs/install#google-analytics
     //  https://developers.google.com/analytics/devguides/collection/gtagjs/user-opt-out
@@ -25,26 +25,28 @@
         gtag('consent', 'default', {
             'ad_storage': 'denied',
             'analytics_storage': 'denied',
-            'functionality_storage': 'denied',
-            'personalization_storage': 'denied',
-            'security_storage': 'denied',
+            'ad_user_data': 'denied',
+            'ad_personalization': 'denied',
             // Wait for consentGa() call...
             'wait_for_update': 500,
         });
     }
 
-    function consentGa() {
+    function consentGa(consent) {
         if ([] === window.dataLayer) {
             initGa();
         }
 
-        gtag('consent', 'update', {
-            'ad_storage': 'granted',
-            'analytics_storage': 'granted',
-            'functionality_storage': 'granted',
-            'personalization_storage': 'granted',
-            'security_storage': 'granted',
-        });
+        if ('undefined' === typeof consent) {
+            consent = {
+                'ad_storage': 'denied',
+                'analytics_storage': 'granted',
+                'ad_user_data': 'denied',
+                'ad_personalization': 'denied',
+            };
+        }
+
+        gtag('consent', 'update', consent);
     }
 
     function disableGa() {
