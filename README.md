@@ -169,7 +169,6 @@ In a shared hosting production environment, as it is currently being used, these
 - `res/`
 - `src/`
 - `templates/`
-- `tests/`
 - `var/`
 - `vendor/`
 - `.env.local.php`
