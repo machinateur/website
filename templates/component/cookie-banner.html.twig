@@ -38,6 +38,35 @@
                 used.
             </p>
 
+            <form class="small"
+                  name="cookieConsentFlags">
+                Storage consent for
+                <label class="ps-1" for="cookieConsentFlags__adStorage">
+                    <input type="checkbox" name="ad_storage"
+                           id="cookieConsentFlags__adStorage"
+                           value="1">
+                    ad storage (google)
+                </label>,
+                <label class="ps-1" for="cookieConsentFlags__analyticsStorage">
+                    <input type="checkbox" name="analytics_storage"
+                           id="cookieConsentFlags__analyticsStorage"
+                           value="1" checked>
+                    analytics storage (google)
+                </label>,
+                <label class="ps-1" for="cookieConsentFlags__adUserData">
+                    <input type="checkbox" name="ad_user_data"
+                           id="cookieConsentFlags__adUserData"
+                           value="1" disabled> {# TODO: Make dependent on ads availability. #}
+                    ad user data (google)
+                </label> and
+                <label class="ps-1" for="cookieConsentFlags__adPersonalization">
+                    <input type="checkbox" name="ad_personalization"
+                           id="cookieConsentFlags__adPersonalization"
+                           value="1" disabled> {# TODO: Make dependent on ads availability. #}
+                    ad personalization (google)
+                </label>.
+            </form>
+
             <div style="margin-right: -2rem;">
                 <hr>
 
@@ -99,8 +128,64 @@
                     + '; samesite=lax';
             }
 
+            /**
+             * @param {HTMLInputElement} flag
+             * @return {string}
+             */
+            function getConsentFlag(flag) {
+                return flag.checked ? 'granted' : 'denied';
+            }
+
+            /**
+             * @param {boolean[]} values
+             */
+            function setConsentFlags(values) {
+                var flags = getConsentFlags();
+                if (!flags) {
+                    return;
+                }
+
+                // Truncate the array, if there are more values.
+                //  The number is expected to be even.
+                if (values.length > flags.length) {
+                    values.length = flags.length;
+                }
+                values.forEach(function (f, i) { flags[i].checked = f; });
+            }
+
+            /**
+             * @return {HTMLFormControlsCollection}
+             */
+            function getConsentFlags() {
+                var form = document.forms['cookieConsentFlags'];
+                if (!form) {
+                    return null;
+                }
+
+                return form.elements;
+            }
+
             function init() {
-                var value = getCookieConsent();
+                var value   = getCookieConsent();
+                var values  = value.split(',');
+
+                if (values.length > 1) {
+                    // Re-assign value to 'true' or 'false' string.
+                    value   = values.shift();
+                    values  = values.map(function (f) { return 0 < +f });
+
+                    // Set the flag states, if we have it already,
+                    //  else the default states remain and get accepted.
+                    setConsentFlags(values);
+                }
+
+                var flags   = getConsentFlags();
+                var consent = 'true' === value ? {
+                    'ad_storage':         getConsentFlag(flags['ad_storage']),
+                    'analytics_storage':  getConsentFlag(flags['analytics_storage']),
+                    'ad_user_data':       getConsentFlag(flags['ad_user_data']),
+                    'ad_personalization': getConsentFlag(flags['ad_personalization']),
+                } : undefined;
 
                 document.body.dataset.appCookieBannerState = value;
 
@@ -115,7 +200,7 @@
                         document.body.dataset.appCookieBanner = 'false';
 
                         initGa();
-                        consentGa();
+                        consentGa(consent);
 
                         break;
                     case 'false':
@@ -144,16 +229,36 @@
                         var buttonNo = buttonGroup.querySelector('button[type="button"]:last-of-type');
 
                         buttonYes.addEventListener('click', function (event) {
-                            setCookieConsent('true');
+                            // Build the value based on checkbox states, only using the index.
+                            var flags  = getConsentFlags();
+                            var values = (new Array(flags.length))
+                                .fill(0)
+                                .map(function (f, i) { return f + flags[i].checked; });
+                            values.unshift('true');
+                            var value  = values.join(',');
+
+                            setCookieConsent(value);
 
                             document.body.dataset.appCookieBanner = 'false';
                             document.body.dataset.appCookieBannerState = 'true';
+
+                            // Update gtag consent as well.
+                            var consent = 'true' === value ? {
+                                'ad_storage':         getConsentFlag(flags['ad_storage']),
+                                'analytics_storage':  getConsentFlag(flags['analytics_storage']),
+                                'ad_user_data':       getConsentFlag(flags['ad_user_data']),
+                                'ad_personalization': getConsentFlag(flags['ad_personalization']),
+                            } : undefined;
+
+                            consentGa(consent);
                         }, false);
                         buttonNo.addEventListener('click', function (event) {
                             setCookieConsent('false');
 
                             document.body.dataset.appCookieBanner = 'false';
                             document.body.dataset.appCookieBannerState = 'false';
+
+                            disableGa();
                         }, false);
                     }
                 );
