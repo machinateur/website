@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a172dc734a62ee255b30c5382c0cc5c5",
+    "content-hash": "5ac716e8df28ff720a159da6ea4e0b73",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -333,23 +333,27 @@
         },
         {
             "name": "erusev/parsedown-extra",
-            "version": "0.8.1",
+            "version": "0.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/erusev/parsedown-extra.git",
-                "reference": "91ac3ff98f0cea243bdccc688df43810f044dcef"
+                "reference": "5b5b9b9d000792c7ac631aec23a6688e0b6d3dc5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/erusev/parsedown-extra/zipball/91ac3ff98f0cea243bdccc688df43810f044dcef",
-                "reference": "91ac3ff98f0cea243bdccc688df43810f044dcef",
+                "url": "https://api.github.com/repos/erusev/parsedown-extra/zipball/5b5b9b9d000792c7ac631aec23a6688e0b6d3dc5",
+                "reference": "5b5b9b9d000792c7ac631aec23a6688e0b6d3dc5",
                 "shasum": ""
             },
             "require": {
-                "erusev/parsedown": "^1.7.4"
+                "erusev/parsedown": "^1.8",
+                "ext-dom": "*",
+                "ext-libxml": "*",
+                "ext-mbstring": "*",
+                "php": ">=7.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.35"
+                "phpunit/phpunit": "^7.5|^8.5|^9.6"
             },
             "type": "library",
             "autoload": {
@@ -365,7 +369,7 @@
                 {
                     "name": "Emanuil Rusev",
                     "email": "hello@erusev.com",
-                    "homepage": "http://erusev.com"
+                    "homepage": "https://erusev.com"
                 }
             ],
             "description": "An extension of Parsedown that adds support for Markdown Extra.",
@@ -378,9 +382,15 @@
             ],
             "support": {
                 "issues": "https://github.com/erusev/parsedown-extra/issues",
-                "source": "https://github.com/erusev/parsedown-extra/tree/0.8.x"
+                "source": "https://github.com/erusev/parsedown-extra/tree/0.9.0"
             },
-            "time": "2019-12-30T23:20:37+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/erusev",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-02-16T13:06:37+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
