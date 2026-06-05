@@ -1,3 +1,5 @@
+@host = machinateur.dev
+
 ### Load the sitemap
 GET https://{{host}}/sitemap.xml
 

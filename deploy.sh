@@ -31,3 +31,4 @@ composer install --no-dev --optimize-autoloader
 composer dump-env prod
 
 php bin/console sitemap "./public/sitemap.txt" --url-scheme="https" --url-host="machinateur.dev" --url-port="443"
+#php bin/console feed --url-scheme="https" --url-host="machinateur.dev" --url-port="443"
