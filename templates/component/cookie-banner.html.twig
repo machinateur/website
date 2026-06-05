@@ -243,12 +243,12 @@
                             document.body.dataset.appCookieBannerState = 'true';
 
                             // Update gtag consent as well.
-                            var consent = 'true' === value ? {
+                            var consent = {
                                 'ad_storage':         getConsentFlag(flags['ad_storage']),
                                 'analytics_storage':  getConsentFlag(flags['analytics_storage']),
                                 'ad_user_data':       getConsentFlag(flags['ad_user_data']),
                                 'ad_personalization': getConsentFlag(flags['ad_personalization']),
-                            } : undefined;
+                            };
 
                             consentGa(consent);
                         }, false);
