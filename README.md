@@ -164,31 +164,20 @@ In a shared hosting production environment, as it is currently being used, these
 
 - `bin/`
 - `config/`
-- `docker/`
 - `public/`
-- `res/`
 - `src/`
 - `templates/`
 - `var/`
 - `vendor/`
 - `.env.local.php`
-- `.gitattributes`
-- `.gitignore`
 - `.php-version`
 - `ads-config.json`
-- `build.sh`
-- `build-coverage.sh`
-- `build-coverage.js`
-- `clear.sh`
-- `clear-coverage.sh`
 - `composer.json`
 - `composer.lock`
-- `docker-compose.yml`
-- `Dockerfile`
 - `LICENSE`
+- `LICENSE-CC`
 - `package.json`
 - `package-lock.json`
-- `phpunit.xml.dist`
 - `README.md`
 - `symfony.lock`
 
