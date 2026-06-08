@@ -1,5 +1,8 @@
-# last update 2022-02-01
-FROM php:8.1-apache
+# last update 2026-06-08
+FROM php:8.4-apache
+
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
 
 # enable apache mod_rewrite
 RUN a2enmod rewrite ssl expires
@@ -20,8 +23,8 @@ RUN mkdir -p /etc/apache2/ssl \
 # no extensions needed (for now)
 #RUN docker-php-ext-install zip
 
-# download composer latest 2.2.x lts version
-RUN wget https://getcomposer.org/download/latest-2.2.x/composer.phar \
+# download composer latest stable version
+RUN wget https://getcomposer.org/download/latest-stable/composer.phar \
     && mv composer.phar /usr/bin/composer \
     && chmod +x /usr/bin/composer
 
