@@ -28,12 +28,16 @@ Now open `https://127.0.0.1:1312/` to see if everything is fine.
 ```bash
 git clone git@github.com:machinateur/website.git
 cd website
-touch .env.local
+touch .env.local .env.prod.local
 ```
 
-Make sure to edit your `.env.local` file accordingly.
+Make sure to edit your `.env.local` and `.env.prod.local` file accordingly, before the environment is dumped (pre-build, see below).
 
 ```bash
+APP_ENV=prod
+APP_DEB=0
+composer dump-env
+
 docker compose build
 docker compose up -d
 ```
